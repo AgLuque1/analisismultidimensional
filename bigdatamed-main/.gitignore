@@ -1,0 +1,36 @@
+
+db.sqlite3
+*.json
+*.csv
+*.pyc
+__pycache__/
+.vscode/
+envBigDataMed/
+*.ipynb
+
+# static/
+# These are some examples of commonly ignored file patterns.
+# You should customize this list as applicable to your project.
+# Learn more about .gitignore:
+#     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
+
+# Node artifact files
+node_modules/
+# dist/
+
+bin/
+envBigdatamed/
+envbigdatamed/
+
+lib/
+logs/
+*.cfg
+
+bigdatamed/__pycache__/
+dashboard/__pycache__/
+migrations/
+/static/
+/media/
+
+
+

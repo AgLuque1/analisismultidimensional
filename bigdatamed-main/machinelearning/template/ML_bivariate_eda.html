@@ -1,0 +1,453 @@
+{% extends 'ML_base.html' %}
+
+{% comment %}
+
+{% extends "main_template.html" %}
+{% extends 'ML_base.html' %}
+
+{% endcomment %}
+
+
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% comment %}
+
+{% block section-content %}
+
+{% block title %}
+{{title_content}}
+{% endblock %}
+{% block content %}
+
+{% endcomment %}
+
+{% block title %}
+{{title_content}}
+{% endblock %}
+{% block content %}
+
+<section class="content">
+
+    {% comment %}
+
+    ############ BIVARIATE NUMERICAL/NUMERICAL ANALYSIS ############
+
+    {% endcomment %}
+
+    {% if bivariate_dict.analysis_type == "numerical/numerical" %}
+
+        <div class="container row my-5">
+
+            <div class="card col" style="width: 100%;">
+                <div class="row">
+                    <table class="table" style="width: 100%;">
+                                <td style="text-align:center">
+                            <img src="data:image/png;base64,{{bivariate_dict.scatter_plot}}" alt="" height="500", width="500">
+                        </td>
+                    </table>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">Scatter plot con recta de regresión</h5>
+                  <div class="accordion my-2" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne1" aria-expanded="true" aria-controls="collapseOne">
+                            Detalles sobre Scatter Plot
+                        </button>
+                      </h2>
+                      <div id="collapseOne1" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        Este diagrama ofrece información sobre la relación o asociación entre dos variables numéricas. Puede proporcionar información gráfica y ayudar en el planteamiento de posibles hipótesis sobre estas relaciones, como si las variables X e Y están linealmente relacionadas, no linealmente, cuadráticamente… También se pueden observar de manera gráfica la aparición de posibles outliers. Además, se añade en la aplicación la recta de regresión que se ajusta a los datos, para comprobar de manera más cómoda si es posible la existencia de una correlación lineal entre las dos variables numéricas consideradas.
+                        </div>
+                      </div>
+                    </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="container row my-5">
+
+            <div class="card col" style="width: 100%;">
+                <div class="row">
+                    <table class="table" style="width: 100%;">
+                                <td style="text-align:center">
+                            {{bivariate_dict.pearson_coeff}}
+                        </td>
+                    </table>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">Coeficiente de correlación de Pearson</h5>
+                  <div class="accordion my-2" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne2" aria-expanded="true" aria-controls="collapseOne">
+                            Detalles sobre el Coeficiente de correlación de Pearson
+                        </button>
+                      </h2>
+                      <div id="collapseOne2" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        Este coeficiente, que no depende de las unidades de medida de las variables, está acotado entre -1 y 1 y su signo indica si la correlación lineal es negativa o positiva, respectivamente. En caso de asociación lineal perfecta el coeficiente toma valores de 1 y -1 y en caso de no existir una correlación línea, toma el valor 0. Sin embargo, este coeficiente no es capaz de garantizar si existe o no otro tipo de correlación (cuadrática, logarítmica, exponencial, etc.). Para más información, pulse <a href="http://www.ub.edu/aplica_infor/spss/cap3-6.htm">aquí</a>
+                        </div>
+                      </div>
+                    </div>
+            </div>
+            </div>
+        </div>
+
+    {% elif bivariate_dict.analysis_type == "numerical/categorical" %}
+
+        <div class="container row my-5">
+
+            <div class="card col" style="width: 100%;">
+                <div class="row">
+                    {% for histogram in bivariate_dict.histogram_list %}
+                            <img src="data:image/png;base64,{{histogram}}" class="mx-auto d-block" style="width: 40rem; height: 40rem" alt="">
+                        {% endfor %}
+
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">Histograma</h5>
+                  <div class="accordion my-2" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne1" aria-expanded="true" aria-controls="collapseOne">
+                            Detalles sobre los Histogramas
+                        </button>
+                      </h2>
+                      <div id="collapseOne1" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          Un histograma es la representación gráfica de un grupo de datos estadísticos, que se agrupan en intervalos numéricos o en función de valores absolutos. Este gráfico muestra cómo se distribuyen los datos de una muestra estadística o una población respecto a una variable numérica. En el histograma se usan barras, cuya altura (eje Y) representa la frecuencia de los datos, mientras que en el eje X se incluyen los intervalos de valores de la variable de estudio. Para más información, pulse <a href="https://economipedia.com/definiciones/histograma.html">aquí</a> 
+                        </div>
+                      </div>
+                    </div>
+            </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="container row my-5">
+            <div class="card col" style="width: 100%;">
+            <table class="table table-hover">
+                <thead>
+                    <tr class="table-secondary">
+                        <th style="text-align:center"><h5><strong>Medidas de tendencia central</strong></h5></th>
+                    </tr>
+                </thead>
+            </table> 
+            <br/>  
+            <table class="tg table table-hover" style="width: 100%;">
+
+            <thead>
+                        <tr class="">
+                            <th style="text-align:center">Medida</th>
+                            <th style="text-align:center">Valor (var categórica asociada: medida)</th>
+                            <th style="text-align:center">Descripción</th>
+                        </tr>
+            </thead>
+            <tbody>
+                        <tr class="">
+                            <th style="text-align:center">Media Aritmética</th>
+                            <th style="text-align:center">{% for value, mean in bivariate_dict.mean_list %}
+                                        {{value}}: {{mean}}
+                                        <br/>
+                                {% endfor %}</th>
+                            <th style="text-align:center">
+                                División de la suma de los datos por el número total de ellos
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Mediana</th>
+                            <th style="text-align:center">{% for value,median in bivariate_dict.median_list %}
+                                        {{value}}: {{median}}<br/>
+                                {% endfor %}</th>
+                            <th style="text-align:center">
+                                Es el percentil o cuantil 50, es decir, el valor que deja la misma cantidad de valores de la distribución por encima y por debajo de este valor.
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Moda</th>
+                            <th style="text-align:center">{% for value,mode in bivariate_dict.mode_list %}
+                                        {{value}}: {{mode}}<br/>
+                                {% endfor %}</th>
+                            <th style="text-align:center">
+                                Valor que más se repite en la distribución. Tiene especial importancia en las variables numéricas discretas, más que en las continuas, ya que en las discretas tienen a repetirse más
+                                los valores.
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Cuartiles</th>
+                            <th style="text-align:center">{% for value,quantiles in bivariate_dict.quantiles_list %}
+                                        {{value}}: {{quantiles.0}}, {{quantiles.1}}, {{quantiles.2}}<br/>
+                                {% endfor %}</th>
+                            <th style="text-align:center">
+                                Valores que dividen el conjunto en cuatro partes iguales. El primero (Q1) deja el 25% de los valores de la distribución por debajo del valor, el segundo, el 50% (Q2 = Mediana) y el tercero (Q3), el 75%.
+                            </th>
+                        </tr>
+                </tbody>
+            </table>    
+
+            </div>
+        </div>
+
+        <div class="container row my-5">
+            <div class="card col" style="width: 100%;">
+            <table class="table table-hover">
+                <thead>
+                    <tr class="table-secondary">
+                        <th style="text-align:center"><h5><strong>Medidas de Dispersión</strong></h5></th>
+                    </tr>
+                </thead>
+            </table> 
+            <br/>  
+            <table class="tg table table-hover" style="width: 100%;">
+
+            <thead>
+                        <tr class="">
+                            <th style="text-align:center">Medida</th>
+                            <th style="text-align:center">Valor (var categórica asociada: medida)</th>
+                            <th style="text-align:center">Descripción</th>
+                        </tr>
+            </thead>
+            <tbody>
+                        <tr class="">
+                            <th style="text-align:center">Desviación Típica</th>
+                            <th style="text-align:center">{% for value,stdev in bivariate_dict.stdev_list %}
+                                        {{value}}: {{stdev}}<br/>
+                                {% endfor %}</th>
+                            <th style="text-align:center">
+                                Medida de dispersión en torno a la media, cuantifica la dispersión de un conjunto de datos.
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Varianza</th>
+                            <th style="text-align:center">{% for value,variance in bivariate_dict.variance_list %}
+                                        {{value}}: {{variance}}<br/>
+                                {% endfor %}</th>
+                            <th style="text-align:center">
+                                Medida de dispersión en torno a la media, igual a la desviación estándar al cuadrado.
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Mínimo</th>
+                            <th style="text-align:center">{% for value,min_value in bivariate_dict.min_value_list %}
+                                        {{value}}: {{min_value}}<br/>
+                                {% endfor %}</th>
+                            <th style="text-align:center">
+                                Valor mínimo que puede tomar la variable numérica.
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Máximo</th>
+                            <th style="text-align:center">{% for value,max_value in bivariate_dict.max_value_list %}
+                                        {{value}}: {{max_value}}<br/>
+                                {% endfor %}</th>
+                            <th style="text-align:center">
+                                Valor máximo que puede tomar la variable numérica.
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Rango</th>
+                            <th style="text-align:center">{% for value,range in bivariate_dict.range_list %}
+                                        {{value}}: {{range}}<br/>
+                                {% endfor %}</th>
+                            <th style="text-align:center">
+                                Diferencia entre los valores mayor y menor de una variable numérica, el máximo menos el mínimo.
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Rango Intercuartílico</th>
+                            <th style="text-align:center">{% for value,IQR in bivariate_dict.IQR_list %}
+                                        {{value}}: {{IQR}}<br/>
+                                {% endfor %}</th>
+                            <th style="text-align:center">
+                                Diferencia entre el percentil 75 y el 25 o Q1 y Q3 los valores que dejan el 25% y el 75% de los datos por debajo, respectivamente.
+                            </th>
+                        </tr>
+                    </tbody>
+            </table>    
+
+            </div>
+        </div>
+
+        <div class="container row my-5">
+
+            <div class="card col" style="width: 100%;">
+                <div class="row">
+                    {% for boxplot in bivariate_dict.box_plot_list %}
+                            <img src="data:image/png;base64,{{boxplot}}" class="mx-auto d-block" style="width: 40rem; height: 40rem" alt="">
+                        {% endfor %}			
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">Boxplot o Diagrama de Cajas</h5>
+                  <div class="accordion my-2" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne3" aria-expanded="true" aria-controls="collapseOne">
+                            Detalles sobre los Diagramas de cajas
+                        </button>
+                      </h2>
+                      <div id="collapseOne3" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          Los Boxplots o diagramas de cajas muestran de manera gráfica y robusta medidas de centralidad y dispersión, dando información sobre la simetría de la distribución de frecuencias, los posibles outliers y cómo de sesgados y cuánto de agrupados o juntos están los datos. La longitud de la caja del diagrama representa el rango intercuartílico, la línea central la mediana, los valores de los extremos que separan los outliers del resto de valores representan Q1-1.5*IQR (Menor valor) y Q3+1.5*IQR (Mayor valor) y los valores que están fuera de este rango son los valores anómalos u outliers.
+                        </div>
+                      </div>
+                    </div>
+            </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="container row my-5">
+
+            <div class="card col" style="width: 100%;">
+                <div class="row">
+                    <table class="table" style="width: 100%;">
+                                <td style="text-align:center">{% for value,sw_test in bivariate_dict.sw_list %}
+                               Con variable categórica {{value}}: {{sw_test}}<br/>
+                        {% endfor %}</td>
+                    </table>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">Test de normalidad Anderson-Darling</h5>
+                  <div class="accordion my-2" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne5" aria-expanded="true" aria-controls="collapseOne">
+                            Detalles sobre el Test de normalidad Anderson-Darling
+                        </button>
+                      </h2>
+                      <div id="collapseOne5" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          Este test de normalidad, está demostrado como uno de los más potentes, aunque está por debajo del test Shapiro-Wilk. Sin embargo, en el caso del segundo mencionado, el tamaño de muestra ha de ser menor que 50, por lo que el test de normalidad de Anderson-Darling es más versátil.
+                        <br/>
+
+        El test comprueba que un conjunto de datos proviene de una distribución en particular, en este caso, de una distribución normal. La hipótesis nula planteada consiste en que la muestra se ha extraído de una distribución normal.
+                        <br/>
+        Para esta prueba, existen una serie de valores críticos que dependen de la distribución con la que se compare la muestra. Los valores críticos asociados a la distribución normal están disponibles para varios niveles de significación, incluyendo el 5%, el considerado en la aplicación. Si el estadístico de la prueba Anderson-Darling es mayor que estos valores críticos asociados a cada nivel de significación, la hipótesis nula, consistente en que los datos provienen de la distribución normal, se rechaza.
+                        <br/>
+                        </div>
+                      </div>
+                    </div>
+            </div>
+            </div>
+            </div>
+        </div>
+
+    {% elif bivariate_dict.analysis_type == "categorical/categorical" %}
+
+        <div class="container row my-5">
+
+            <div class="card col" style="width: 100%;">
+                <div class="row">
+                    <table class="table" style="width: 100%;">
+                                <td style="text-align:center">
+                            <img src="data:image/png;base64,{{bivariate_dict.bar_plot_2cat_image}}" alt="" height="500", width="500">
+                        </td>
+                    </table>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">Diagrama de barras filtrado por variables categóricas</h5>
+                  <div class="accordion my-2" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne3" aria-expanded="true" aria-controls="collapseOne">
+                            Detalles sobre Diagrama de barras filtrado por variables categóricas
+                        </button>
+                      </h2>
+                      <div id="collapseOne3" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        Se trata del mismo gráfico descrito previamente en el análisis univariable para variables categóricas, pero en este caso se añaden en distintos colores las proporciones de las categorías halladas en las observaciones de la otra variable categórica considerada.
+                        </div>
+                      </div>
+                    </div>
+            </div>
+            </div>
+        </div>
+
+
+        <div class="container row my-5">
+
+            <div class="card col" style="width: 100%;">
+                <div class="row">
+                    <table class="table" style="width: 100%;">
+                            <div class="row d-flex justify-content-center">
+                                <td style="text-align:center">
+                                    {% autoescape off %}
+                                    {{bivariate_dict.data_crosstab_df}}
+                                    {% endautoescape %}
+                                </td>
+                            </div>
+                    </table>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">Tabla de contingencia</h5>
+                  <div class="accordion my-2" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne1" aria-expanded="true" aria-controls="collapseOne">
+                            Detalles sobre la tabla de contingencia
+                        </button>
+                      </h2>
+                      <div id="collapseOne1" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          Las tablas de contingencia proporcionan una forma de visualizar frecuencias absolutas y relativas de las observaciones disponibles de dos variables categóricas. Los elementos de una categoría se muestran en las columnas, mientras que los de la otra se muestran a lo largo de las filas.
+                        </div>
+                      </div>
+                    </div>
+            </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="container row my-5">
+
+            <div class="card col" style="width: 100%;">
+                <div class="row">
+                    <table class="table" style="width: 100%;">
+                                <td style="text-align:center">
+                            Coeficiente Chi-cuadrado de Pearson {{bivariate_dict.chi2}}:
+                        </td>
+                    </table>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">Prueba Chi Cuadrado de Pearson</h5>
+                  <div class="accordion my-2" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne2" aria-expanded="true" aria-controls="collapseOne">
+                            Detalles sobre el coeficiente Chi cuadrado de Pearson
+                        </button>
+                      </h2>
+                      <div id="collapseOne2" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          Esta prueba no paramétrica, mide la discrepancia entre una distribución de frecuencias observadas y esperadas. El estadístico Χ^2 toma valores entre cero e infinito y no tiene valores negativos, ya que es la suma de valores elevados al cuadrado. El principal objetivo de esta prueba es investigar la diferencia en valores de frecuencias cuando se clasifica una muestra “n” por un atributo “A” y después se realiza una nueva clasificación de “A” por un segundo atributo “B”. La hipótesis nula es que no existe asociación entre las variables A y B, es decir, que son variables independientes.
+                        <br/>
+                        La hipótesis nula y alternativa consisten en lo siguiente:
+                        <br/>
+                        <li>H_0  : No hay asociación entre las variables A|B (Las variables son independientes)</li>
+                        <li>H_1  : Sí hay asociación entre las variables A|B (Las variables no son independientes)</li>
+
+                        </div>
+                      </div>
+                    </div>
+            </div>
+            </div>
+            </div>
+        </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}
+
+{% block special_javascript %}
+
+<script src="{% static 'js/chartjs-library.js' %}"></script>
+<script src="{% static 'js/charts-custom.js' %}"></script>
+
+<script src="{% static 'js/data-table-custom.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/data-table-custom.css' %}"></link>
+
+
+{% endblock %}

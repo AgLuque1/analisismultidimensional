@@ -1,0 +1,15 @@
+{% load static %}
+
+{% for cat in categories %}
+
+    <div class="card col-md-4 col-lg-4 col-xl-4 col-sm-6 col-12">
+        <div style="height: 500px; width:100%;">
+            <img height="100%" width="100%" class="card-img-top" src="{{ cat.image.url  }}" alt="Card image cap">
+        </div>
+        <div class="card-body">
+            <h2 class="card-title">{{cat.name}}</h2>
+            <p class="card-text">{{cat.description | safe }}</p>
+            <a href="{{ cat.url }}" class="btn btn-primary">Comenzar</a>
+        </div>
+    </div>
+{% endfor %}

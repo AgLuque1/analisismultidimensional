@@ -1,0 +1,21 @@
+{% extends "main_template.html" %}
+{% load static %}
+
+{% block special_css %}
+
+{% endblock special_css %}
+{% block content-header %}
+    <div class="container-fluid">
+        <h5>Resultados de ejecución  algoritmos de aprendizaje automático</h5>
+    </div>
+    
+    {% include 'experiment-session-dataset.html' %}
+    
+    
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless"
+        src='{{MEDIA_URL}}tmp/visualization/graph.html' height="850px" width="100%"></iframe> 
+    </div>
+
+
+{% endblock content-header %}

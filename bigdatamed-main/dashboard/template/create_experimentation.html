@@ -1,0 +1,234 @@
+
+{% extends "main_template.html" %}
+{% load static %}
+{% block special_css %}
+<link rel="stylesheet" href="{% static 'css/table-experiments.css' %}" />
+    
+  <!-- Font Awesome -->
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+rel="stylesheet"
+/>
+<!-- Google Fonts -->
+<link
+href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+rel="stylesheet"
+/>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">  
+
+<!-- CSS DATAPICKERS-->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/data-table-bdmed.css' %}" />
+     
+{% endblock special_css %}
+
+{% block section-content   %}
+<section class="content">
+    
+    <!-- Botones Crear Nueva Experimentación-->
+    <!-- ======================================================      -->
+   
+    <!-- BEGIN    Botones Crear Nueva Experimentación  -->
+   
+    {% if all_experiments %}
+    
+    <div>
+        <form method="post" action="{% url 'dashboard:load_experiment' 'Load' %}">
+          {% csrf_token %}
+          <input type="hidden"  id="id_exp"                 name="id_exp"           />
+          <input type="hidden"  id="date_create_exp"        name="date_create_exp"  />
+          <input type="hidden"  id="name_exp"               name="name_exp"         />
+          <input type="hidden"  id="select_bbdd"            name="select_bbdd"      />
+          <input type="hidden"  id="date_init"              name="date_init"        />
+          <input type="hidden"  id="date_end"               name="date_end"         />
+          <input type="hidden"  id="filter_apply"           name="filter_apply"     />
+          <button type="submit" id="load-experiment" class="btn btn-primary btn-lg"  style="margin-bottom:1%;" disabled> Carga Experimentación</input>
+        </form>
+    </div>
+    <br>
+
+    <!-- END   Botones Crear Nueva Experimentación  -->
+    
+    
+    <!-- Tabla con los distintos experimentos del usuario-->
+    <!-- ======================================================      -->
+    <!-- Hay que realizar la carga de los datos de forma dinámica-->
+    
+    <!-- BEGIN   Tabla con los distintos experimentos del usuario  -->
+    <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Experimentaciones del Usuario {{ user.username | title }}</h3>
+          <div class="card-tools"></div>
+        </div>
+        <!-- /.card-header -->
+      
+        <div class="card-body p-0">
+          <table id="table_experiments" class="table table-striped table-bordered table-sm" cellspacing="10" width="100%">
+            <thead>
+              <tr>
+                <th style='display: none;'></th>
+                
+                <th>Fecha de creación</th>
+                <th>Titulo de la experimentación</th>
+                <th>Base Datos Seleccionada</th>
+                <th>Fecha inicio del DataSet</th>
+                <th>Fecha fin del DataSet</th>
+                <th>Filtros y variables seleccionadas del DataSet</th>
+                <th>Operaciones</th>
+                <!-- <th style="width: 40px">Label</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              {% for exp in all_experiments %}
+              <tr>
+                <td class="id_exp" style="display:none;">{{exp.pk}}</td>
+                <td>{{ exp.date_create }}   </td>
+                <td>{{ exp.name }}          </td>
+                <td>{{ exp.name_bbdd   }}   </td>
+                <td>{% if not  exp.date_init  %} 
+                  Desde que se tengan registros
+                {% else %}
+                  {{ exp.date_init  }}      
+                {% endif %}
+                </td>
+                <td>{% if not  exp.date_end  %} 
+                  Hasta que se tengan registros
+                {% else %}
+                  {{ exp.date_end  }}      
+                {% endif %}
+                </td>
+                <td>{% if not exp.filter_apply  %} 
+                      Ninguno seleccionado. Es necesario seleccionar variables.
+                    {% else %}
+                      {% autoescape off %}
+                        {{ exp.filter_apply|get_info_filter }}  
+                      {% endautoescape %}
+                    {% endif %}
+                </td>
+                <td>
+                  <span class="experiment-rm"><i class="fas fa-trash"></i></span>
+                  <span><i class="fas fa-search-plus"></i></span>
+                  <span>
+                    <form autocomplete="off" method="post" action="{% url 'dashboard:load_experiment' 'Edit' %}">
+                      {% csrf_token %}
+                      <input type="hidden"  id="id_exp_edit_{{exp.pk}}"                 name="id_exp"           />
+                      <input type="hidden"  id="date_create_exp_edit_{{exp.pk}}"        name="date_create_exp"  />
+                      <input type="hidden"  id="name_exp_edit_{{exp.pk}}"               name="name_exp"         />
+                      <input type="hidden"  id="select_bbdd_edit_{{exp.pk}}"            name="select_bbdd"      />
+                      <input type="hidden"  id="date_init_edit_{{exp.pk}}"              name="date_init"        />
+                      <input type="hidden"  id="date_end_edit_{{exp.pk}}"               name="date_end"         />
+                      <input type="hidden"  id="filter_apply_edit_{{exp.pk}}"           name="filter_apply"     />
+                      <button type="submit" id="load-experiment_edit" class="edit-button" style="background: none;padding: 0px;border: none;">
+                        <i class="fas fas fa-edit"></i>
+                      </button>
+                    </form>
+                  </span>     
+                </td>
+
+                <!-- <td><span class="badge bg-danger">55%</span></td> -->
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+    {% endif %}
+    
+    <!-- END   Tabla con los distintos experimentos del usuario  -->
+    <p>
+        <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" data-target="#section-new-experiment"
+        aria-expanded="true" aria-controls="section-new-experiment">
+            Nueva Experimentación
+        </button>
+    </p>
+    <div class="collapse" id="section-new-experiment">
+        <!--BEGIN Input Base de datos -->
+        <!-- Hay que realizar la carga de los elementos de forma dinámica-->
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+            <form action="{% url 'dashboard:create_experimentation' %}" method="post"  >
+              {% csrf_token %}
+              
+              <div class="form-group">
+                  <label for="name_experiments">{{formNewExperiment.name.label }}</label>
+                    {{ formNewExperiment.name }}
+                    {% if formNewExperiment.name.error_messages %} 
+                      <div class="alert alert-danger" role="alert">
+                        {{formNewExperiment.name.error_messages}}
+                      </div>
+                    {% endif %}
+
+                  <small id="nameExpHelp" class="form-text text-muted">Debe ser un nombre descriptivo.</small>
+              </div>
+              <!-- Select name BBDD in forms -->
+              <div class="form-group">
+                  <label for="FormSelectControlBBDD">{{formNewExperiment.name_bbdd.label }} </label>
+                      {{ formNewExperiment.name_bbdd }}
+                  <small id="selectBDHelp" class="form-text text-muted">Elija la base de datos sobre el que va seleccionar el
+                      conjunto de datos de la experimentación.</small>
+              </div>
+              
+              <div id="accordion-date">
+                <div class="card">
+                  <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                      <label class="btn btn-link" data-toggle="collapse" data-target="#section-date-partition-experiment" 
+                      aria-expanded="true" aria-controls="section-date-partition-experiment">
+                        Pinche aquí y seleccione un intervalo de tiempo para la extracción del conjunto de datos ( por defecto, se seleccionaran todos los datos)
+                      </label>
+                    </h5>
+                  </div>
+                
+                  <div id="section-date-partition-experiment" class="collapse" aria-labelledby="headingOne" data-parent="#accordion-date">
+                    <div class="card-body">
+                      
+                      <div class="form-group">
+                        <label for="datepicker_init" class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" >{{ formNewExperiment.date_init.label }} </label>
+                        {{ formNewExperiment.date_init }}
+                        <i class="far fa-calendar-alt"></i>
+                      </div>
+        
+                      <div class="form-group">
+                          <label for="datepicker_end" class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">{{ formNewExperiment.date_end.label }} </label>
+                          </label>
+                          {{ formNewExperiment.date_end }}
+                          <i class="far fa-calendar-alt"></i>
+                      </div>                   
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                  <button type="submit" class="btn btn-primary btn-lg">Siguiente</button>
+              </div>
+              
+            </form>
+        </div>
+        
+        <!-- END  Input Base de datos -->    
+                
+    </div>
+
+    
+</section>
+
+{% endblock section-content %}
+
+{% block special_javascript %}
+    <!-- Auxiliary library daterangepicker -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
+    
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
+
+    <script src="{% static 'js/table-experiments.js' %}"></script>
+    <script src="{% static 'js/calendar-experiment.js' %}"></script>
+      
+{% endblock %}

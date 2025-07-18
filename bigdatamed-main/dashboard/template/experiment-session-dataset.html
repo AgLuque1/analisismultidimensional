@@ -1,0 +1,35 @@
+<table class="table" id="table_experiments">
+    <thead>
+      <tr>
+        
+        <th>Fecha de creación</th>
+        <th>Titulo de la experimentación</th>
+        <th>Base Datos Seleccionada</th>
+        <th>Fecha inicio del DataSet</th>
+        <th>Fecha fin del DataSet</th>
+        <th>Selección de campos del DataSet</th>
+        <!-- <th style="width: 40px">Label</th> -->
+      </tr>
+    </thead>
+    <tbody>
+     
+      <tr>
+
+       
+        <td> {{ request.session.date_create_exp }}   </td>
+        <td> {{ request.session.name_exp }}          </td>
+        <td> {{ request.session.select_bbdd }}       </td>
+        <td> {{ request.session.date_init }}         </td>
+        <td> {{ request.session.date_end }}          </td>
+        <td>  {% if not  request.session.filter_apply %} 
+                Ninguno seleccionado.
+              {% else %}
+                {{ request.session.filter_apply }}      
+              {% endif %}
+        </td>
+
+        <!-- <td><span class="badge bg-danger">55%</span></td> -->
+      </tr>
+     
+    </tbody>
+  </table>

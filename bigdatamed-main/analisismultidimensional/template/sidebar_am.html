@@ -1,0 +1,90 @@
+{% load static %}
+<!-- Main Sidebar Container -->
+ <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="main_template_am.html" class="brand-link">
+    
+      <span data-i18n="tituloSidebar" class="brand-text font-weight-light">i18next.t('tituloSidebar')</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{{ user.profile.image.url }}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="{% url 'dashboard:profile_user' %}" class="d-block">{{user.username}}</a>
+        </div>
+      </div>
+    
+      <!--
+       SidebarSearch Form -
+      <div class="form-inline">
+        <div class="input-group" data-widget="sidebar-search">
+          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+          <div class="input-group-append">
+            <button class="btn btn-sidebar">
+              <i class="fas fa-search fa-fw"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+       -->
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item menu-is-opening">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fa fa-cube"></i>
+              <p data-i18n="crearCuboSidebar">
+                i18next.t('crearCuboSidebar')
+              </p>
+              <i class="right fas fa-angle-left"></i>
+            </a>
+
+            <ul class="nav nav-treeview" style="display: none;">
+             
+
+              <li class="nav-item">
+                <a href="{% url 'analisismultidimensional:crear_cubo' %}" class="nav-link">
+                  <i class="nav-icon fas fa-th"></i>
+                  <p data-i18n="nuevoCuboSidebar">i18next.t('nuevoCuboSidebar')</p>
+                </a>
+              </li>
+              <!--
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-copy"></i>
+                  <p data-i18n="existenteCuboSidebar">i18next.t('existenteCuboSidebar')</p>
+                </a>
+              </li>-->
+
+            </ul>
+          </li>
+
+          <li class="nav-item">
+            <a href="{% url 'analisismultidimensional:cubos' %}" class="nav-link">
+              <i class="nav-icon fas fa-cubes"></i>
+              <p data-i18n="misCubosSidebar">i18next.t('misCubosSidebar')</p>
+            </a>
+          </li>
+          <!---
+          <li class="nav-item">
+            <a href="http://localhost:8007/cubetext/admin" class="nav-link">
+              <i class="nav-icon fas fa-copy"></i>
+              <p data-i18n="visualizacionSidebar">i18next.t('visualizacionSidebar')</p>
+            </a>
+          </li> --->
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+
+ 

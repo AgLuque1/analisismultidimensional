@@ -1,0 +1,1206 @@
+{% extends "main_template.html" %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block section-content %}
+
+<section class="content">
+
+    <br/>
+    <h5>Fecha de ejecución del algoritmo: {{ri.dateOfCreation}}</h5>
+    <br/>
+
+    <div class="container row my-5">
+
+        <div class="card col-2" style="width: 30rem;">
+                <div class="row">
+                    <table class="table" >
+                            <td>{{ri.dfShow | linebreaks }}</td>
+                    </table>
+                </div>
+                <br/>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">Primeras 20 líneas del dataframe usado en el algoritmo</h5>
+                </div>
+        </div>
+
+        <div class="card col" style="width: 30rem;">
+                <div class="row">
+                    <table class="table" >
+                            <td style="text-align:center">{{ri.dfSchema | linebreaks}}</td>
+                    </table>
+                </div>
+                <br/>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">Esquema del dataframe usado en el algoritmo</h5>
+                </div>
+        </div>
+
+        <div class="card col " style="width: 30rem;">
+                <div class="row">
+                    <table class="table" >
+                            <td style="text-align:center">{{ri.dfShape}}</td>
+                    </table>
+                </div>
+                <br/>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">Dimensiones del dataframe usado en el algoritmo (filas x columnas)</h5>
+                </div>
+        </div>
+
+    </div>
+
+    {% comment %}Logistic regression results{% endcomment %}
+
+    {% if selected_algorithm == "BinaryLogisticRegression" %}
+
+        <br/>
+        <h5>Parámetros usados en la ejecución del algoritmo</h5>
+        <br/>
+
+        <table class="tg table table-hover">
+            <thead>
+              <tr class="">
+                      <th>Parámetro</th>
+                      <th>Descripción</th>
+                      <th>Valor de entrada</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Maxiter</td>
+                    <td>Número máximo de iteraciones por algoritmo</td>
+                    <td>{{ri.maxIter}}</td>
+                </tr>
+                <tr>
+                    <td>Parallelism</td>
+                    <td>Número de hilos a usar en la validación cruzada</td>
+                    <td>{{ri.parallelism}}</td>
+                </tr>
+                <tr>
+                    <td>Número de folds</td>
+                    <td>Número de particiones entrenamiento-test en la validación cruzada</td>
+                    <td>{{ri.numFolds}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <br/>
+        <h5>Resultados de la ejecución del algoritmo:</h5>
+        <br/>
+
+        <table class="tg table table-hover">
+            <thead>
+              <tr class="">
+                      <th>Medida</th>
+                      <th>Descripción</th>
+                      <th>Resultado</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Tiempo de ejecución</td>
+                    <td>Tiempo de ejecución del algoritmo (no se considera el tiempo de carga de datos)</td>
+                    <td>{{ri.executionTime}}</td>
+                </tr>
+                <tr>
+                    <td>Media de AUC</td>
+                    <td>Media de AUC de cada conjunto de test o validación de cada fold (no del conjunto de entrenamiento). Área que se encuentra bajo la curva ROC.</td>
+                    <td>{{ri.aucMean}}</td>
+                </tr>
+                <tr>
+                    <td>AUC Best</td>
+                    <td>AUC del mejor modelo de entrenamiento encontrado en la cross validation</td>
+                    <td>{{ri.aucBest}}</td>
+                </tr>
+                <tr>
+                    <td>Mejor Accuracy</td>
+                    <td>Accuracy del mejor modelo de entrenamiento encontrado en la cross validation. Accuracy = (TP+TN)/(P+N) </td>
+                    <td>{{ri.accuracyBest}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="container row my-5">
+
+        <div class="card col " style="width: 30rem;">
+                <div class="row">
+                    <table class="table" >
+                            <td style="text-align:center"><img src="data:image/png;base64,{{ri.coeffImage}}" class="mx-auto d-block" style="width: 20rem; height: 20rem" alt=""></td>
+                    </table>
+                </div>
+                <br/>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">Coeficientes de regresión logística del mejor modelo. </h5>
+                </div>
+        </div>
+
+        <div class="card col" style="width: 30rem;">
+            <div class="row">
+                <table class="table" >
+                            <td style="text-align:center"><img src="data:image/png;base64,{{ri.rocImage}}" class="mx-auto d-block" style="width: 20rem; height: 20rem" alt=""></td>
+                    </table>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Curva ROC del mejor modelo </h5>
+              <div class="accordion my-2" id="accordionExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                      Más detalles sobre la curva ROC
+                    </button>
+                  </h2>
+                  <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      Los gráficos ROC (Receiver operating characteristic) son gráficos bidimensionales en los que la ratio de verdaderos positivos se grafica en el eje de ordenadas y la ratio de falsos positivos en el de abscisas. Se puede interpretar que estos gráficos representan la relación o compensación entre los beneficios (TP) y los costes (FP). Una característica que los hace particularmente interesantes es la capacidad de no ser sensibles a los cambios en la distribución de las clases, por lo que, si la proporción de instancias negativas o positivas cambia en un conjunto de test, el gráfico ROC no se verá afectado.
+                    </div>
+                  </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card col " style="width: 30rem;">
+                <div class="row">
+                    <table class="table" >
+                            <td style="text-align:center"><img src="data:image/png;base64,{{ri.prImage}}" class="mx-auto d-block" style="width: 20rem; height: 20rem" alt=""></td>
+                    </table>
+                </div>
+                <br/>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">Curva Precision/Recall, se aplican las explicaciones de la curva ROC.</h5>
+                </div>
+        </div>
+
+    </div>
+
+    {% endif %}
+
+    {% if selected_algorithm == "MulticlassLogisticRegression" %}
+        <br/>
+        <h5>Parámetros usados en la ejecución del algoritmo</h5>
+        <br/>
+
+        <table class="tg table table-hover">
+            <thead>
+              <tr class="">
+                      <th>Parámetro</th>
+                      <th>Descripción</th>
+                      <th>Valor de entrada</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Maxiter</td>
+                    <td>Número máximo de iteraciones por algoritmo</td>
+                    <td>{{ri.maxIter}}</td>
+                </tr>
+                <tr>
+                    <td>Parallelism</td>
+                    <td>Número de hilos a usar en la validación cruzada</td>
+                    <td>{{ri.parallelism}}</td>
+                </tr>
+                <tr>
+                    <td>Número de folds</td>
+                    <td>Número de particiones entrenamiento-test en la validación cruzada</td>
+                    <td>{{ri.numFolds}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <br/>
+        <h5>Resultados de la ejecución del algoritmo:</h5>
+        <br/>
+
+        <table class="tg table table-hover">
+            <thead>
+              <tr class="">
+                      <th>Medida</th>
+                      <th>Descripción</th>
+                      <th>Resultado</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Tiempo de ejecución</td>
+                    <td>Tiempo de ejecución del algoritmo (no se considera el tiempo de carga de datos)</td>
+                    <td>{{ri.executionTime}}</td>
+                </tr>
+                <tr>
+                    <td>F1-Score</td>
+                    <td>Media de F1 Score de cada conjunto de test o validación de cada fold (no del conjunto de entrenamiento). F1Score = TP/(TP+1/2(FP+FN)) </td>
+                    <td>{{ri.f1Mean}}</td>
+                </tr>
+                <tr>
+                    <td>Matriz de coeficientes</td>
+                    <td>Matriz con los coeficientes de regresión logística del mejor modelo.</td>
+                    <td>{{ri.coeffMatrix}}</td>
+                </tr>
+                <tr>
+                    <td>Mejor Accuracy</td>
+                    <td>Accuracy del mejor modelo de entrenamiento encontrado en la cross validation. Accuracy = (TP+TN)/(P+N) </td>
+                    <td>{{ri.accuracyBest}}</td>
+                </tr>
+                <tr>
+                    <td>F1-Score por etiqueta</td>
+                    <td>F1-Score por etiqueta del mejor modelo de entrenamiento encontrado en la cross validation.</td>
+                    <td>{{ri.f1ByLabel}}</td>
+                </tr>
+                <tr>
+                    <td>False Positive Rate Score por etiqueta</td>
+                    <td>False Positive Rate Score por etiqueta en el mejor modelo encontrado en la cross validation. FPR = FP/N</td>
+                    <td>{{ri.fprByLabel}}</td>
+                </tr>
+                <tr>
+                    <td>Precision por etiqueta</td>
+                    <td>Precision por etiqueta en el mejor modelo encontrado en la cross validation. Precision = TP/(TP+FP) </td>
+                    <td>{{ri.precisionByLabel}}</td>
+                </tr>
+                <tr>
+                    <td>Recall por etiqueta</td>
+                    <td>Recall, Sensibilidad o Ratio de verdaderos positivos por etiqueta en el mejor modelo encontrado en la cross validation. Recall = TP/P = 1-FN rate </td>
+                    <td>{{ri.recallByLabel}}</td>
+                </tr>
+                <tr>
+                    <td>F1-Score ponderado</td>
+                    <td>F1-Score ponderado del mejor modelo de entrenamiento encontrado en la cross validation.</td>
+                    <td>{{ri.f1Weighted}}</td>
+                </tr>
+                <tr>
+                    <td>False Positive Rate Score ponderado</td>
+                    <td>False Positive Rate Score ponderado en el mejor modelo encontrado en la cross validation. FPR = FP/N</td>
+                    <td>{{ri.fprWeighted}}</td>
+                </tr>
+                <tr>
+                    <td>Precision ponderado</td>
+                    <td>Precision ponderado en el mejor modelo encontrado en la cross validation. Precision = TP/(TP+FP) </td>
+                    <td>{{ri.precisionWeighted}}</td>
+                </tr>
+                <tr>
+                    <td>Recall ponderado</td>
+                    <td>Recall, Sensibilidad o Ratio de verdaderos positivos ponderada en el mejor modelo encontrado en la cross validation. Recall = TP/P = 1-FN rate </td>
+                    <td>{{ri.recallWeighted}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+    {% endif %}
+
+    {% comment %}Binary Algorithms results{% endcomment %}
+
+    {% if type == "Binary" %}
+
+        <br/>
+        <h5>Parámetros usados en la ejecución del algoritmo</h5>
+        <br/>
+
+        <table class="tg table table-hover">
+            <thead>
+              <tr class="">
+                      <th>Parámetro</th>
+                      <th>Descripción</th>
+                      <th>Valor de entrada</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Parallelism</td>
+                    <td>Número de hilos a usar en la validación cruzada</td>
+                    <td>{{ri.parallelism}}</td>
+                </tr>
+                <tr>
+                    <td>Número de folds</td>
+                    <td>Número de particiones entrenamiento-test en la validación cruzada</td>
+                    <td>{{ri.numFolds}}</td>
+                </tr>
+
+        {% if selected_algorithm == "BinaryDecisionTree" %}
+
+            <tr>
+                <td>maxDepth</td>
+                <td>Máxima profundidad del árbol, ha de ser mayor que 0</td>
+                <td>{{ri.maxDepth}}</td>
+            </tr>
+            <tr>
+                <td>maxBins</td>
+                <td>Max number of bins for discretizing continuous features. Must be >=2 and >= number of categories for any categorical feature.</td>
+                <td>{{ri.maxBins}}</td>
+            </tr> 
+            <tr>
+                <td>minInstancesPerNode</td>
+                <td>Minimum number of instances each child must have after split. If a split causes the left or right child to have fewer than minInstancesPerNode, the split will be discarded as invalid. Should be >= 1.</td>
+                <td>{{ri.minInstancesPerNode}}</td>
+            </tr> 
+            <tr>
+                <td>minInfoGain</td>
+                <td>Minimum information gain for a split to be considered at a tree node.</td>
+                <td>{{ri.minInfoGain}}</td>
+            </tr> 
+            <tr>
+                <td>maxMemoryInMB</td>
+                <td>Maximum memory in MB allocated to histogram aggregation. If too small, then 1 node will be split per iteration, and its aggregates may exceed this size.</td>
+                <td>{{ri.maxMemoryInMB}}</td>
+            </tr> 
+            <tr>
+                <td>impurity</td>
+                <td>Criterion used for information gain calculation (case-insensitive). Supported options: entropy, gini</td>
+                <td>{{ri.impurity}}</td>
+            </tr> 
+
+            </tbody>
+        </table>
+
+        {% elif selected_algorithm == "BinaryRandomForest" %}
+
+            <tr>
+                <td>maxDepth</td>
+                <td>Máxima profundidad del árbol, ha de ser mayor que 0</td>
+                <td>{{ri.maxDepth}}</td>
+            </tr>
+            <tr>
+                <td>maxBins</td>
+                <td>Max number of bins for discretizing continuous features. Must be >=2 and >= number of categories for any categorical feature.</td>
+                <td>{{ri.maxBins}}</td>
+            </tr> 
+            <tr>
+                <td>minInstancesPerNode</td>
+                <td>Minimum number of instances each child must have after split. If a split causes the left or right child to have fewer than minInstancesPerNode, the split will be discarded as invalid. Should be >= 1.</td>
+                <td>{{ri.minInstancesPerNode}}</td>
+            </tr> 
+            <tr>
+                <td>minInfoGain</td>
+                <td>Minimum information gain for a split to be considered at a tree node.</td>
+                <td>{{ri.minInfoGain}}</td>
+            </tr> 
+            <tr>
+                <td>maxMemoryInMB</td>
+                <td>Maximum memory in MB allocated to histogram aggregation. If too small, then 1 node will be split per iteration, and its aggregates may exceed this size.</td>
+                <td>{{ri.maxMemoryInMB}}</td>
+            </tr> 
+            <tr>
+                <td>impurity</td>
+                <td>Criterion used for information gain calculation (case-insensitive). Supported options: entropy, gini</td>
+                <td>{{ri.impurity}}</td>
+            </tr>
+            <tr>
+                <td>subsamplingRate</td>
+                <td>Fraction of the training data used for learning each decision tree, in range (0, 1].</td>
+                <td>{{ri.subsamplingRate}}</td>
+            </tr> 
+            <tr>
+                <td>featureSubsetStrategy</td>
+                <td>The number of features to consider for splits at each tree node. Supported options: 'auto' (choose automatically for task: If numTrees == 1, set to 'all'. If numTrees > 1 (forest), set to 'sqrt' for classification and to 'onethird' for regression), 'all' (use all features), 'onethird' (use 1/3 of the features), 'sqrt' (use sqrt(number of features)), 'log2' (use log2(number of features)), 'n' (when n is in the range (0, 1.0], use n * number of features. When n is in the range (1, number of features), use n features). default = 'auto'</td>
+                <td>{{ri.featureSubsetStrategy}}</td>
+            </tr> 
+            <tr>
+                <td>numTrees</td>
+                <td>Number of trees to train (>= 1).</td>
+                <td>{{ri.numTrees}}</td>
+            </tr> 
+            <tr>
+                <td>bootstrap</td>
+                <td>Whether bootstrap samples are used when building trees.</td>
+                <td>{{ri.bootstrap}}</td>
+            </tr> 
+
+            </tbody>
+        </table>
+
+        {% elif selected_algorithm == "BinaryGBT" %}
+
+            <tr>
+                <td>maxDepth</td>
+                <td>Máxima profundidad del árbol, ha de ser mayor que 0</td>
+                <td>{{ri.maxDepth}}</td>
+            </tr>
+            <tr>
+                <td>maxBins</td>
+                <td>Max number of bins for discretizing continuous features. Must be >=2 and >= number of categories for any categorical feature.</td>
+                <td>{{ri.maxBins}}</td>
+            </tr> 
+            <tr>
+                <td>minInstancesPerNode</td>
+                <td>Minimum number of instances each child must have after split. If a split causes the left or right child to have fewer than minInstancesPerNode, the split will be discarded as invalid. Should be >= 1.</td>
+                <td>{{ri.minInstancesPerNode}}</td>
+            </tr> 
+            <tr>
+                <td>minInfoGain</td>
+                <td>Minimum information gain for a split to be considered at a tree node.</td>
+                <td>{{ri.minInfoGain}}</td>
+            </tr> 
+            <tr>
+                <td>maxMemoryInMB</td>
+                <td>Maximum memory in MB allocated to histogram aggregation. If too small, then 1 node will be split per iteration, and its aggregates may exceed this size.</td>
+                <td>{{ri.maxMemoryInMB}}</td>
+            </tr> 
+            <tr>
+                <td>impurity</td>
+                <td>Criterion used for information gain calculation (case-insensitive). Supported options: entropy, gini</td>
+                <td>{{ri.impurity}}</td>
+            </tr>
+            <tr>
+                <td>subsamplingRate</td>
+                <td>Fraction of the training data used for learning each decision tree, in range (0, 1].</td>
+                <td>{{ri.subsamplingRate}}</td>
+            </tr> 
+            <tr>
+                <td>featureSubsetStrategy</td>
+                <td>The number of features to consider for splits at each tree node. Supported options: 'auto' (choose automatically for task: If numTrees == 1, set to 'all'. If numTrees > 1 (forest), set to 'sqrt' for classification and to 'onethird' for regression), 'all' (use all features), 'onethird' (use 1/3 of the features), 'sqrt' (use sqrt(number of features)), 'log2' (use log2(number of features)), 'n' (when n is in the range (0, 1.0], use n * number of features. When n is in the range (1, number of features), use n features). default = 'auto'</td>
+                <td>{{ri.featureSubsetStrategy}}</td>
+            </tr>
+            <tr>
+                <td>maxIter</td>
+                <td>max number of iterations (>= 0).</td>
+                <td>{{ri.maxIter}}</td>
+            </tr>
+            <tr>
+                <td>lossType</td>
+                <td>Loss function which GBT tries to minimize (case-insensitive). Supported options: logistic.</td>
+                <td>{{ri.lossType}}</td>
+            </tr>
+            <tr>
+                <td>validationTol</td>
+                <td>hreshold for stopping early when fit with validation is used. If the error rate on the validation input changes by less than the validationTol, then learning will stop early (before `maxIter`). This parameter is ignored when fit without validation is used.</td>
+                <td>{{ri.validationTol}}</td>
+            </tr>
+            <tr>
+                <td>stepSize</td>
+                <td>Step size (a.k.a. learning rate) in interval (0, 1] for shrinking the contribution of each estimator.</td>
+                <td>{{ri.stepSize}}</td>
+            </tr>
+            <tr>
+                <td>minWeightFractionPerNode</td>
+                <td>Minimum fraction of the weighted sample count that each child must have after split. If a split causes the fraction of the total weight in the left or right child to be less than minWeightFractionPerNode, the split will be discarded as invalid. Should be in interval [0.0, 0.5).</td>
+                <td>{{ri.minWeightFractionPerNode}}</td>
+            </tr>
+
+            </tbody>
+        </table>
+
+        {% elif selected_algorithm == "BinaryNaiveBayes" %}
+
+
+            <tr>
+                <td>smoothing</td>
+                <td>The smoothing parameter, should be >= 0, default is 1.0</td>
+                <td>{{ri.smoothing}}</td>
+            </tr>
+            <tr>
+                <td>modelType</td>
+                <td>The model type which is a string (case-sensitive). Supported options: multinomial (default), bernoulli and gaussian.</td>
+                <td>{{ri.modelType}}</td>
+            </tr>
+
+            </tbody>
+        </table>
+
+        {% elif selected_algorithm == "BinaryLinearSVC" %}
+
+            <tr>
+                <td>maxIter</td>
+                <td>max number of iterations (>= 0).</td>
+                <td>{{ri.maxIter}}</td>
+            </tr>
+            <tr>
+                <td>regParam</td>
+                <td>regularization parameter (>= 0).</td>
+                <td>{{ri.regParam}}</td>
+            </tr>
+            <tr>
+                <td>standardization</td>
+                <td>whether to standardize the training features before fitting the model.</td>
+                <td>{{ri.standardization}}</td>
+            </tr>
+            <tr>
+                <td>tol</td>
+                <td>the convergence tolerance for iterative algorithms (>= 0).</td>
+                <td>{{ri.tol}}</td>
+            </tr>
+
+            </tbody>
+        </table>
+
+        {% endif %}
+
+        <br/>
+        <h5>Resultados de la ejecución del algoritmo:</h5>
+        <br/>
+
+        <table class="tg table table-hover">
+            <thead>
+              <tr class="">
+                      <th>Medida</th>
+                      <th>Descripción</th>
+                      <th>Resultado</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Tiempo de ejecución</td>
+                    <td>Tiempo de ejecución del algoritmo (no se considera el tiempo de carga de datos)</td>
+                    <td>{{ri.executionTime}}</td>
+                </tr>
+                <tr>
+                    <td>Mapeo de etiquetas</td>
+                    <td>Mapeo de etiquetas realizado durante el preprocesamiento del conjunto</td>
+                    <td>{{ri.labelMapping}}</td>
+                </tr>
+                <tr>
+                    <td>Media de AUC</td>
+                    <td>Media de AUC de cada conjunto de test o validación de cada fold (no del conjunto de entrenamiento). Área que se encuentra bajo la curva ROC.</td>
+                    <td>{{ri.aucMean}}</td>
+                </tr>
+                <tr>
+                    <td>AUC Best</td>
+                    <td>AUC del mejor modelo de entrenamiento encontrado en la cross validation</td>
+                    <td>{{ri.aucBest}}</td>
+                </tr>
+                <tr>
+                    <td>Mejor Accuracy</td>
+                    <td>Accuracy del mejor modelo de entrenamiento encontrado en la cross validation. Accuracy = (TP+TN)/(P+N) </td>
+                    <td>{{ri.accuracyBest}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="container row my-5">
+
+            <div class="card col " style="width: 30rem;">
+                    <div class="row">
+                        <table class="table" >
+                                <td style="text-align:center"><img src="data:image/png;base64,{{ri.cmBest}}" class="mx-auto d-block" style="width: 20rem; height: 20rem" alt=""></td>
+                        </table>
+                    </div>
+                    <br/>
+                    <div class="card-body">
+                      <h5 class="card-title" style="text-align:center">Matriz de confusión del mejor modelo. Contiene la información sobre verdaderos positivos, falsos positivos, falsos negativos y verdaderos negativos. </h5>
+                    </div>
+            </div>
+
+            <div class="card col " style="width: 30rem;">
+                    <div class="row">
+                        <table class="table" >
+                                <td style="text-align:center"><img src="data:image/png;base64,{{ri.cmNormBest}}" class="mx-auto d-block" style="width: 20rem; height: 20rem" alt=""></td>
+                        </table>
+                    </div>
+                    <br/>
+                    <div class="card-body">
+                      <h5 class="card-title" style="text-align:center"> Matriz de confusión normalizada del mejor modelo. Contiene la información sobre verdaderos positivos, falsos positivos, falsos negativos y verdaderos negativos. </h5>
+                    </div>
+            </div>
+
+        </div>
+
+        Descripciones de las medidas a continuación
+
+        <table class="tg table table-hover">
+            <thead>
+              <tr class="">
+                      <th>Medida</th>
+                      <th>Descripción</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Precision</td>
+                    <td>Precision = TP/(TP+FP)</td>
+                </tr>
+                <tr>
+                    <td>Recall, Sensibilidad o Ratio de verdaderos positivos</td>
+                    <td>Recall = TP/P = 1-FN rate</td>
+                </tr>
+                <tr>
+                    <td>Ratio de falsos positivos</td>
+                    <td>Ratio de falsos positivos = FP/N</td>
+                </tr>
+                <tr>
+                    <td>Ratio de verdaderos negativos o especificidad:</td>
+                    <td>TNR = 1-FP rate</td>
+                </tr>
+                <tr>
+                    <td>F1-Score</td>
+                    <td>F1-Score = TP/(TP+1/2(FP+FN))   </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br/>
+        <br/>
+        Estas medidas, a excepción de la curva ROC, usan un threshold 0.5 por el funcionamiento del árbol de decisión (devuelve como predicción la etiqueta del nodo hoja con mayor proporción)
+        <br/>
+        <br/>
+        Considerando la etiqueta '0' como clase positiva
+        <br/>
+        <br/>
+        Precision: {{ri.precisionBest0}}
+        <br/>
+        Recall, Sensibilidad o Ratio de verdaderos positivos: {{ri.recallBest0}}
+        <br/>
+        Ratio de falsos positivos: {{ri.fprBest0}}
+        <br/>
+        Ratio de verdaderos negativos o especificidad: {{ri.tnrBest0}}
+        <br/>
+        F1-Score: {{ri.f1Score0}}
+        <br/>
+
+        {% if selected_algorithm != "BinaryGBT" and selected_algorithm != "BinaryLinearSVC" %}
+
+            Curva ROC manualmente obtenida de las proporciones de cada clase en los nodos hoja:
+            <br/>
+            ROC_image_0
+            <br/>
+            <img src="data:image/png;base64,{{ri.rocImage0}}" alt="" height="500", width="500">
+            <br/>
+            <br/>
+
+        {% else %}
+
+            Este algoritmo es un clasificador discreto, por lo que no puede representarse una curva ROC. Aparecería un único punto en el espacio con valor ({{ri.fprBest0}} , {{ri.recallBest0}}) 
+            <br/>
+
+        {% endif %}
+
+        <br/>
+        Considerando la etiqueta '1' como clase positiva
+        <br/>
+        <br/>
+        Precision: {{ri.precisionBest1}}
+        <br/>
+        Recall, Sensibilidad o Ratio de verdaderos positivos: {{ri.recallBest1}}
+        <br/>
+        Ratio de falsos positivos: {{ri.fprBest1}}
+        <br/>
+        Ratio de verdaderos negativos o especificidad: {{ri.tnrBest1}}
+        <br/>
+        F1-Score: {{ri.f1Score1}}
+        <br/>
+
+        {% if selected_algorithm != "BinaryGBT" and selected_algorithm != "BinaryLinearSVC"%}
+
+            Curva ROC manualmente obtenida de las proporciones de cada clase en los nodos hoja:
+            <br/>
+            ROC_image_1
+            <br/>
+            <img src="data:image/png;base64,{{ri.rocImage1}}" alt="" height="500", width="500">
+            <br/>
+            <br/>
+
+        {% else %}
+
+            Este algoritmo es un clasificador discreto, por lo que no puede representarse una curva ROC. Aparecería un único punto en el espacio con valor ({{ri.fprBest1}} , {{ri.recallBest1}}) 
+            <br/>
+
+        {% endif %}
+
+        <br/>
+
+    {% endif %}
+
+    {% comment %}Multiclass Algorithms results{% endcomment %}
+
+    {% if type == "Multiclass" %}
+
+        <br/>
+        <h5>Parámetros usados en la ejecución del algoritmo</h5>
+        <br/>
+
+        <table class="tg table table-hover">
+            <thead>
+              <tr class="">
+                      <th>Parámetro</th>
+                      <th>Descripción</th>
+                      <th>Valor de entrada</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Parallelism</td>
+                    <td>Número de hilos a usar en la validación cruzada</td>
+                    <td>{{ri.parallelism}}</td>
+                </tr>
+                <tr>
+                    <td>Número de folds</td>
+                    <td>Número de particiones entrenamiento-test en la validación cruzada</td>
+                    <td>{{ri.numFolds}}</td>
+                </tr>
+
+        {% if selected_algorithm == "MulticlassDecisionTree" %}
+            <tr>
+                <td>maxDepth</td>
+                <td>Máxima profundidad del árbol, ha de ser mayor que 0</td>
+                <td>{{ri.maxDepth}}</td>
+            </tr>
+            <tr>
+                <td>maxBins</td>
+                <td>Max number of bins for discretizing continuous features. Must be >=2 and >= number of categories for any categorical feature.</td>
+                <td>{{ri.maxBins}}</td>
+            </tr> 
+            <tr>
+                <td>minInstancesPerNode</td>
+                <td>Minimum number of instances each child must have after split. If a split causes the left or right child to have fewer than minInstancesPerNode, the split will be discarded as invalid. Should be >= 1.</td>
+                <td>{{ri.minInstancesPerNode}}</td>
+            </tr> 
+            <tr>
+                <td>minInfoGain</td>
+                <td>Minimum information gain for a split to be considered at a tree node.</td>
+                <td>{{ri.minInfoGain}}</td>
+            </tr> 
+            <tr>
+                <td>maxMemoryInMB</td>
+                <td>Maximum memory in MB allocated to histogram aggregation. If too small, then 1 node will be split per iteration, and its aggregates may exceed this size.</td>
+                <td>{{ri.maxMemoryInMB}}</td>
+            </tr> 
+            <tr>
+                <td>impurity</td>
+                <td>Criterion used for information gain calculation (case-insensitive). Supported options: entropy, gini</td>
+                <td>{{ri.impurity}}</td>
+            </tr> 
+
+            </tbody>
+        </table>
+
+        {% elif selected_algorithm == "MulticlassRandomForest" %}
+
+           <tr>
+                <td>maxDepth</td>
+                <td>Máxima profundidad del árbol, ha de ser mayor que 0</td>
+                <td>{{ri.maxDepth}}</td>
+            </tr>
+            <tr>
+                <td>maxBins</td>
+                <td>Max number of bins for discretizing continuous features. Must be >=2 and >= number of categories for any categorical feature.</td>
+                <td>{{ri.maxBins}}</td>
+            </tr> 
+            <tr>
+                <td>minInstancesPerNode</td>
+                <td>Minimum number of instances each child must have after split. If a split causes the left or right child to have fewer than minInstancesPerNode, the split will be discarded as invalid. Should be >= 1.</td>
+                <td>{{ri.minInstancesPerNode}}</td>
+            </tr> 
+            <tr>
+                <td>minInfoGain</td>
+                <td>Minimum information gain for a split to be considered at a tree node.</td>
+                <td>{{ri.minInfoGain}}</td>
+            </tr> 
+            <tr>
+                <td>maxMemoryInMB</td>
+                <td>Maximum memory in MB allocated to histogram aggregation. If too small, then 1 node will be split per iteration, and its aggregates may exceed this size.</td>
+                <td>{{ri.maxMemoryInMB}}</td>
+            </tr> 
+            <tr>
+                <td>impurity</td>
+                <td>Criterion used for information gain calculation (case-insensitive). Supported options: entropy, gini</td>
+                <td>{{ri.impurity}}</td>
+            </tr>
+            <tr>
+                <td>subsamplingRate</td>
+                <td>Fraction of the training data used for learning each decision tree, in range (0, 1].</td>
+                <td>{{ri.subsamplingRate}}</td>
+            </tr> 
+            <tr>
+                <td>featureSubsetStrategy</td>
+                <td>The number of features to consider for splits at each tree node. Supported options: 'auto' (choose automatically for task: If numTrees == 1, set to 'all'. If numTrees > 1 (forest), set to 'sqrt' for classification and to 'onethird' for regression), 'all' (use all features), 'onethird' (use 1/3 of the features), 'sqrt' (use sqrt(number of features)), 'log2' (use log2(number of features)), 'n' (when n is in the range (0, 1.0], use n * number of features. When n is in the range (1, number of features), use n features). default = 'auto'</td>
+                <td>{{ri.featureSubsetStrategy}}</td>
+            </tr> 
+            <tr>
+                <td>numTrees</td>
+                <td>Number of trees to train (>= 1).</td>
+                <td>{{ri.numTrees}}</td>
+            </tr> 
+            <tr>
+                <td>bootstrap</td>
+                <td>Whether bootstrap samples are used when building trees.</td>
+                <td>{{ri.bootstrap}}</td>
+            </tr> 
+
+            </tbody>
+        </table>
+
+        {% elif selected_algorithm == "MulticlassNaiveBayes" %}
+
+            <tr>
+                <td>smoothing</td>
+                <td>The smoothing parameter, should be >= 0, default is 1.0</td>
+                <td>{{ri.smoothing}}</td>
+            </tr>
+            <tr>
+                <td>modelType</td>
+                <td>The model type which is a string (case-sensitive). Supported options: multinomial (default), bernoulli and gaussian.</td>
+                <td>{{ri.modelType}}</td>
+            </tr>
+
+            </tbody>
+        </table>
+
+        {% endif %}
+
+        <br/>
+        <h5>Resultados de la ejecución del algoritmo:</h5>
+        <br/>
+
+        <table class="tg table table-hover">
+            <thead>
+              <tr class="">
+                      <th>Medida</th>
+                      <th>Descripción</th>
+                      <th>Resultado</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Tiempo de ejecución</td>
+                    <td>Tiempo de ejecución del algoritmo (no se considera el tiempo de carga de datos)</td>
+                    <td>{{ri.executionTime}}</td>
+                </tr>
+                <tr>
+                    <td>Mapeo de etiquetas</td>
+                    <td>Mapeo de etiquetas realizado durante el preprocesamiento del conjunto</td>
+                    <td>{{ri.labelMapping}}</td>
+                </tr>
+                <tr>
+                    <td>Media de F1Mean</td>
+                    <td>Media de F1Mean de cada conjunto de test o validación de cada fold (no del conjunto de entrenamiento). F1-Score = TP/(TP+1/2(FP+FN))  </td>
+                    <td>{{ri.f1Mean}}</td>
+                </tr>
+                <tr>
+                    <td>Mejor Accuracy</td>
+                    <td>Accuracy del mejor modelo de entrenamiento encontrado en la cross validation. Accuracy = (TP+TN)/(P+N) </td>
+                    <td>{{ri.accuracyBest}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="container row my-5">
+
+            <div class="card col " style="width: 30rem;">
+                    <div class="row">
+                        <table class="table" >
+                                <td style="text-align:center"><img src="data:image/png;base64,{{ri.cmBest}}" class="mx-auto d-block" style="width: 20rem; height: 20rem" alt=""></td>
+                        </table>
+                    </div>
+                    <br/>
+                    <div class="card-body">
+                      <h5 class="card-title" style="text-align:center">Matriz de confusión del mejor modelo. Contiene la información sobre verdaderos positivos, falsos positivos, falsos negativos y verdaderos negativos. </h5>
+                    </div>
+            </div>
+
+            <div class="card col " style="width: 30rem;">
+                    <div class="row">
+                        <table class="table" >
+                                <td style="text-align:center"><img src="data:image/png;base64,{{ri.cmNormBest}}" class="mx-auto d-block" style="width: 20rem; height: 20rem" alt=""></td>
+                        </table>
+                    </div>
+                    <br/>
+                    <div class="card-body">
+                      <h5 class="card-title" style="text-align:center"> Matriz de confusión normalizada del mejor modelo. Contiene la información sobre verdaderos positivos, falsos positivos, falsos negativos y verdaderos negativos. </h5>
+                    </div>
+            </div>
+
+        </div>
+
+        Descripciones de las medidas a continuación
+
+        <table class="tg table table-hover">
+            <thead>
+              <tr class="">
+                      <th>Medida</th>
+                      <th>Descripción</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Precision</td>
+                    <td>Precision = TP/(TP+FP)</td>
+                </tr>
+                <tr>
+                    <td>Recall, Sensibilidad o Ratio de verdaderos positivos</td>
+                    <td>Recall = TP/P = 1-FN rate</td>
+                </tr>
+                <tr>
+                    <td>Ratio de falsos positivos</td>
+                    <td>Ratio de falsos positivos = FP/N</td>
+                </tr>
+                <tr>
+                    <td>Ratio de verdaderos negativos o especificidad:</td>
+                    <td>TNR = 1-FP rate</td>
+                </tr>
+                <tr>
+                    <td>F1-Score</td>
+                    <td>F1-Score = TP/(TP+1/2(FP+FN))   </td>
+                </tr>
+            </tbody>
+        </table>
+
+        Medidas por Etiqueta:
+        <br/>
+        <br/>
+        F1 Score por etiqueta en el mejor modelo encontrado en la cross validation {{ri.f1ByLabel}}
+        <br/>
+        False Positive Rate por etiqueta en el mejor modelo encontrado en la cross validation {{ri.fprByLabel}}
+        <br/>
+        True Negative Rate o especificidad por etiqueta en el mejor modelo encontrado en la cross validation {{ri.tnrByLabel}}
+        <br/>
+        Precision por etiqueta en el mejor modelo encontrado en la cross validation {{ri.precisionByLabel}}
+        <br/>
+        Recall, Sensibilidad o Ratio de verdaderos positivos por etiqueta en el mejor modelo encontrado en la cross validation {{ri.recallByLabel}}
+        <br/>
+        <br/>
+        Medidas ponderadas:
+        <br/>
+        <br/>
+        F1 Score ponderada en el mejor modelo encontrado en la cross validation {{ri.f1Weighted}}
+        <br/>
+        False Positive Rate ponderada en el mejor modelo encontrado en la cross validation {{ri.fprWeighted}}
+        <br/>
+        True Negative Rate o especificidad ponderada en el mejor modelo encontrado en la cross validation {{ri.tnrWeighted}}
+        <br/>
+        Precision ponderada en el mejor modelo encontrado en la cross validation {{ri.precisionWeighted}}
+        <br/>
+        Recall, Sensibilidad o Ratio de verdaderos positivos ponderada en el mejor modelo encontrado en la cross validation {{ri.recallWeighted}}
+        <br/>
+
+    {% endif %}
+
+    {% comment %}Regression Algorithms results{% endcomment %}
+
+    {% if type == "Regression" %}
+
+        <br/>
+        <h5>Parámetros usados en la ejecución del algoritmo</h5>
+        <br/>
+
+        <table class="tg table table-hover">
+            <thead>
+              <tr class="">
+                      <th>Parámetro</th>
+                      <th>Descripción</th>
+                      <th>Valor de entrada</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Parallelism</td>
+                    <td>Número de hilos a usar en la validación cruzada</td>
+                    <td>{{ri.parallelism}}</td>
+                </tr>
+                <tr>
+                    <td>Número de folds</td>
+                    <td>Número de particiones entrenamiento-test en la validación cruzada</td>
+                    <td>{{ri.numFolds}}</td>
+                </tr>
+
+        {% if selected_algorithm == "DecisionTreeRegression" %}
+
+            <tr>
+                <td>maxDepth</td>
+                <td>Máxima profundidad del árbol, ha de ser mayor que 0</td>
+                <td>{{ri.maxDepth}}</td>
+            </tr>
+            <tr>
+                <td>maxBins</td>
+                <td>Max number of bins for discretizing continuous features. Must be >=2 and >= number of categories for any categorical feature.</td>
+                <td>{{ri.maxBins}}</td>
+            </tr> 
+            <tr>
+                <td>minInstancesPerNode</td>
+                <td>Minimum number of instances each child must have after split. If a split causes the left or right child to have fewer than minInstancesPerNode, the split will be discarded as invalid. Should be >= 1.</td>
+                <td>{{ri.minInstancesPerNode}}</td>
+            </tr> 
+            <tr>
+                <td>minInfoGain</td>
+                <td>Minimum information gain for a split to be considered at a tree node.</td>
+                <td>{{ri.minInfoGain}}</td>
+            </tr> 
+            <tr>
+                <td>maxMemoryInMB</td>
+                <td>Maximum memory in MB allocated to histogram aggregation. If too small, then 1 node will be split per iteration, and its aggregates may exceed this size.</td>
+                <td>{{ri.maxMemoryInMB}}</td>
+            </tr> 
+            <tr>
+                <td>impurity</td>
+                <td>Criterion used for information gain calculation (case-insensitive). Supported options: variance</td>
+                <td>{{ri.impurity}}</td>
+            </tr> 
+
+            </tbody>
+        </table>
+
+        {% elif selected_algorithm == "RandomForestRegression" %}
+
+            <tr>
+                <td>maxDepth</td>
+                <td>Máxima profundidad del árbol, ha de ser mayor que 0</td>
+                <td>{{ri.maxDepth}}</td>
+            </tr>
+            <tr>
+                <td>maxBins</td>
+                <td>Max number of bins for discretizing continuous features. Must be >=2 and >= number of categories for any categorical feature.</td>
+                <td>{{ri.maxBins}}</td>
+            </tr> 
+            <tr>
+                <td>minInstancesPerNode</td>
+                <td>Minimum number of instances each child must have after split. If a split causes the left or right child to have fewer than minInstancesPerNode, the split will be discarded as invalid. Should be >= 1.</td>
+                <td>{{ri.minInstancesPerNode}}</td>
+            </tr> 
+            <tr>
+                <td>minInfoGain</td>
+                <td>Minimum information gain for a split to be considered at a tree node.</td>
+                <td>{{ri.minInfoGain}}</td>
+            </tr> 
+            <tr>
+                <td>maxMemoryInMB</td>
+                <td>Maximum memory in MB allocated to histogram aggregation. If too small, then 1 node will be split per iteration, and its aggregates may exceed this size.</td>
+                <td>{{ri.maxMemoryInMB}}</td>
+            </tr> 
+            <tr>
+                <td>impurity</td>
+                <td>Criterion used for information gain calculation (case-insensitive). Supported options: entropy, gini</td>
+                <td>{{ri.impurity}}</td>
+            </tr>
+            <tr>
+                <td>subsamplingRate</td>
+                <td>Fraction of the training data used for learning each decision tree, in range (0, 1].</td>
+                <td>{{ri.subsamplingRate}}</td>
+            </tr> 
+            <tr>
+                <td>featureSubsetStrategy</td>
+                <td>The number of features to consider for splits at each tree node. Supported options: 'auto' (choose automatically for task: If numTrees == 1, set to 'all'. If numTrees > 1 (forest), set to 'sqrt' for classification and to 'onethird' for regression), 'all' (use all features), 'onethird' (use 1/3 of the features), 'sqrt' (use sqrt(number of features)), 'log2' (use log2(number of features)), 'n' (when n is in the range (0, 1.0], use n * number of features. When n is in the range (1, number of features), use n features). default = 'auto'</td>
+                <td>{{ri.featureSubsetStrategy}}</td>
+            </tr> 
+            <tr>
+                <td>numTrees</td>
+                <td>Number of trees to train (>= 1).</td>
+                <td>{{ri.numTrees}}</td>
+            </tr> 
+            <tr>
+                <td>bootstrap</td>
+                <td>Whether bootstrap samples are used when building trees.</td>
+                <td>{{ri.bootstrap}}</td>
+            </tr> 
+
+            </tbody>
+        </table>
+
+        {% elif selected_algorithm == "GBTRegression" %}
+
+            <tr>
+                <td>maxDepth</td>
+                <td>Máxima profundidad del árbol, ha de ser mayor que 0</td>
+                <td>{{ri.maxDepth}}</td>
+            </tr>
+            <tr>
+                <td>maxBins</td>
+                <td>Max number of bins for discretizing continuous features. Must be >=2 and >= number of categories for any categorical feature.</td>
+                <td>{{ri.maxBins}}</td>
+            </tr> 
+            <tr>
+                <td>minInstancesPerNode</td>
+                <td>Minimum number of instances each child must have after split. If a split causes the left or right child to have fewer than minInstancesPerNode, the split will be discarded as invalid. Should be >= 1.</td>
+                <td>{{ri.minInstancesPerNode}}</td>
+            </tr> 
+            <tr>
+                <td>minInfoGain</td>
+                <td>Minimum information gain for a split to be considered at a tree node.</td>
+                <td>{{ri.minInfoGain}}</td>
+            </tr> 
+            <tr>
+                <td>maxMemoryInMB</td>
+                <td>Maximum memory in MB allocated to histogram aggregation. If too small, then 1 node will be split per iteration, and its aggregates may exceed this size.</td>
+                <td>{{ri.maxMemoryInMB}}</td>
+            </tr> 
+            <tr>
+                <td>impurity</td>
+                <td>Criterion used for information gain calculation (case-insensitive). Supported options: entropy, gini</td>
+                <td>{{ri.impurity}}</td>
+            </tr>
+            <tr>
+                <td>subsamplingRate</td>
+                <td>Fraction of the training data used for learning each decision tree, in range (0, 1].</td>
+                <td>{{ri.subsamplingRate}}</td>
+            </tr> 
+            <tr>
+                <td>featureSubsetStrategy</td>
+                <td>The number of features to consider for splits at each tree node. Supported options: 'auto' (choose automatically for task: If numTrees == 1, set to 'all'. If numTrees > 1 (forest), set to 'sqrt' for classification and to 'onethird' for regression), 'all' (use all features), 'onethird' (use 1/3 of the features), 'sqrt' (use sqrt(number of features)), 'log2' (use log2(number of features)), 'n' (when n is in the range (0, 1.0], use n * number of features. When n is in the range (1, number of features), use n features). default = 'auto'</td>
+                <td>{{ri.featureSubsetStrategy}}</td>
+            </tr>
+            <tr>
+                <td>maxIter</td>
+                <td>max number of iterations (>= 0).</td>
+                <td>{{ri.maxIter}}</td>
+            </tr>
+            <tr>
+                <td>lossType</td>
+                <td>Loss function which GBT tries to minimize (case-insensitive). Supported options: logistic.</td>
+                <td>{{ri.lossType}}</td>
+            </tr>
+            <tr>
+                <td>validationTol</td>
+                <td>hreshold for stopping early when fit with validation is used. If the error rate on the validation input changes by less than the validationTol, then learning will stop early (before `maxIter`). This parameter is ignored when fit without validation is used.</td>
+                <td>{{ri.validationTol}}</td>
+            </tr>
+            <tr>
+                <td>stepSize</td>
+                <td>Step size (a.k.a. learning rate) in interval (0, 1] for shrinking the contribution of each estimator.</td>
+                <td>{{ri.stepSize}}</td>
+            </tr>
+            <tr>
+                <td>minWeightFractionPerNode</td>
+                <td>Minimum fraction of the weighted sample count that each child must have after split. If a split causes the fraction of the total weight in the left or right child to be less than minWeightFractionPerNode, the split will be discarded as invalid. Should be in interval [0.0, 0.5).</td>
+                <td>{{ri.minWeightFractionPerNode}}</td>
+            </tr>
+
+            </tbody>
+        </table>
+
+        {% endif %}
+
+        <br/>
+        Resultados de la ejecución del algoritmo:
+        <br/>
+        Media de RMSE de cada conjunto de test o validación de cada fold (no del conjunto de entrenamiento): {{ri.rmseMean}}
+        <br/>
+        MAE del mejor modelo de entrenamiento encontrado en la cross validation: {{ri.maeBest}}
+        <br/>
+        MAPE del mejor modelo de entrenamiento encontrado en la cross validation: {{ri.mapeBest}}
+        <br/>
+        MSE del mejor modelo de entrenamiento encontrado en la cross validation: {{ri.mseBest}}
+        <br/>
+        RMSE del mejor modelo de entrenamiento encontrado en la cross validation: {{ri.rmseBest}}
+        <br/>
+        R2 o coeficiente de determinación del mejor modelo de entrenamiento encontrado en la cross validation: {{ri.r2Best}}
+
+        <div class="container row my-5">
+
+            <div class="card col " style="width: 30rem;">
+                    <div class="row">
+                        <table class="table" >
+                                <td style="text-align:center"><img src="data:image/png;base64,{{ri.regressionPlot}}" class="mx-auto d-block" style="width: 20rem; height: 20rem" alt=""></td>
+                        </table>
+                    </div>
+                    <br/>
+                    <div class="card-body">
+                      <h5 class="card-title" style="text-align:center">Valores reales vs predichos en regresión</h5>
+                    </div>
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock section-content %}
+
+{% block special_javascript %}
+
+<script src="{% static 'js/chartjs-library.js' %}"></script>
+<script src="{% static 'js/charts-custom.js' %}"></script>
+
+<script src="{% static 'js/data-table-custom.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/data-table-custom.css' %}"></link>
+
+
+{% endblock %}

@@ -1,0 +1,149 @@
+ {% load static %}
+ <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="{% url 'dashboard:home' %}" class="brand-link">
+<!--       <img src="{% static 'dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> -->
+        <img src="{% static 'img/logo_test.png' %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <span class="brand-text font-weight-light">BIGDATAMED</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{{ user.profile.image.url }}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="{% url 'dashboard:profile_user' %}" class="d-block">{{user.username}}</a>
+        </div>
+      </div>
+
+      <!-- SidebarSearch Form -->
+      <div class="form-inline">
+        <div class="input-group" data-widget="sidebar-search">
+          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+          <div class="input-group-append">
+            <button class="btn btn-sidebar">
+              <i class="fas fa-search fa-fw"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+    <!-- Sidebar Menu -->
+    <nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column " data-widget="treeview" role="menu" data-accordion="false">
+        <!-- Add icons to the links using the .nav-icon class
+            with font-awesome or any other icon font library -->
+        <li class="nav-item menu-open">
+          <a href="{% url 'dashboard:create_experimentation' %}" class="nav-link active">
+              <i class="nav-icon fas fa-tachometer-alt "></i>
+              <p>
+              Crear Experimentación
+              </p>
+          </a>       
+        </li>    
+        
+        <li class="nav-item menu-open">
+          <!-- <a href="{% url 'machinelearning:ML_dataset_config' %}" class="nav-link active"> -->
+          <a href="" class="nav-link active">
+              <i class="nav-icon fas fa-database"></i>
+              <p>
+              Configuración del conjunto de datos
+              </p>
+          </a>       
+        </li>
+        
+        <li class="nav-item menu-open">
+            
+<!--             If the subset is built, the item is activated, if not, it's disabled -->
+          {% if request.session.subset_built %} 
+            
+              <!-- <a href="{% url 'machinelearning:ML_show_cards' 4 %}" class="nav-link active"> -->
+              <a href="" class="nav-link active">
+                  <i class="nav-icon fas fa-search"></i>
+                  <p>
+                  Explorar datos
+                  </p>
+              </a> 
+              
+          {% else %}
+              
+              <a href="" class="nav-link bg-light">
+                  <i class="nav-icon fas fa-search"></i>
+                  <p>
+                  Explorar datos
+                  </p>
+              </a> 
+              
+          {% endif %}
+               
+        </li>
+        
+        <li class="nav-item menu-open">
+            
+          {% if request.session.subset_built %} 
+            
+              <!-- <a href="{% url 'machinelearning:ML_show_cards' 5 %}" class="nav-link active"> -->
+              <a href="" class="nav-link active">
+                  <i class="nav-icon fas fa-microchip"></i>
+                  <p>
+                  Extracción de conocimiento
+                  </p>
+              </a> 
+              
+          {% else %}
+              
+              <a href="" class="nav-link bg-light">
+                  <i class="nav-icon fas fa-microchip"></i>
+                  <p>
+                  Extracción de conocimiento
+                  </p>
+              </a> 
+              
+          {% endif %}
+            
+        </li>
+        
+        <li class="nav-item menu-open">
+            
+          {% if request.session.subset_built %} 
+            
+              <!-- <a href="{% url 'machinelearning:ML_previous_results' %}" class="nav-link active"> -->
+              <a href="" class="nav-link active">
+                  <i class="nav-icon fas fa-list-alt"></i>
+                  <p>
+                  Histórico de resultados
+                  </p>
+              </a>  
+              
+          {% else %}
+              
+              <a href="" class="nav-link bg-light">
+                  <i class="nav-icon fas fa-list-alt"></i>
+                  <p>
+                  Histórico de resultados
+                  </p>
+              </a> 
+              
+          {% endif %}
+                 
+        </li>
+
+        <li class="nav-item menu-open">
+          <a href="{% url 'analisismultidimensional:home' %}" class="nav-link active">
+              <i class="nav-icon fas fa-tachometer-alt "></i>
+              <p>
+              Análisis Multidimensional
+              </p>
+          </a>       
+        </li>  
+
+    </ul>
+    </nav>
+    <!-- /.sidebar-menu -->
+</div>
+<!-- /.sidebar -->
+</aside>

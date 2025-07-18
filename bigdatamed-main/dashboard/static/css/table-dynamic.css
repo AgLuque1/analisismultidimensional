@@ -1,0 +1,71 @@
+.ui-dialog-titlebar {
+    display: none !important;
+}
+
+.ui-button {
+    background: #ffffff !important;
+}
+
+#select_deselect_all {
+    cursor: pointer !important;
+    pointer-events: all !important;
+}
+
+.selectable-cell{
+    cursor: pointer !important;
+    pointer-events: all !important;
+}
+
+#selected_vars_div{
+    margin-left: 1% !important;
+}
+
+.variable-container {
+    padding-left:4px;
+    display: inline-block;
+}
+
+.variable-label {
+    display: inline-block;
+    border: none;
+    outline: none;
+    background-color: #bebebe;
+    color: #000000;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 1px 1px 1px #D3D3D3;
+    padding-left:4px;
+    padding-right:4px;
+    padding-top:1px;
+    padding-bottom:1px;
+    overflow: auto;
+    
+}
+
+.variable-label:hover {
+    background-color: #c1c1c1;
+    color: #505050
+}
+
+.close-icon{
+    line-height: 25px;
+    padding-left:4px;
+    vertical-align: top;
+    display:inline-block;
+}
+
+.fa-times-circle:hover{
+    color: #000000;
+}
+
+.circle-category-container{
+    line-height: 22px;
+    padding-left: 4px;
+    padding-right: 4px;
+    vertical-align: top;
+    display:inline-block;
+}
+
+.fa-circle{
+    text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
+}

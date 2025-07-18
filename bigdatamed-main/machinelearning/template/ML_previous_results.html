@@ -1,0 +1,55 @@
+{% extends "main_template.html" %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block section-content %}
+
+<section class="content">
+
+    <h5>Haga clic en el ID de la ejecución para acceder al análisis de resultados</h5>
+
+    {% for model,instances,measure in populated_models_instances %}
+
+        <br/>
+        Resultados para <strong>{{model}}</strong>:
+        <br/>
+        <br/>
+
+        <table class="tg table table-hover">
+            <thead>
+              <tr class="">
+                      <th>Id</th>
+                      <th>Fecha</th>
+                      <th>{{measure}}</th>
+              </tr>
+            </thead>
+
+            <tbody>
+                {% for instance in instances %}
+                    <tr>
+                        <th><a class="text-dark" href="/machinelearning/ml-result-analysis/{{model}}/{{instance.0}}">{{instance.0}}</a></th>
+                        <td>{{instance.1}}</td>
+                        <td>{{instance.2}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% endfor %}
+    
+</section>
+
+{% endblock section-content %}
+
+{% block special_javascript %}
+
+<script src="{% static 'js/chartjs-library.js' %}"></script>
+<script src="{% static 'js/charts-custom.js' %}"></script>
+
+<script src="{% static 'js/data-table-custom.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/data-table-custom.css' %}"></link>
+
+
+{% endblock %}

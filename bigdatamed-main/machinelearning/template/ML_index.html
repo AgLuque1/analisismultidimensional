@@ -1,0 +1,89 @@
+{% extends "main_template.html" %}
+{% load static %}
+{% block section-content   %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            
+            <div class="card col-md-4 col-lg-4 col-xl-4 col-sm-6 col-12">
+                <img class="card-img-top" src="{% static 'file.png' %}" alt="Card image cap">
+                <div class="card-body">
+                    <h2 class="card-title">Selección de modelo</h2>
+                    <p class="card-text"><br/>{{model_string}} <strong>{{chosen_model}}</strong></p>
+                    <form action="{% url 'machinelearning:ML_index' %}" method="post" >
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <input type="submit" class="btn btn-dark" value="Actualizar modelo">
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card col-md-4 col-lg-4 col-xl-4 col-sm-6 col-12">
+                <img class="card-img-top" src="{% static 'upload.png' %}" alt="Card image cap">
+                <div class="card-body">
+                    <h2 class="card-title">Subida de datos</h2>
+                    <p class="card-text">Permite al usuario introducir instancias en las tablas de la base de datos SQLite a partir de archivos .csv que se encuentren en su sistema local de archivos.</p>
+                    <a href="{% url 'machinelearning:ML_upload_csv' %}" class="btn btn-dark">Subir datos</a>
+                </div>
+            </div>
+            
+            <div class="card col-md-4 col-lg-4 col-xl-4 col-sm-6 col-12">
+                <img class="card-img-top" src="{% static 'book-open.png' %}" alt="Card image cap">
+                <div class="card-body">
+                    <h2 class="card-title">Visualización de datos en tabla</h2>
+                    <p class="card-text">Con este módulo, el usuario puede visualizar, filtrar y borrar las instancias asociadas al modelo seleccionado que se encuentren en la base de datos local SQLite.</p>
+                    <a href="{% url 'machinelearning:ML_display_filter_data' '_id' %}" class="btn btn-dark">Visualizar datos</a>
+                </div>
+            </div>
+        
+            <div class="card col-md-4 col-lg-4 col-xl-4 col-sm-6 col-12">
+                <img class="card-img-top" src="{% static 'explore.png' %}" alt="Card image cap">
+                <div class="card-body">
+                    <h2 class="card-title">Analisis Exploratorio de datos</h2>
+                    <p class="card-text">Permite la exploración de los datos, ofreciendo un detallado análisis estadístico. Se incluyen todas las herramientas necesarias para que el usuario pueda llevar a cabo un extenso análisis exploratorio de datos univariable y bivariable. Este análisis es específico en el sentido que, dependiendo el tipo o los tipos de las variables consideradas (si son simbólicas o numéricas), se muestran una serie de figuras, estadísticos y test de hipótesis determinados.</p>
+                    <a href="{% url 'machinelearning:ML_eda_index' %}" class="btn btn-dark">Realizar EDA</a>
+                </div>
+            </div>
+            
+            <div class="card col-md-4 col-lg-4 col-xl-4 col-sm-6 col-12">
+                <img class="card-img-top" src="{% static 'cpu.png' %}" alt="Card image cap">
+                <div class="card-body">
+                    <h2 class="card-title">Resolución de problemas</h2>
+                    <p class="card-text">Ejecuta un algoritmo de aprendizaje supervisado con parámetros de ejecución personalizados en un entorno local o distribuido. Estos algoritmos se plantean como herramientas para solucionar problemas de clasificación binaria y multiclase y regresión.</p>
+                    <a href="{% url 'machinelearning:ML_problem_resolution_index' %}" class="btn btn-dark">Resolver problemas</a>
+                </div>
+            </div>
+            
+            <div class="card col-md-4 col-lg-4 col-xl-4 col-sm-6 col-12">
+                <img class="card-img-top" src="{% static 'bar-chart.png' %}" alt="Card image cap">
+                <div class="card-body">
+                    <h2 class="card-title">Resultados previos de ejecución</h2>
+                    <p class="card-text">Permite el acceso a los reportes automáticos de ejecuciones anteriores. En este módulo se ofrece una lista con ejecuciones anteriores y se permite acceder a los reportes generados automáticamente que contienen el análisis de resultados de los algoritmos asociados a cada ejecución. Cada tipo de problema tiene una serie de medidas con las que analizar su desempeño y cada una de las medidas obtenidas se describen, con algunas pautas para su interpretación.</p>
+                    <a href="{% url 'machinelearning:ML_previous_results' %}" class="btn btn-dark">Acceder a resultados previos</a>
+                </div>
+            </div>
+            
+            <div class="card col-md-4 col-lg-4 col-xl-4 col-sm-6 col-12">
+                <img class="card-img-top" src="{% static 'database.png' %}" alt="Card image cap">
+                <div class="card-body">
+                    <h2 class="card-title">Administración de la Base de Datos</h2>
+                    <p class="card-text">Módulo para la gestión interna de base de datos. Funcionalidad por defecto provista por Django.</p>
+                    <a href="{% url 'admin:index' %}" class="btn btn-dark">Administrar la Base de Datos</a>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+</section>
+
+{% endblock section-content %}
+
+{% block special_javascript %}
+
+<script src="{% static 'js/chartjs-library.js' %}"></script>
+<script src="{% static 'js/charts-custom.js' %}"></script>
+
+<script src="{% static 'js/data-table-custom.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/data-table-custom.css' %}"></link>
+
+{% endblock %}

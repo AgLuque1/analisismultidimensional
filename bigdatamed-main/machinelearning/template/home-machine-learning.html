@@ -1,0 +1,93 @@
+{% extends "main_template.html" %}
+{% load static %}
+
+{% block special_css %}
+
+{% endblock special_css %}
+{% block content-header %}
+    <div class="container-fluid">
+        <h5>Módulo aplicación de algoritmos de aprendizaje automático</h5>
+    </div>
+
+    {% include 'experiment-session-dataset.html' %}
+
+    
+    <div class="form-group">
+        <label for="type_algorithm">Selecciona Algoritmo:</label>
+        <select class="form-control" id="type_algorithm">
+            <option>Clustering - KMeans - NO SUPERVISADO</option>            
+        </select>
+        <small id="selectBDHelp" class="form-text text-muted">Elija el algoritmo que va aplicar sobre el conjunto de datos de su 
+            experimentación.</small>
+        </div>
+      
+        <p>
+            <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" data-target="#section-params-algorithm"
+            aria-expanded="true" aria-controls="section-params-algorithm">
+                Parámetros Algoritmo:
+            </button>
+        </p>
+        <div class="collapse" id="section-params-algorithm">
+            <!--BEGIN Input Base de datos -->
+            <!-- Hay que realizar la carga de los elementos de forma dinámica-->
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+       
+            
+                <form action="{% url 'machinelearning:result_experiment' %}" method="post"  >
+                    {% csrf_token %}
+                        
+                    <div class="form-group ">
+                        <label for="n_cluster">{{FormClusteringKmeansUnsupervised.n_clusters.label}}</label>
+                        {{FormClusteringKmeansUnsupervised.n_clusters}} 
+                        <small id="selectBDHelp" class="form-text text-muted">{{FormClusteringKmeansUnsupervised.n_clusters.help_text}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="init">{{FormClusteringKmeansUnsupervised.init.label}}</label>
+                        {{FormClusteringKmeansUnsupervised.init}}
+                        <small id="selectBDHelp" class="form-text text-muted">{{FormClusteringKmeansUnsupervised.init.help_text}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="n_init">{{FormClusteringKmeansUnsupervised.n_init.label}}</label>
+                        {{FormClusteringKmeansUnsupervised.n_init}}
+                        <small id="selectBDHelp" class="form-text text-muted">{{FormClusteringKmeansUnsupervised.n_init.help_text}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="max_iter">{{FormClusteringKmeansUnsupervised.max_iter.label}}</label>
+                        {{FormClusteringKmeansUnsupervised.max_iter}}
+                        <small id="selectBDHelp" class="form-text text-muted">{{FormClusteringKmeansUnsupervised.max_iter.help_text}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="tol">{{FormClusteringKmeansUnsupervised.tol.label}}</label>
+                        {{FormClusteringKmeansUnsupervised.tol}}
+                        <small id="selectBDHelp" class="form-text text-muted">{{FormClusteringKmeansUnsupervised.tol.help_text}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="verbose">{{FormClusteringKmeansUnsupervised.verbose.label}}</label>
+                        {{FormClusteringKmeansUnsupervised.verbose}}
+                        <small id="selectBDHelp" class="form-text text-muted">{{FormClusteringKmeansUnsupervised.verbose.help_text}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="random_state">{{FormClusteringKmeansUnsupervised.random_state.label}}</label>
+                        {{FormClusteringKmeansUnsupervised.random_state}}
+                        <small id="selectBDHelp" class="form-text text-muted">{{FormClusteringKmeansUnsupervised.random_state.help_text}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="copy_x">{{FormClusteringKmeansUnsupervised.copy_x.label}}</label>
+                        {{FormClusteringKmeansUnsupervised.copy_x}}
+                        <small id="selectBDHelp" class="form-text text-muted">{{FormClusteringKmeansUnsupervised.copy_x.help_text}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="algorithm">{{FormClusteringKmeansUnsupervised.algorithm.label}}</label>
+                        {{FormClusteringKmeansUnsupervised.algorithm}}
+                        <small id="selectBDHelp" class="form-text text-muted">{{FormClusteringKmeansUnsupervised.algorithm.help_text}}</small>
+                    </div>
+                
+                    <div>
+                        <button type="submit" class="btn btn-primary btn-lg">Ejecutar Algoritmo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    
+
+{% endblock %}

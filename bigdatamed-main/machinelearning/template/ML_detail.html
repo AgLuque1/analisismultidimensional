@@ -1,0 +1,34 @@
+{% extends "main_template.html" %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block section-content %}
+
+<section class="content">
+
+    <h5> Elemento con id {{ Id }}</h5>
+
+    {% for elem in data %}
+        <tr>
+            {% for key, value in elem.items %} 
+              <li><strong>{{key}}</strong> : {{value}}</li>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+
+</section>
+
+{% endblock section-content %}
+
+{% block special_javascript %}
+
+<script src="{% static 'js/chartjs-library.js' %}"></script>
+<script src="{% static 'js/charts-custom.js' %}"></script>
+
+<script src="{% static 'js/data-table-custom.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/data-table-custom.css' %}"></link>
+
+
+{% endblock %}

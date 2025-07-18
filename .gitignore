@@ -1,0 +1,82 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Entornos virtuales
+venv/
+env/
+.venv/
+.ENV/
+ENV/
+
+# Archivos de configuración del entorno
+.env
+.env.*
+
+# Logs
+*.log
+
+# Archivos de bases de datos locales
+*.sqlite3
+*.db
+
+# Carpetas de IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# PyInstaller
+*.spec
+dist/
+build/
+
+# Jupyter Notebooks checkpoints
+.ipynb_checkpoints
+
+# Archivos de test / cobertura
+htmlcov/
+.tox/
+.nox/
+coverage.*
+.cache
+.pytest_cache/
+
+# Mypy / linting
+.mypy_cache/
+.dmypy.json
+.pyre/
+
+# Docker (si usas Docker)
+*.pid
+*.pid.lock
+
+# MacOS / Windows
+.DS_Store
+Thumbs.db
+
+# Archivos comprimidos / temporales
+*.zip
+*.tar.gz
+*.rar
+*.bak
+*.swp
+*.tmp
+
+# Node.js (si hay frontend)
+node_modules/
+
+# Local datasets
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.parquet
+*.feather
+
+# Otros
+*.egg-info/

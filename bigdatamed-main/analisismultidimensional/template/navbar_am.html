@@ -1,0 +1,45 @@
+{% load static %}
+ <!-- Navbar -->
+ <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      
+        
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <!-- Navbar Search -->
+      <!--Banderas para el idioma-->
+      <div id="flags" class="flags">
+        <div class="flags_item" data-language="es" data-value="es">
+          <img src="{% static 'img/es.svg' %}" alt="">
+        </div>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <div class="flags_item" data-language="en" data-value="en">
+          <img src="{% static 'img/en.svg' %}" alt="">
+         
+        </div>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+      <li class="nav-item">
+        {% if user.is_authenticated %}
+          <a href="{% url 'logout' %}" data-i18n="botonAyuda">i18next.t('botonAyuda')</a>
+        {% endif %}
+      </li>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <li class="nav-item">
+        {% if user.is_authenticated %}
+          <a href="{% url 'logout' %}" data-i18n="botonLogout">i18next.t('botonLogout')</a>
+        {% endif %}
+      </li>
+      
+    </ul>
+  
+  </nav>
+  <!-- /.navbar -->
+
+

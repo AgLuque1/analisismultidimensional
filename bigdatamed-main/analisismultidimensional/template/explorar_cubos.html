@@ -1,0 +1,31 @@
+{% extends "main_template_am.html" %}
+{% load static %}
+<h1>Prueba</h1>
+
+{% block special_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/cubes.css' %}">
+
+
+<!--CSS para la tabla-->
+<link href="https://cdn.jsdelivr.net/npm/fancygrid/client/fancy.min.css" rel="stylesheet">
+<!--<link href="https://cdn.fancygrid.com/fancy.min.css" rel="stylesheet">-->
+{% endblock special_css %}
+
+{% block section-content   %}
+    <form id="formulario" method="POST">
+        {% csrf_token %}
+        <div id="container"></div>
+        <p id="info"></p>
+
+    </form>
+
+{% endblock section-content %}
+
+{% block special_javascript %}
+
+<!--Scripts para la tabla-->
+
+<script src="https://cdn.jsdelivr.net/npm/fancygrid/client/fancy.full.min.js"></script>
+<!--- <script src="https://cdn.fancygrid.com/fancy.min.js"></script>-->
+<script src="{% static 'js/tabla.js' %}"></script>
+{% endblock %}

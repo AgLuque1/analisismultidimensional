@@ -1,0 +1,174 @@
+{% extends "main_template.html" %}
+{% load static %}
+{% block special_css %}
+
+  <!-- Font Awesome -->
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+rel="stylesheet"
+/>
+<!-- Google Fonts -->
+<link
+href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+rel="stylesheet"
+/>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+
+<!-- For selecion in datatable -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">  
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.4/css/select.dataTables.min.css">   
+
+<!-- For buttons -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js">  
+
+
+<!-- CSS DATAPICKERS-->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="{% static 'css/data-table-bdmed.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/table-dynamic.css' %}" />
+
+{% endblock special_css %}
+
+<form method="post">{% csrf_token %}
+
+{% block section-content   %}
+<section class="content">
+
+    <br/>
+    <!-- BEGIN   Table (card) with the info about the fields of the selected database  -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Información sobre los campos de la base de datos</h3>
+        <div class="card-tools"></div>
+      </div>
+      <!-- /.card-header -->
+    
+      <div class="card-body p-0">
+
+        <br/>
+        <!--  === Categories selection and buttons for the selection and deselection of variables -->
+        <div class="container" style="margin-left: 1% !important">
+          <div class="row">
+            <div class="text-left">
+
+              <!-- BEGIN  Jquery selectmenu for applying search filtering in the table -->
+              <form action="#">
+                <fieldset>  
+                  <label for="category_menu">Categoría</label>
+                  <select name="category_menu" id="category_menu" class="Categoría">
+                    <option disabled selected>Seleccione categoría</option>
+                    <option selected="selected">Cualquiera</option>
+                    {% for elem in request.session.categories %}
+                      <option>{{elem}}</option>
+                    {% endfor %}
+                  </select>
+                </fieldset>
+              </form>
+              <!-- END  Jquery selectmenu -->
+            </div>
+          </div>
+        </div>
+
+        <br/><br/>
+        <!--  === Div that contains the selected variables -->
+        <div id="selected_vars_div"></div>
+
+        <br/>
+        
+        <table id="table_dynamic" class='table table-striped table-bordered table-sm' cellspacing='10' width='100%'>
+          
+          <!--  === Metadata headers -->
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Descripción</th>
+              <th>Categoría</th>
+              <th>Tipo de variable</th>
+
+              <!--  === Header cell containing a checkbox for (de)selecting the current rows of the table -->
+              <th>
+                <div class="form-check">
+                  <input id='select_deselect_all' class="form-check-input" type="checkbox" value="">
+                  <label class="form-check-label" for="flexCheckDefault"></label>
+                </div>
+              </th>
+              <th></th>
+            </tr>
+          </thead>
+          
+          <!--  === Body with the metadata fields -->
+          <tbody>
+            {% for elem in request.session.meta_description %}  
+              <tr>
+                <td>   
+                  {{elem.Code}}
+                </td>
+                <td>   
+                  {{elem.Description}}
+                </td>
+                <td>   
+                  {{elem.Category}}
+                </td>
+                <td>{{elem.VarType}}</td>
+
+                <!--  === Cell with selection box -->
+                <td class="text-center center-block selectable-cell"></td>
+
+                <!--  === If it is not an Identifier, add an eye icon for plotting -->
+                {% if elem.VarType != "Identifier"%}
+                  <td class="show_chart text-center center-block selectable-cell"><i class="fas fa-eye"></i></td>
+                {% else %}
+                  <td></td>
+                {% endif %}
+
+              </tr>
+            {% endfor %}
+          </tbody>
+          
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+  <!-- /.card -->
+
+
+  <div id="dynamic_dialog" class="row"></div>
+
+    <div>
+      <form action="{% url 'dashboard:filter_dataset' %}" method="POST">
+        {% csrf_token %}
+        <input id="request-variable-selected" type="hidden" name="variable-selected" />
+        <input id="request-category-selected" type="hidden" name="category-selected" />
+        <input type="submit" class="btn btn-primary btn-lg"  value="Siguiente" />
+      </form>
+    </div>
+
+
+</section>
+
+{% endblock section-content %}
+
+
+{% block special_javascript %}
+
+    <!-- Auxiliary library daterangepicker -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
+    <!-- Datatables -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+
+    <!-- For selection in datatable -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
+
+    <!-- Static file with Dynamic table, used in this view -->
+    <script src="{% static 'js/table-dynamic.js' %}"></script>>
+    <!-- <script src="{% static 'js/test-chartjs.js' %}"></script>> -->
+
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% endblock special_javascript %}
+

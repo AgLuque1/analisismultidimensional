@@ -1,0 +1,340 @@
+{% extends "main_template_am.html" %}
+{% load static %}
+
+{% block special_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/cubes.css' %}">
+
+{% endblock %}
+
+{% block section-content   %}
+
+ <!-- Content Wrapper. Contains page content -->
+    <!-- Main content -->
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card card-primary card-outline card-blue">
+              <div class="card-header">
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <h5 data-i18n="crearCuboCard">i18next.t('crearCuboCard')</h5>
+              </div>
+              <div class="card-body">
+            <div class="card card-primary card-outline card-blue">
+              <div class="card-header">
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <h5 data-i18n="definirCard">i18next.t('definirCard')</h5>
+              </div>
+              <div class="card-body">
+                <!--<h5 class="card-title">Cube Table Mapper</h5>-->
+                  <label data-i18n="nombreLabel">i18next.t('nombreLabel')</label>
+                  
+                  <input data-i18n="[placeholder]placeholderNombreCubo" class="input-validar form-control form-control-border border-width-2" 
+                  type="text" width="65%" id="cubename" name="cubename" data-placeholder="cubeName"><br>
+                  <label data-i18n="descripcionLabel">i18next.t('descripcionLabel')</label><br>
+                  <textarea id="description" style="width: 100%;"></textarea>
+                  <br>
+                  <div class="form-group select2-blue">
+                    <br>
+                    <label data-i18n="bdLabel">i18next.t('bdLabel')</label><br>
+                    <span data-i18n="spanBd" >i18next.t('spanBd')</span><br>
+                    <select id="basesdedatos" class="form-control" onchange="obtenerExperimentaciones()">
+                      <option data-section="placeholders" data-value="experimentation"  value="" 
+                      disabled selected></option>
+                      <option id="HospitalMarbella">Hospital Marbella</option>
+                      <option id="HospitalSanCecilio">Hospital San Cecilio</option>
+                      <option id="EjemploVentas">Ejemplo Ventas </option>
+                      
+                    </select>
+                  </div> 
+
+                  <div class="form-group select2-blue">
+                    <br>
+                    <label data-i18n="labelExp">i18next.t('labelExp')</label><br>
+                    <span data-i18n="spanExp">i18next.t('spanExp')</span><br>
+                    <select disabled id="experimentaciones" class="form-control" onchange="obtenerColumnas();obtenerFilas()">
+                      <option data-section="placeholders" data-value="experimentation"  value="" 
+                      disabled selected></option>
+                      
+                    </select>
+                  </div> 
+
+                
+                    <div class="form-group select2-blue" data-select2-id="47">
+                      <br>
+                      <label data-i18n="labelNiveles">i18next.t('labelNiveles')</label><br>
+                     
+                      <span data-i18n="spanNiveles">i18next.t('spanNiveles')</span><br>
+                      <select disabled class="form-control" data-dropdown-css-class="select2-blue" 
+                      multiple="multiple" style="width: 100%;" data-select2-id="1" tabindex="-1" 
+                      aria-hidden="true" id="columnas">
+                      
+                      </select>
+                      <span class="select2-purple select2-container select2-container--default select2-container--below" 
+                      dir="ltr" data-select2-id="8" style="width: 100%;">
+                        <span class="select2-results__option--highlighted">
+                        </span>
+                        <span class="dropdown-wrapper" aria-hidden="true">
+                        </span>
+                      </span>
+                    </div>
+                    <input type="checkbox" id="filtrofilas" name="filtrofilas" value="Bike">
+                  <label data-i18n="ignorarFilas" for="filtrofilas">i18next.t('ignorarFilas')</label><br>
+              </div>
+            </div>
+
+            <div class="card card-outline card-blue">
+              <div class="card-header">
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool collapsed" data-card-widget="collapse" >
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+                <h5 data-i18n="estructuraCard">i18next.t('estructuraCard')</h5>
+              </div>
+              <div class="card-body" style="display: none;">
+                <div style="vertical-align: middle;">
+                  <label data-i18n="dimensionesLabel">i18next.t('dimensionesLabel')</label>
+                  <br>
+                  <div class="input-group input-group-sm">
+                    <input data-i18n="[placeholder]placeholderDimensiones" class="input-validar form-control form-control-border border-width-2" 
+                    data-placeholder="dimensionName" type="text" id="nombreDimension" style="width: 65%;"/>
+                    <span class="input-group-append">
+                      <button data-i18n="botonCrearDim" id="botonCrearDimension" disabled  onclick="agregarDimension()" 
+                      type="button" class="btn btn-info btn-sm" style="background-color: rgb(64,132,180);">i18next.t('botonCrearDim')</button>
+                    </span>
+                  </div>
+                  
+                  
+                  <br><br>
+
+                  <!--Modal-->
+                  <div class="modal fade" id="modalDimension" data-backdrop="static" tabindex="-1" role="dialog" 
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 data-i18n="modalDimension" class="modal-title" id="staticBackdropLabel">i18next.t('modalDimension')</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-footer">
+                        <button data-i18n="botonModalCerrar" type="button" class="btn btn-secondary" data-dismiss="modal">i18next.t('botonModalCerrar')</button>
+                        <button data-i18n="botonModalSeguro" onclick="eliminarDimension()" type="button" class="btn btn-info">i18next.t('botonModalSeguro')</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                  <span data-i18n="spanDimensiones">i18next.t('spanDimensiones')</span><br>
+                  <select  class="custom-select form-control-border border-width-2" data-dropdown-css-class="select2-lightblue" id="dimensiones" style="width: 85%;"></select>
+                  <span>
+                    <i id="borrarDimension" style="margin-left: 10px;" class="fas fa-trash fa-lg"></i>
+                  </span>
+                </div>
+
+                <div>
+                  <br>
+                  <label data-i18n="labelJerarquias" >i18next.t('labelJerarquias')</label>
+                  <br>
+                  <div class="input-group input-group-sm">
+                    <input data-i18n="[placeholder]placeholderJerarquias" class="input-validar form-control form-control-border border-width-2" 
+                    data-placeholder="hierarchyName" type="text" id="nombreJerarquia"/>
+                    <span class="input-group-append" >
+                      <button data-i18n="botonCrearJer" disabled id="botonCrearJerarquia"  
+                      onclick="añadirJerarquia()" id="crearJerarquia" type="button"
+                      class="btn btn-success btn-sm">i18next.t('botonCrearJer')</button>
+                    </span>
+                  </div>
+                  
+                
+                  <br><br>
+
+                  <!--Modal-->
+                  <div class="modal fade" id="modalJerarquia" data-backdrop="static" tabindex="-1" role="dialog" 
+                  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 data-i18n="modalJerarquias" class="modal-title" id="staticBackdropLabel">i18next.t('modalJerarquias')</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-footer">
+                          <button data-i18n="botonModalCerrar" type="button" class="btn btn-secondary" data-dismiss="modal">i18next.t('botonModalCerrar')</button>
+                          <button data-i18n="botonModalSeguro" onclick="eliminarJerarquia()" type="button" class="btn btn-success">i18next.t('botonModalSeguro')</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <span data-i18n="spanJerarquias">i18next.t('spanJerarquias')</span><br>
+                  <select  class="form-control" id="dimensionesJerarquias" data-dropdown-css-class="select2-green" style="width: 85%;"></select>
+                  <span>
+                    <i id="borrarJerarquia" style="margin-left: 10px;" class="fas fa-trash fa-lg"></i>
+                  </span>
+                </div>
+                <br>
+
+                <div class="form-group">
+                  <label data-i18n="labelColumnas">i18next.t('labelColumnas')</label>
+                  <br>
+                  <div class="input-group input-group-sm">
+                    <input data-i18n="[placeholder]placeholderNiveles" class="input-validar form-control form-control-border border-width-2" 
+                    data-placeholder="levelName" type="text" id="nombreNivel" style="width: 35%;" />
+                    <span class="input-group-append">
+                      <button disabled id="botonCrearNivel" data-i18n="botonCrearNiv" 
+                      onclick="añadirNivel()" id="crearNivel" type="button" 
+                      class="btn btn-warning btn-sm">i18next.t('botonCrearNiv')</button>
+                    </span>
+                  </div>
+                 
+                  
+                  <br><br>
+                  <span data-i18n="spanNiveles">i18next.t('spanNiveles')</span><br>
+                  <select class="form-control" data-dropdown-css-class="select2-yellow" id="niveles" style="width: 85%;">
+                  </select>
+                  <span>
+                    <i id="borrarNivel" style="margin-left: 10px;" class="fas fa-trash fa-lg"></i>
+                  </span>
+                  <br>
+                  <br>
+                  <div id="contenedorDimensiones">
+                    
+                  </div>
+
+                </div>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="modalNivel" data-backdrop="static" tabindex="-1" role="dialog" 
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 data-i18n="modalNivel" class="modal-title" id="staticBackdropLabel">i18next.t('modalNivel')</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-footer">
+                        <button data-i18n="botonModalCerrar" type="button" class="btn btn-secondary" data-dismiss="modal">i18next.t('botonModalCerrar')</button>
+                        <button data-i18n="botonModalSeguro" onclick="eliminarNivel()" type="button" class="btn btn-warning">i18next.t('botonModalSeguro')</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div><!-- /.container-fluid -->
+            </div>
+
+          
+            <div class="card card-primary card-outline card-blue">
+              <div class="card-header">
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+                <h5 class="m-0" data-i18n="medidaCard">i18next.t('medidaCard')</h5>
+              </div>
+              <div class="card-body" style="display: none;">
+                <!--<h5 class="card-title">Card title</h5> -->
+                
+                <label data-i18n="labelMedida">i18next.t('labelMedida')</label>
+              
+                <input data-i18n="[placeholder]placeholderMedida" class="input-validar form-control form-control-border border-width-2" 
+                data-placeholder="measureName" type="text" id="nombreMedida" style="width: 100%;"/> 
+                <br>
+                
+                <div class="form-group">
+                  <label data-i18n="labelNiveles">i18next.t('labelNiveles')</label>
+                  <select class="form-control" id="columnasSeleccionadas" data-dropdown-css-class="select2-blue" style="width: 100%;">
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label data-i18n="labelAgregacion">i18next.t('labelAgregacion')</label><br>
+                  <span data-i18n="spanAgregacion">i18next.t('spanAgregacion')</span><br>
+                  <select  class="form-control select2" style="width: 100%;" id="medidas" data-dropdown-css-class="select2-blue" >
+                    <option value="" disabled selected></option>
+                    <option value="suma">Suma (SUM)</option>
+                    <option value="promedio">Promedio (AVG)</option>
+                    <option value="minimo">Mínimo (MIN)</option>
+                    <option value="maximo">Máximo (MAX)</option>
+                    <option value="conteo">Conteo (COUNT)</option>
+                  </select>
+                </div>
+
+               
+              
+              </div>
+            </div><!-- /.card -->
+
+            <form id="formularioEnvio" method="POST">
+              {% csrf_token %}
+              <button data-i18n="botonGuardar" disabled style="float: right;" id="botonTerminar" onclick="enviarCubo()" type="button"\
+               class="btn btn-primary btn-sm" style="width: 150px;" >i18next.t('botonGuardar')</button>
+
+            </form>
+            </div>
+          </div>
+          </div>
+          <!-- /.col-md-6 -->
+          <div class="col-lg-6">
+            <div class="card card-primary card-outline card-blue">
+              <div class="card-header">
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <h5 class="m-0" data-section="tree view"
+                data-value="title">Vista Cubo</h5>
+              </div>
+              <div class="card-body">
+                <!--<h5 class="card-title">Cube Table Mapper</h5>-->
+                <div id="tree"></div>
+                <span id="infonodo"></span> <br>
+                <span id="infovalor"></span>
+
+              </div>
+            </div>
+            <!-- /.content -->
+            
+          </div>
+          <!-- /.content-wrapper -->
+          <p id="usuario" data-usuario="{{ user }}"></p>
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+    <div class="p-3">
+      <h5>Title</h5>
+      <p>Sidebar content</p>
+    </div>
+  </aside>
+  <!-- /.control-sidebar -->
+<!---->
+  <!-- Main Footer -->
+  <!--<footer class="main-footer">-->
+    <!-- To the right -->
+    <!-- Default to the left -->
+    <!--<strong>Copyright &copy; 2023 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.-->
+  <!--</footer>-->
+
+{% endblock section-content %}
+{% block special_javascript %}
+<!--<script src="https://cdn.jsdelivr.net/npm/jquery.fancytree@2.38.3/dist/jquery.fancytree-all.min.js"></script>-->
+<script src="{% static 'js/obtenerColumnas.js'%}"></script>
+<script src="{% static 'js/columnasSeleccionadas.js' %}"></script>
+<script src="{% static 'js/dimensiones.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.js"></script>
+{% endblock %}

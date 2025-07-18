@@ -1,0 +1,98 @@
+{% extends "main_template.html" %}
+{% load static %}
+{% block section-content   %}
+<section class="content">
+    
+    <div class="container-fluid">
+        <h5>Ejemplo de Workflows con los que el usuario podría interactuar</h5><br/>
+
+        <div class="row">
+            
+            <div class="col">
+                <br/><br/>En caso que el usuario se encuente en esta misma vista, en creación de la experimentación: &nbsp;&nbsp;&nbsp;
+            </div>
+
+            <div class="col">
+               <img src="{% static 'img/WF-1.png'%}">
+            </div>
+            
+        </div>
+        <br/><br/><br/>
+        <div class="row">
+            
+            <div class="col">
+                <br/><br/>En caso que el usuario se encuente la vista de extracción de conocimiento: &nbsp;&nbsp;&nbsp;
+            </div>
+
+            <div class="col">
+                <img src="{% static 'img/WF-4.png'%}">
+            </div>
+            
+        </div>
+        <!-- ./row  -->
+    </div>
+    
+    <br/><br/><br/><br/>
+    <div class="container-fluid">
+        <h4>Workflow de trabajo de la aplicación</h4><br/>
+        <div class="row">
+            <div class="col"></div>
+            <div class="col">
+                  
+                <img src="{% static 'img/WF.png' %}">
+                <br/><br/><br/>
+
+                <table class="tg table table-hover">
+                    <thead>
+                      <tr class="">
+                              <th>Operación</th>
+                              <th>Detalles</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                            <tr>
+                                <th>Configuración del Dataset</th>
+                               <td>Configuración del dataset con el que va a llevarse a cabo la experimentación.</td>
+                            </tr>
+                            <tr>
+                                <th>Explorar datos</th>
+                               <td> De forma opcional, se exploran los datos, haciendo posible la formulación de problemas de diversos ámbitos del aprendizaje automático, 
+                                   que pueden resolverse con las herramientas de machine learning de la aplicación.</td>
+                            </tr> 
+                            <tr>
+                                <th>Extracción de conocimiento</th>
+                               <td>Extracción de conocimiento: mediante el uso de las herramientas disponibles se solucionan problemas de machine learning, minería de datos, etc., de forma que se extrae conocimiento de los datos seleccionados como entrada.</td>
+                            </tr> 
+                            <tr>
+                                <th>Análisis de resultados</th>
+                               <td>Con el módulo de histórico de resultados se analizan, de forma personalizada según el problema y el algoritmo empleados, las salidas provistas por los algoritmos y se ofrecen explicaciones que ayudan al usuario a interpretar y comprender los resultados fruto de la experimentación realizada.</td>
+                            </tr> 
+                    </tbody>
+                </table>
+        
+            </div>
+            <div class="col"></div>
+        </div>
+
+        <br/>
+        <h4>Siguiente paso en el WF: </h4> 
+        
+        <br/><br/>
+        
+    </div>
+    
+</section>
+
+{% endblock section-content %}
+
+{% block special_javascript %}
+
+<script src="{% static 'js/chartjs-library.js' %}"></script>
+<script src="{% static 'js/charts-custom.js' %}"></script>
+
+<script src="{% static 'js/data-table-custom.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/data-table-custom.css' %}"></link>
+
+
+{% endblock %}

@@ -1,0 +1,157 @@
+{% extends "main_template_am.html" %}
+{% load static %}
+
+{% block special_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/cubes.css' %}">
+{% endblock special_css %}
+
+{% block section-content   %}
+<div class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="card card-primary card-outline card-purple">
+            <div class="card-header">
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+              <h5 class="m-0" data-i18n="operacionesCard">i18next.t('operacionesCard')</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <span data-i18n="operacionesSelect">i18next.t('operacionesSelect')</span><br>
+                    <select class="form-control select2" id="operaciones">
+                      <option value="" disabled selected></option>
+                      <option value="drilldown">Drill down</option>
+                      <option value="rollup">Roll up</option>
+                      <option value="slice">Slice</option>
+                      <option value="dice">Dice</option>
+                    </select>
+                  </div>
+
+         <!--<div class="card card-primary card-outline card-purple">
+            <div class="card-header">
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+              <h5 class="m-0" data-section="cube table mapper"
+              data-value="title">Definir cubo</h5>
+            </div>
+            <div class="card-body">
+              <!--<h5 class="card-title">Cube Table Mapper</h5>>
+                <label data-section="cube table mapper"
+                data-value="cube name">Nombre</label>
+                
+                <input class="input-validar form-control form-control-border border-width-2" 
+                type="text" width="65%" id="cubename" name="cubename" data-placeholder="cubeName"
+                placeholder="Introduce nombre del cubo"><br>
+                <label data-section="cube table mapper"
+                data-value="description">Descripción</label><br>
+                <textarea id="description" style="width: 100%;"></textarea>
+                <br>
+                <div class="form-group select2-blue">
+                  <br>
+                  <label data-section="cube table mapper"
+                  data-value="tables">Experimentaciones </label><br>
+                  <span data-section="cube table mapper" data-value="spanExperimentations">Selecciona experimentación</span><br>
+                  <select id="experimentaciones" class="form-control" onchange="obtenerColumnas()">
+                    <option data-section="placeholders" data-value="experimentation"  value="" 
+                    disabled selected></option>
+                    {% for experiment in all_experiments %}
+                      <option value="{{experiment}}">{{experiment}}</option>
+                    {% endfor %}
+                  </select>
+                </div> 
+
+              
+                  <div class="form-group" data-select2-id="47">
+                    <label data-section="cube table mapper"
+                    data-value="columns">Columnas </label><br>
+                   
+                    <span data-section="cube table mapper" data-value="spanColumns">Selecciona las columnas</span><br>
+                    <select class="form-control" data-dropdown-css-class="select2-blue" 
+                    multiple="multiple" style="width: 100%;" data-select2-id="1" tabindex="-1" 
+                    aria-hidden="true" id="columnas">
+                      {% for columna in columnas %}
+                      <option value="{{columna}}">{{columna}}</option>
+                      {% endfor %}
+                    </select>
+                    <span class="select2-blue select2-container select2-container--default select2-container--below" 
+                    dir="ltr" data-select2-id="8" style="width: 100%;">
+                      <span class="select2-results__option--highlighted">
+                      </span>
+                      <span class="dropdown-wrapper" aria-hidden="true">
+                      </span>
+                    </span>
+                  </div>
+            </div>
+          </div>
+        -->
+          <div id="contenedorSelects"></div>
+
+          
+            
+
+          </div>
+        </div>
+        </div>
+        <!-- /.col-md-6 -->
+        <div class="col-lg-6">
+          <div class="card card-primary card-outline card-purple">
+            <div class="card-header">
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+              <h5 class="m-0" data-i18n="vistaCard">i18next.t('vistaCard')</h5>
+            </div>
+            <div class="card-body">
+              <!--<h5 class="card-title">Cube Table Mapper</h5>-->
+              <!--<p id="name"></p>-->
+              <p data-i18n="descripcionCubo" id="descripcion"></p>
+              <div id="tree"></div>
+              <span data-i18n="nombreCubo" id="nombrecubo"></span> <br>
+              <span data-i18n="tipoNodo" id="infonodo"></span> <br>
+              <span data-i18n="nombreNodo" id="infovalor"></span><br>
+              <span data-i18n="medidaCubo" id="medidaCubo"></span>
+              
+              <button onClick="mostrarResumenCubo()" data-i18n="botonVerDatosCubo" style="width: 20%; float: right; margin-top: 7.5px;" type="button" class="btn btn-block btn-info">i18next.t('botonVerDatosCubo')</button>
+              <button onclick="borrarCubo()" data-i18n="botonBorrarCubo" style="width: 20%; float: right; margin-right: 30px;" type="button" class="btn btn-block btn-danger">i18next.t('botonBorrarCubo')</button>
+              
+            </div>
+          </div>
+          
+          
+          
+        </div>
+      </br>
+
+      <div id="botonOcultarGraficoContainer"></div>
+      <canvas id="diceChart"></canvas>
+      <div id="botonOcultarDatosContainer"></div>
+      <div id="resumenPrincipal" style="display: flex; align-items: flex-start; gap: 10px; width: 100%;">
+        <div id="contenedorGraficosResumen" class="graficos-resumen"></div>
+        
+      </div>
+      
+      
+      <div id="resultadoDiceTotal" style="display: none; margin-top: 20px;">
+        <div style="padding: 20px; background-color: #e0f7fa; border-radius: 8px; text-align: center; font-size: 1.5em;">
+          Total: <span id="valorTotalDice"></span>
+        </div>
+    </div>
+    
+        
+        
+{% endblock section-content %}
+
+{% block special_javascript %}
+<script src="{% static 'js/infoCubo.js' %}"></script>
+
+{% endblock %}
+

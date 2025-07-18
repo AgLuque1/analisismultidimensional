@@ -1,0 +1,269 @@
+{% extends "main_template.html" %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block section-content %}
+
+<section class="content">
+
+    <!--     Filter associated to the subset building is shown -->
+        {% if view_dict.subset_building == False %}
+    
+            <div class="container-fluid">
+
+                <div class="row">
+
+                    <div class="col">
+
+                        <div class="card text-dark bg-info mb-3" >
+                         <h5 class="card-header">El subconjunto activo se basa en el siguiente filtro: {{view_dict.filter_string_subset_verbose}}</h5>
+                        </div>
+
+                    </div>
+
+                    <div class="col"></div>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    <!--     Check if there is an active filter (different from the one assoociated to the subset) in the current view and show if necessary -->
+        {% if view_dict.filtering %}
+
+            {% if view_dict.filter_string_verbose %}
+
+                <div class="container-fluid">
+
+                    <div class="row">
+
+                        <div class="col">
+
+                            <div class="card text-white bg-secondary mb-3" >
+                             <h5 class="card-header">Hay un filtro activo con la siguiente lógica: {{view_dict.filter_string_verbose}}</h5>
+                            </div>
+
+                        </div>
+
+                        <div class="col"></div>
+
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <h5></h5>
+                <div class="container-fluid">
+
+                    <div class="row">
+
+                        <div class="col">
+
+                            <div class="card text-white bg-secondary mb-3" >
+                             <h5 class="card-header">Hay un filtro activo con la siguiente lógica: ''</h5>
+                            </div>
+
+                        </div>
+
+                        <div class="col"></div>
+
+                    </div>
+
+                </div>
+    
+            {% endif %}
+
+        {% else %}
+    
+            <div class="container-fluid">
+
+                    <div class="row">
+
+                        <div class="col">
+
+                            <div class="card text-white bg-secondary mb-3" >
+                             <h5 class="card-header">No hay ningún filtro activo</h5>
+                            </div>
+
+                        </div>
+
+                        <div class="col"></div>
+
+                    </div>
+
+                </div>
+
+        {% endif %}
+
+    <!--     Shows the filter that the user is building using the system and buttons -->
+        {% if view_dict.filter_string %}
+
+            <div class="container-fluid">
+
+                    <div class="row">
+
+                        <div class="col">
+
+                            <div class="card text-dark bg-light mb-3" >
+                             <h5 class="card-header">El filtro que el usuario está introduciendo es: {{view_dict.filter_string_verbose}}</h5>
+                            </div>
+
+                        </div>
+
+                        <div class="col"></div>
+
+                    </div>
+
+                </div>
+
+        {% endif %}
+
+    <!--     Filtering tool -->
+
+        <br/>
+        <h4>Opciones de filtrado</h4>
+        <br/>
+
+    <!--     Form with the variable-operation-value schema -->
+        <form action="{% url 'machinelearning:ML_display_filter_data' view_dict.order_variable %}" method="post">
+            {% csrf_token %}
+            {% bootstrap_form view_dict.form %}
+            {% buttons %}
+                <button type="submit" class="btn btn-dark">
+                  Añadir operando
+                </button>
+            {% endbuttons %}
+        </form>
+
+    <!--     Buttons of the filtering tool -->
+        <a href="{% url 'machinelearning:ML_build_complex_filter' 'and' %}" class="btn btn-dark">And</a>
+        <a href="{% url 'machinelearning:ML_build_complex_filter' 'or' %}" class="btn btn-dark">Or</a>
+        <a href="{% url 'machinelearning:ML_build_complex_filter' 'add_parenthesis' %}" class="btn btn-dark">Paréntesis</a>
+        <a href="{% url 'machinelearning:ML_build_complex_filter' 'run_filter' %}" class="btn btn-dark">Ejecutar filtro</a>
+
+    <!--     If the user is building a new subset, show the option that uses the current filter to build a subset  -->
+        {% if view_dict.subset_building == True %}
+
+            <a href="{% url 'machinelearning:ML_create_subset' %}" class="btn btn-dark">Crear subconjunto de datos con el filtro activo</a>
+
+        {% endif %}
+
+        <br/><br/>
+
+    <!--     Buttons to reset the filters and erase all data associated to the model/dataset -->
+        <a href="{% url 'machinelearning:ML_reset_filter' 'display_filter_data' %}" class="btn btn-dark">Reiniciar filtro activo o en proceso</a>
+        <a href="{% url 'machinelearning:ML_erase_table' %}" class="btn btn-dark">Eliminar datos</a>
+
+
+    <!--     Show Data in table (in future datatable will be used) -->
+        <br/><br/>
+        <h4>Datos asociados al modelo {{view_dict.model}}</h4>
+        <br/>
+
+        <table class="tg table table-hover">
+            <thead>
+              <tr class="">
+                {% for variable in view_dict.variable_names %}
+
+                    {% if view_dict.current_order == "+" %}
+                      <th> <a class="btn btn-outline-dark" href="/machinelearning/ml-display-filter-data/-{{variable}}?page={{ view_dict.page }}">{{ variable }}</a></th>
+                    {% else %}
+                      <th> <a class="btn btn-outline-dark" href="/machinelearning/ml-display-filter-data/{{variable}}?page={{ view_dict.page }}">{{ variable }}</a></th>
+                    {% endif %}
+
+                {% endfor %}
+
+              </tr>
+            </thead>
+
+            <tbody>
+
+                {% if view_dict.current_order == '+' or view_dict.current_order == '-' %}
+                    {% for elem in view_dict.dictionary_list %}
+                        {% for elem2 in elem %}
+                            <tr>
+                                {% for key, value in elem2.items %}
+                                    {% if key == "_id" %}
+                                        <th><a class="text-dark" href="/machinelearning/ml-detail/{{value}}">{{ value }}</a></th>
+                                    {% else %}
+                                        <td>{{value}}</td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    {% for elem in view_dict.data %}
+                        <tr>
+                        {% for key, value in elem.items %}
+                            {% if key == "_id" %}
+                                <th><a class="text-dark" href="/machinelearning/ml-detail/{{value}}">{{ value }}</a></th>
+                            {% else %}
+                                <td>{{value}}</td>
+                            {% endif %}
+                        {% endfor %}
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+
+            </tbody>
+
+        </table>
+
+        {% if view_dict.data.has_other_pages %}
+          <ul class="pagination">
+              <div class="w-50 p-3" style="background-color: #ffffff;">
+                  <table class="table table-hover">
+                      <tbody>
+                          <tr>
+                              <th scope="col">
+                                    {% if view_dict.data.has_previous %}
+                                      <a href="?page={{ view_dict.data.previous_page_number }}">&laquo;</a>
+                                    {% else %}
+                                      <li class="disabled"><span>&laquo;</span>
+                                    {% endif %}
+                              </th>
+
+                                {% for i in view_dict.data.paginator.page_range %}
+                                  <th scope="col">
+                                      {% if view_dict.data.number == i %}
+                                        <span>{{ i }} <span class="sr-only">(current)</span></span>
+                                      {% else %}
+                                       <a href="?page={{ i }}">{{ i }}</a>
+                                      {% endif %}
+                                  </th>
+                                {% endfor %}
+
+                                <th scope="col">
+                                    {% if view_dict.data.has_next %}
+                                      <a href="?page={{ view_dict.data.next_page_number }}">&raquo;</a>
+                                    {% else %}
+                                      <li class="disabled"><span>&raquo;</span>
+                                    {% endif %}
+                                </th>
+
+                          </tr>            
+                      </tbody>
+                  </table>    
+              </div>
+          </ul>
+        {% endif %}
+
+</section>
+
+{% endblock section-content %}
+
+{% block special_javascript %}
+
+<script src="{% static 'js/chartjs-library.js' %}"></script>
+<script src="{% static 'js/charts-custom.js' %}"></script>
+
+<script src="{% static 'js/data-table-custom.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/data-table-custom.css' %}"></link>
+
+
+{% endblock %}

@@ -1,0 +1,173 @@
+{% extends "main_template.html" %}
+{% load static %}
+{% block section-content %}
+
+<section class="content">
+    
+    <h5> Conjuntos de datos disponibles </h5>
+    
+    <table class="tg table table-hover">
+        <thead>
+          <tr class="">
+                <th>Nombre</th>
+                <th>Ámbito</th>
+                <th>Número de filas</th>
+                <th>Número de variables</th>
+                <th>Preprocesamiento disponible</th>
+                <th>Problemas asociados</th>
+          </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <th>CMBD Marbella</th>
+                <td>Hospitalario, datos CMBD</td>
+                <td>77000</td>
+                <td>28</td>
+                <td>Sí</td>
+                <td>Clasificación multiclase y binaria, regresión</td>
+            </tr>
+            <tr>
+                <th>CMBD PTS Granada</th>
+                <td>Hospitalario, datos CMBD</td>
+                <td>520000</td>
+                <td>32</td>
+                <td>Sí</td>
+                <td>Clasificación multiclase y binaria, regresión</td>
+            </tr>
+            <tr>
+                <th>Datos Tesis Doctoral</th>
+                <td>Hospitalario, datos CMBD orientados con añadidos</td>
+                <td>177000</td>
+                <td>52</td>
+                <td>No</td>
+                <td>Clasificación multiclase, regresión, clustering</td>
+            </tr>
+        </tbody>
+        
+    </table>
+    
+<!--     <p>
+        Esta vista ha de contener: <br/>
+        1. Datatable con los dataset disponibles <br/>
+        2. Características básicas de los datasets (variables y sus tipos, número de filas y columnas, características principales de los datasets - ámbito de aplicación, hospital relacionado... - y gráficos con resumen de características de los datasets, parecido a lo que se incluye en Kaggle). <br/>
+        3. Enlace a seguir con el siguiente paso del WorkFlow de experimentación (exploración de datos) <br/>
+        4. Pequeño diagrama en el que se establece en qué parte del WF está el usuario <br/>
+        5. Conexión con las bases de datos invisible al usuario <br/>
+    </p> -->
+    
+    <br/><br/>
+    {% if dataset_config_dict.subset_built == True %}
+
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <div class="col">
+
+                    <div class="card text-dark bg-info mb-3" >
+                     <h5 class="card-header">Información sobre el conjunto de datos activo</h5>
+                      <div class="card-body">
+                        <p class="card-text">Existe un subconjunto de datos activo basado en el siguiente filtro: {{dataset_config_dict.filter_string_subset_verbose}} y el siguiente conjunto de variables: {{dataset_config_dict.variables_subset}}</p>
+                      </div>
+                    </div>
+
+                </div>
+
+                <div class="col"></div>
+                
+            </div>
+
+        </div>
+    
+    {% else %} 
+    
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <div class="col">
+
+                    <div class="card text-dark bg-info mb-3" >
+                     <h5 class="card-header">No hay ningún conjunto de datos activo</h5>
+                    </div>
+
+                </div>
+
+                <div class="col"></div>
+            </div>
+            
+        </div>
+
+    {% endif %}
+    <br/><br/>
+    
+    <h5> Anteriores configuraciones de subconjuntos de datos(pulse en una para activarla): </h5>
+    
+    <table class="tg table table-hover">
+        <thead>
+          <tr class="">
+                  <th>Id</th>
+                  <th>Nombre</th>
+                  <th>Descripción</th>
+                  <th>Verbose Filter</th>
+                  <th>Variables</th>
+                  <th>Model</th>
+          </tr>
+        </thead>
+
+        <tbody>
+            
+            {% for elem in dataset_config_dict.previous_configurations %}
+                <tr>
+                    {% for key, value in elem.items %}
+
+                        {% if key == "id" %}
+                    
+                            <th><a class="text-dark" href="/machinelearning/ml-activate-previous-config/{{value}}">{{ value }}</a></th>
+                        
+                        {% else %}
+                            
+                            <td>{{value}}</td>
+                    
+                        {% endif %}
+                        
+                    {% endfor %}
+                </tr>
+
+            {% endfor %}
+            
+        </tbody>
+    </table>
+    
+    <div class="container">
+        
+        <br/><br/>
+        Selección provisional de datastet:
+        <br/><br/>
+
+        Modelo seleccionado: <strong>{{dataset_config_dict.model}}</strong>
+        <form action="{% url 'machinelearning:ML_dataset_config' %}" method="post" >
+            {% csrf_token %}
+            {{ dataset_config_dict.form.as_p }}
+            <input type="submit" class="btn btn-dark" value="Configurar dataset">
+        </form>
+
+    </div>
+
+    <br/><br/>
+    <p>Siguiente paso en el WF: </p> 
+    <a href="{% url 'machinelearning:ML_show_cards' 4 %}" class="btn btn-dark">Continuar con el Work Flow</a>
+    <br/><br/>
+    
+{% endblock section-content %}
+
+{% block special_javascript %}
+
+<script src="{% static 'js/chartjs-library.js' %}"></script>
+<script src="{% static 'js/charts-custom.js' %}"></script>
+
+<script src="{% static 'js/data-table-custom.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/data-table-custom.css' %}"></link>
+
+{% endblock %}

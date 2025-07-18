@@ -1,0 +1,36 @@
+{% extends "main_template_am.html" %}
+{% load static %}
+
+{% block special_css %}
+<style>
+    .contenedor-centrado {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 60vh; /* Ajusta la altura según el diseño */
+    }
+</style>
+
+{% endblock %}
+
+
+{% block section-content   %}
+
+<h2 style="text-align: center;">Análisis multidimensional</h2>
+
+<div class="contenedor-centrado">
+    <!--<img src="{% static 'img/background_am.jpg' %}">-->
+    <p>Aqui imagen de fondo</p>
+</div>
+
+{% endblock section-content %}
+{% block special_javascript %}
+<script>
+var cubo = {
+  "descripcion":"algo",
+  "nombreCubo": "algo"
+}
+
+inicializarTraducciones()
+</script>
+{% endblock %}

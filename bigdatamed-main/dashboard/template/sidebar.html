@@ -1,0 +1,142 @@
+ {% load static %}
+ <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="{% url 'dashboard:home' %}" class="brand-link">
+      <!-- style="margin-left: 3.8rem;  max-height: 48px;" -->
+<!--       <img src="{% static 'dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> -->
+        <img src="{% static 'img/aimdp.png' %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="float: left;
+        line-height: .8; margin-left: 2.8em; margin-right: 0.5rem; margin-top: -0.5em; max-height: 48px; width: auto;">
+      <span class="brand-text font-weight-light" style="color:#343a40">BIGDATAMED</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{{ user.profile.image.url }}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="{% url 'dashboard:profile_user' %}" class="d-block">{{user.username}}</a>
+        </div>
+      </div>
+
+      <!-- SidebarSearch Form -->
+      <div class="form-inline">
+        <div class="input-group" data-widget="sidebar-search">
+          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+          <div class="input-group-append">
+            <button class="btn btn-sidebar">
+              <i class="fas fa-search fa-fw"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+    <!-- Sidebar Menu -->
+    <nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column " data-widget="treeview" role="menu" data-accordion="false">
+        <!-- Add icons to the links using the .nav-icon class
+            with font-awesome or any other icon font library --> 
+
+        <li class="nav-item menu-open">
+          <!--            Button blue/active if it is the correct view -->
+          {% if sidebar_active == "experimentation" %}  
+            <a href="{% url 'dashboard:create_experimentation' %}" class="nav-link active">
+          {% else %}
+            <a href="{% url 'dashboard:create_experimentation' %}" class="nav-link bg-light">
+          {% endif %}
+            <i class="nav-icon fas fa-tachometer-alt "></i>
+            <p>
+            Crear Experimentación
+            <!-- Create experiment -->
+            </p>
+          </a> 
+        </li>     
+
+        <li class="nav-item menu-open">
+          <!--            Button blue/active if it is the correct view -->
+          {% if sidebar_active == "configDataset" %}  
+            <a href="{% url 'dashboard:config_dataset' %}" class="nav-link active">
+          {% else %}
+            <a href="{% url 'dashboard:config_dataset' %}" class="nav-link bg-light">
+          {% endif %}
+            <i class="nav-icon fas fa-tachometer-alt "></i>
+            <p>
+            Configuración del dataset
+            <!-- Data set configuration -->
+            </p>
+          </a> 
+        </li>     
+        
+        <li class="nav-item menu-open">
+            
+<!--             If the subset is built, the item is activated, if not, it's disabled -->
+          {% comment %}
+          <!-- {% if request.session.subset_built %}  -->
+          {% endcomment %}
+
+          {% if sidebar_active == "exploration" %}  
+            <a href="" class="nav-link active">
+          {% else %}
+            <a href="" class="nav-link bg-light">
+          {% endif %}
+              <i class="nav-icon fas fa-search"></i>
+              <p>
+              Explorar datos
+              <!-- Data exploration -->
+              </p>
+            </a>     
+        </li>
+        
+        <li class="nav-item menu-open">
+          {% if sidebar_active == "knowledgeExtraction" %}  
+            <a href="{% url 'dashboard:problem_selection' %}" class="nav-link active">
+          {% else %}
+            <a href="{% url 'dashboard:problem_selection' %}" class="nav-link bg-light">
+          {% endif %}
+
+              <i class="nav-icon fas fa-microchip"></i>
+              <p>
+              Extracción de conocimiento
+              <!-- Knowledge Extraction -->
+              </p>
+          </a> 
+        </li>
+        
+        <li class="nav-item menu-open">
+            
+          {% if sidebar_active == "resultAnalysis" %}  
+            <a href="" class="nav-link active">
+          {% else %}
+            <a href="" class="nav-link bg-light">
+          {% endif %}
+                  <i class="nav-icon fas fa-list-alt"></i>
+                  <p>
+                  Histórico de resultados
+                  <!-- Result Analysis -->
+                  </p>
+            </a>    
+        </li>
+
+        <li class="nav-item menu-open">
+          <!--            Button blue/active if it is the correct view -->
+          {% if sidebar_active == "analisis" %}  
+            <a href="{% url 'analisismultidimensional:home' %}" class="nav-link active">
+          {% else %}
+            <a href="{% url 'analisismultidimensional:home' %}" class="nav-link bg-light">
+          {% endif %}
+            <i class="nav-icon fas fa-cubes "></i>
+            <p>
+            Análisis Multidimensional
+            </p>
+          </a> 
+        </li>  
+
+    </ul>
+    </nav>
+    <!-- /.sidebar-menu -->
+</div>
+<!-- /.sidebar -->
+</aside>

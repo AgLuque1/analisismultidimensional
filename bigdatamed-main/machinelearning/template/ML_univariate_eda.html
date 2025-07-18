@@ -1,0 +1,416 @@
+{% extends 'ML_base.html' %}
+
+{% comment %}
+
+{% extends "main_template.html" %}
+{% extends 'ML_base.html' %}
+
+{% endcomment %}
+
+
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% comment %}
+
+{% block section-content %}
+
+{% block title %}
+{{title_content}}
+{% endblock %}
+{% block content %}
+
+{% endcomment %}
+
+{% block title %}
+{{title_content}}
+{% endblock %}
+{% block content %}
+
+<section class="content">
+
+    {% comment %}
+
+    ############ MISSING VALUES - PART OF BOTH UNIVARIATE ANALYSIS (NUMERICAL AND CATEGORICAL) ############
+
+    {% endcomment %}
+
+    <div class="container row my-5">
+
+        <div class="card col" style="width: 100%;">
+            <div class="row">
+                <img src="data:image/png;base64,{{univariate_dict.missing_values_image}}" class="mx-auto d-block" style="width: 40rem; height: 40rem" alt="">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title" style="text-align:center">Missing Values</h5>
+              <div class="accordion my-2" id="accordionExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne1" aria-expanded="true" aria-controls="collapseOne">
+                        Detalles sobre los Missing Values
+                    </button>
+                  </h2>
+                  <div id="collapseOne1" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      Los “missing values” o valores perdidos representan la ausencia de valores almacenados para una variable en una instancia u observación. Estos son cruciales a la hora de la manipulación correcta de los conjuntos de datos. Si no se tienen en cuenta los valores perdidos de un dataset y se actúa de forma incorrecta, pueden introducirse errores en los modelos predictivos que utilicen el conjunto de datos como entrada, dando resultados distintos a los que se obtendrían si se tuvieran presentes. Existen algunos métodos para la estimación de estos si no se desea eliminarlos directamente como la regresión, máxima verosimilitud (MLE) o eliminación por listas o parejas, entre otros. Para más información, pulse <a href="https://www.statisticssolutions.com/dissertation-resources/missing-values-in-data/">aquí</a> 
+                    </div>
+                  </div>
+                </div>
+        </div>
+        </div>
+        </div>
+    </div>
+
+    {% comment %}
+
+    ############ UNIVARIATE NUMERICAL ANALYSIS ############
+
+    {% endcomment %}
+
+    {% if univariate_dict.analysis_type == "numerical" %}
+
+        <div class="container row my-5">
+
+            <div class="card col" style="width: 100%;">
+                <div class="row">
+                    <img src="data:image/png;base64,{{univariate_dict.histogram}}" class="mx-auto d-block" style="width: 40rem; height: 40rem" alt="">
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">Histograma</h5>
+                  <div class="accordion my-2" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne2" aria-expanded="true" aria-controls="collapseOne">
+                            Detalles sobre los Histogramas
+                        </button>
+                      </h2>
+                      <div id="collapseOne2" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          Un histograma es la representación gráfica de un grupo de datos estadísticos, que se agrupan en intervalos numéricos o en función de valores absolutos. Este gráfico muestra cómo se distribuyen los datos de una muestra estadística o una población respecto a una variable numérica. En el histograma se usan barras, cuya altura (eje Y) representa la frecuencia de los datos, mientras que en el eje X se incluyen los intervalos de valores de la variable de estudio. Para más información, pulse <a href="https://economipedia.com/definiciones/histograma.html">aquí</a> 
+                        </div>
+                      </div>
+                    </div>
+            </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="container row my-5">
+            <div class="card col" style="width: 100%;">
+            <table class="table table-hover">
+                <thead>
+                    <tr class="table-secondary">
+                        <th style="text-align:center"><h5><strong>Medidas de tendencia central</strong></h5></th>
+                    </tr>
+                </thead>
+            </table> 
+            <br/>  
+            <table class="tg table table-hover" style="width: 100%;">
+
+            <thead>
+                        <tr class="">
+                            <th style="text-align:center">Medida</th>
+                            <th style="text-align:center">Valor</th>
+                            <th style="text-align:center">Descripción</th>
+                        </tr>
+            </thead>
+            <tbody>
+                        <tr class="">
+                            <th style="text-align:center">Media Aritmética</th>
+                            <th style="text-align:center">{{univariate_dict.mean}}</th>
+                            <th style="text-align:center">
+                                División de la suma de los datos por el número total de ellos
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Mediana</th>
+                            <th style="text-align:center">{{univariate_dict.median}}</th>
+                            <th style="text-align:center">
+                                Es el percentil o cuantil 50, es decir, el valor que deja la misma cantidad de valores de la distribución por encima y por debajo de este valor.
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Moda</th>
+                            <th style="text-align:center">{{univariate_dict.mode}}</th>
+                            <th style="text-align:center">
+                                Valor que más se repite en la distribución. Tiene especial importancia en las variables numéricas discretas, más que en las continuas, ya que en las discretas tienen a repetirse más
+                                los valores.
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Cuartiles</th>
+                            <th style="text-align:center">{{univariate_dict.quantiles.0}}, {{univariate_dict.quantiles.1}}, {{univariate_dict.quantiles.2}}</th>
+                            <th style="text-align:center">
+                                Valores que dividen el conjunto en cuatro partes iguales. El primero (Q1) deja el 25% de los valores de la distribución por debajo del valor, el segundo, el 50% (Q2 = Mediana) y el tercero (Q3), el 75%.
+                            </th>
+                        </tr>
+                </tbody>
+            </table>    
+
+            </div>
+        </div>
+
+        <div class="container row my-5">
+            <div class="card col" style="width: 100%;">
+            <table class="table table-hover">
+                <thead>
+                    <tr class="table-secondary">
+                        <th style="text-align:center"><h5><strong>Medidas de Dispersión</strong></h5></th>
+                    </tr>
+                </thead>
+            </table> 
+            <br/>  
+            <table class="tg table table-hover" style="width: 100%;">
+
+            <thead>
+                        <tr class="">
+                            <th style="text-align:center">Medida</th>
+                            <th style="text-align:center">Valor</th>
+                            <th style="text-align:center">Descripción</th>
+                        </tr>
+            </thead>
+            <tbody>
+                        <tr class="">
+                            <th style="text-align:center">Desviación Típica</th>
+                            <th style="text-align:center">{{univariate_dict.stdev}}</th>
+                            <th style="text-align:center">
+                                Medida de dispersión en torno a la media, cuantifica la dispersión de un conjunto de datos.
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Varianza</th>
+                            <th style="text-align:center">{{univariate_dict.variance}}</th>
+                            <th style="text-align:center">
+                                Medida de dispersión en torno a la media, igual a la desviación estándar al cuadrado.
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Mínimo</th>
+                            <th style="text-align:center">{{univariate_dict.min_value}}</th>
+                            <th style="text-align:center">
+                                Valor mínimo que puede tomar la variable numérica.
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Máximo</th>
+                            <th style="text-align:center">{{univariate_dict.max_value}}</th>
+                            <th style="text-align:center">
+                                Valor máximo que puede tomar la variable numérica.
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Rango</th>
+                            <th style="text-align:center">{{univariate_dict.range}}</th>
+                            <th style="text-align:center">
+                                Diferencia entre los valores mayor y menor de una variable numérica, el máximo menos el mínimo.
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Rango Intercuartílico</th>
+                            <th style="text-align:center">{{univariate_dict.IQR}}</th>
+                            <th style="text-align:center">
+                                Diferencia entre el percentil 75 y el 25 o Q1 y Q3 los valores que dejan el 25% y el 75% de los datos por debajo, respectivamente.
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Coeficiente de asimetría</th>
+                            <th style="text-align:center">{{univariate_dict.skewness_test}}</th>
+                            <th style="text-align:center">
+                                Medida de la asimetría de una distribución. La distribución normal es simétrica y tiene un valor de asimetría igual a 0. Una distribución que tenga una asimetría positiva significativa tiene una cola derecha larga. Una distribución que tenga una asimetría negativa significativa tiene una cola izquierda larga. Como regla aproximada, un valor de la asimetría mayor que el doble de su error típico se asume que indica una desviación de la simetría.
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <th style="text-align:center">Coeficiente de Curtosis</th>
+                            <th style="text-align:center">{{univariate_dict.kurtosis_test}}</th>
+                            <th style="text-align:center">
+                                Medida del grado en que las observaciones están agrupadas en torno al punto central. Para una distribución normal, el valor del estadístico de curtosis es 0. Una curtosis positiva indica que las observaciones se concentran más y presentan colas más largas que las de una distribución normal. Una curtosis negativa indica que las observaciones se agrupan menos y presentan colas más cortas. Interpretación del test.
+                            </th>
+                        </tr>
+                    </tbody>
+            </table>    
+
+            </div>
+        </div>
+
+        <div class="container row my-5">
+
+            <div class="card col" style="width: 100%;">
+                <div class="row">
+                    <img src="data:image/png;base64,{{univariate_dict.box_plot_image}}" class="mx-auto d-block" style="width: 40rem; height: 40rem" alt="">
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">Boxplot o Diagrama de Cajas</h5>
+                  <div class="accordion my-2" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne3" aria-expanded="true" aria-controls="collapseOne">
+                            Detalles sobre los Diagramas de cajas
+                        </button>
+                      </h2>
+                      <div id="collapseOne3" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          Los Boxplots o diagramas de cajas muestran de manera gráfica y robusta medidas de centralidad y dispersión, dando información sobre la simetría de la distribución de frecuencias, los posibles outliers y cómo de sesgados y cuánto de agrupados o juntos están los datos. La longitud de la caja del diagrama representa el rango intercuartílico, la línea central la mediana, los valores de los extremos que separan los outliers del resto de valores representan Q1-1.5*IQR (Menor valor) y Q3+1.5*IQR (Mayor valor) y los valores que están fuera de este rango son los valores anómalos u outliers.
+                        </div>
+                      </div>
+                    </div>
+            </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="container row my-5">
+
+            <div class="card col" style="width: 100%;">
+                <div class="row">
+                    <img src="data:image/png;base64,{{univariate_dict.QQplot_image}}" class="mx-auto d-block" style="width: 40rem; height: 40rem" alt="">
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">QQPlot</h5>
+                  <div class="accordion my-2" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne4" aria-expanded="true" aria-controls="collapseOne">
+                            Detalles sobre los QQPlot
+                        </button>
+                      </h2>
+                      <div id="collapseOne4" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          También conocido como diagrama Cuantil-Cuantil, se utiliza para determinar si un conjunto de datos está distribuido normalmente. El QQ-plot muestra los cuantiles teóricos contra los empíricos. Si la distribución asumida o teórica es la correcta, se genera una línea recta. Puede ser también útil para complementar y reafirmar los resultados provistos por test de normalidad incluido en la aplicación, el test Anderson-Darling.
+                        </div>
+                      </div>
+                    </div>
+            </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="container row my-5">
+
+            <div class="card col" style="width: 100%;">
+                <div class="row">
+                    <table class="table" style="width: 100%;">
+                                <td style="text-align:center">{{univariate_dict.sw_test}}</td>
+                    </table>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">Test de normalidad Anderson-Darling</h5>
+                  <div class="accordion my-2" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne5" aria-expanded="true" aria-controls="collapseOne">
+                            Detalles sobre el Test de normalidad Anderson-Darling
+                        </button>
+                      </h2>
+                      <div id="collapseOne5" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          Este test de normalidad, está demostrado como uno de los más potentes, aunque está por debajo del test Shapiro-Wilk. Sin embargo, en el caso del segundo mencionado, el tamaño de muestra ha de ser menor que 50, por lo que el test de normalidad de Anderson-Darling es más versátil.
+                        <br/>
+
+        El test comprueba que un conjunto de datos proviene de una distribución en particular, en este caso, de una distribución normal. La hipótesis nula planteada consiste en que la muestra se ha extraído de una distribución normal.
+                        <br/>
+        Para esta prueba, existen una serie de valores críticos que dependen de la distribución con la que se compare la muestra. Los valores críticos asociados a la distribución normal están disponibles para varios niveles de significación, incluyendo el 5%, el considerado en la aplicación. Si el estadístico de la prueba Anderson-Darling es mayor que estos valores críticos asociados a cada nivel de significación, la hipótesis nula, consistente en que los datos provienen de la distribución normal, se rechaza.
+                        <br/>
+                        </div>
+                      </div>
+                    </div>
+            </div>
+            </div>
+            </div>
+        </div>
+
+    {% comment %}
+
+    ############ UNIVARIATE CATEGORICAL ANALYSIS ############
+
+    {% endcomment %}
+
+    {% elif univariate_dict.analysis_type == "categorical" %}
+
+        <div class="container row my-5">
+
+            <div class="card col" style="width: 100%;">
+                <div class="row">
+                    <img src="data:image/png;base64,{{univariate_dict.bar_plot_image}}" class="mx-auto d-block" style="width: 40rem; height: 40rem" alt="">
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align:center">Diagrama de Barras</h5>
+                  <div class="accordion my-2" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne2" aria-expanded="true" aria-controls="collapseOne">
+                            Detalles sobre los diagramas de barras
+                        </button>
+                      </h2>
+                      <div id="collapseOne2" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          En el diagrama de barras, los diferentes valores que toma la variable categórica o categorías se muestran en el eje de la X, mientras que las frecuencias absolutas o relativas, aparecen en el eje Y. La altura de cada barra representa las ocurrencias o porcentajes. Presenta algunas ventajas con respecto al diagrama de sectores, ya que en el diagrama de barras es más fácil comparar visualmente categorías.
+                        </div>
+                      </div>
+                    </div>
+            </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="container row my-5">
+            <div class="card col" style="width: 100%;">
+                    <div class="row">
+                        <table class="table" style="width: 100%;">
+                                <td style="text-align:center">{{univariate_dict.frequencies}}</td>
+                        </table>
+                    </div>
+                    <br/>
+                    <div class="card-body">
+                      <h5 class="card-title" style="text-align:center">Tabla de frecuencias absolutas y relativas</h5>
+                      <p class="card-text accordion" style="text-align:center">Las tablas muestran la frecuencia absoluta (número de ocurrencias) y relativa (proporción) de cada uno de los valores que toma la variable categórica.</p>
+                    </div>
+            </div>
+        </div>
+
+    {% endif %}
+
+    {% comment %}
+
+    ############ LINK TO BIVARIATE ANALYSIS - PART OF BOTH UNIVARIATE ANALYSIS (NUMERICAL AND CATEGORICAL) ############
+
+    {% endcomment %}
+
+    <div class="container row mt-5">
+
+        <div class="card col" style="width: 30rem;">
+            <div class="card-body">
+              <h5 class="card-title" style="text-align:center">Análisis Bivariable</h5>
+                <br/>
+                <div class="container-fluid" style="border:1px solid #cecece;">
+                    <br/>
+                    Seleccione una variable para la realización de un análisis bivariable junto a la variable actual.
+                    <br/>
+                    <form action="{% url 'machinelearning:ML_eda' univariate_dict.eda_variable 0 %}" method="post">
+                        {% csrf_token %}
+                        {% bootstrap_form univariate_dict.form %}
+
+                </div>
+                    <br/>
+                       <input type="submit" class="btn btn-dark" value="Ir a EDA bivariable">
+                    </form>
+
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block special_javascript %}
+
+<script src="{% static 'js/chartjs-library.js' %}"></script>
+<script src="{% static 'js/charts-custom.js' %}"></script>
+
+<script src="{% static 'js/data-table-custom.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/data-table-custom.css' %}"></link>
+
+
+{% endblock %}

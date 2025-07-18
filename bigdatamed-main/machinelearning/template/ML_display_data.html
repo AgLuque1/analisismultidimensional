@@ -1,0 +1,158 @@
+{% extends 'ML_base.html' %}
+
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}
+    Visualización de datos - Modelo {{display_data_view_dict.model}}
+{% endblock %}
+
+{% block content %}
+
+{% if display_data_view_dict.filtering %}
+
+    <h5>Hay un filtro activo con la siguiente lógica: {{display_data_view_dict.filter_string_verbose}}</h5>
+
+{% else %}
+
+    <h5>No hay ningún filtro activo</h5>
+
+{% endif %}
+
+{% if display_data_view_dict.filter_string %}
+
+    El filtro que el usuario está introduciendo es: {{display_data_view_dict.filter_string_verbose}}
+
+{% endif %}
+
+<br/>
+<h4>Opciones de filtrado</h4>
+<br/>
+
+<form action="{% url 'machinelearning:ML_display_data' display_data_view_dict.order_variable %}" method="post">
+    {% csrf_token %}
+    {% bootstrap_form display_data_view_dict.form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-dark">
+          Añadir operando
+        </button>
+    {% endbuttons %}
+</form>
+
+<a href="{% url 'machinelearning:ML_build_complex_filter' 'and' 'display_data' %}" class="btn btn-dark">And</a>
+<a href="{% url 'machinelearning:ML_build_complex_filter' 'or' 'display_data' %}" class="btn btn-dark">Or</a>
+<a href="{% url 'machinelearning:ML_build_complex_filter' 'add_parenthesis' 'display_data' %}" class="btn btn-dark">Paréntesis</a>
+<a href="{% url 'machinelearning:ML_build_complex_filter' 'run_filter' 'display_data' %}" class="btn btn-dark">Ejecutar filtro</a>
+<br/><br/>
+
+<form action="{% url 'machinelearning:ML_reset_table' 'display_data' %}">
+    {% buttons %}
+        <button type="submit" class="btn btn-dark">
+          Reiniciar Filtros
+        </button>
+    {% endbuttons %}
+</form>
+
+<form action="{% url 'machinelearning:ML_erase_table' %}">
+    {% buttons %}
+        <button type="submit" class="btn btn-dark">
+          Eliminar datos del modelo {{display_data_view_dict.model}}
+        </button>
+    {% endbuttons %}
+</form>
+
+<br/><br/><br/>
+<h4>Datos asociados al modelo {{display_data_view_dict.model}}</h4>
+<br/>
+
+<table class="tg table table-hover">
+    <thead>
+	  <tr class="">
+        {% for variable in display_data_view_dict.variable_names %}
+          
+            {% if display_data_view_dict.current_order == "+" %}
+              <th> <a class="btn btn-outline-dark" href="/machinelearning/ml-display-data/-{{variable}}?page={{ page }}">{{ variable }}</a></th>
+            {% else %}
+              <th> <a class="btn btn-outline-dark" href="/machinelearning/ml-display-data/{{variable}}?page={{ page }}">{{ variable }}</a></th>
+            {% endif %}
+    
+        {% endfor %}
+          
+	  </tr>
+	</thead>
+    
+    <tbody>
+        
+        {% if display_data_view_dict.current_order == '+' or display_data_view_dict.current_order == '-' %}
+            {% for elem in display_data_view_dict.dictionary_list %}
+                {% for elem2 in elem %}
+                    <tr>
+                        {% for key, value in elem2.items %}
+                            {% if key == "_id" %}
+                                <th><a class="text-dark" href="/machinelearning/ml-detail/{{value}}">{{ value }}</a></th>
+                            {% else %}
+                                <td>{{value}}</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        {% else %}
+            {% for elem in display_data_view_dict.data %}
+                <tr>
+                {% for key, value in elem.items %}
+                    {% if key == "_id" %}
+                        <th><a class="text-dark" href="/machinelearning/ml-detail/{{value}}">{{ value }}</a></th>
+                    {% else %}
+                        <td>{{value}}</td>
+                    {% endif %}
+                {% endfor %}
+                </tr>
+            {% endfor %}
+        {% endif %}
+        
+    </tbody>
+    
+</table>
+
+{% if display_data_view_dict.data.has_other_pages %}
+  <ul class="pagination">
+      <div class="w-50 p-3" style="background-color: #ffffff;">
+          <table class="table table-hover">
+              <tbody>
+                  <tr>
+                      <th scope="col">
+                            {% if display_data_view_dict.data.has_previous %}
+                              <a href="?page={{ display_data_view_dict.data.previous_page_number }}">&laquo;</a>
+                            {% else %}
+                              <li class="disabled"><span>&laquo;</span>
+                            {% endif %}
+                      </th>
+
+                        {% for i in display_data_view_dict.data.paginator.page_range %}
+                          <th scope="col">
+                              {% if display_data_view_dict.data.number == i %}
+                                <span>{{ i }} <span class="sr-only">(current)</span></span>
+                              {% else %}
+                               <a href="?page={{ i }}">{{ i }}</a>
+                              {% endif %}
+                          </th>
+                        {% endfor %}
+
+                        <th scope="col">
+                            {% if display_data_view_dict.data.has_next %}
+                              <a href="?page={{ display_data_view_dict.data.next_page_number }}">&raquo;</a>
+                            {% else %}
+                              <li class="disabled"><span>&raquo;</span>
+                            {% endif %}
+                        </th>
+
+                  </tr>            
+              </tbody>
+          </table>    
+      </div>
+  </ul>
+{% endif %}
+
+{% endblock %}

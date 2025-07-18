@@ -1,0 +1,37 @@
+{% extends "main_template.html" %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block section-content %}
+
+<section class="content">
+
+    {% if error == True %}
+        {% bootstrap_alert error_message alert_type='danger' %}
+    {% endif %}
+
+    Seleccione <strong>una</strong> o <strong>dos</strong> variables de las disponibles, para realizar un análisis univariable o bivariable, respectivamente.
+    <br/>
+    <br/>
+    <form action="{% url "machinelearning:ML_eda_index" %}" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" class="btn btn-dark" value="Submit">
+    </form>
+
+</section>
+
+{% endblock section-content %}
+
+{% block special_javascript %}
+
+<script src="{% static 'js/chartjs-library.js' %}"></script>
+<script src="{% static 'js/charts-custom.js' %}"></script>
+
+<script src="{% static 'js/data-table-custom.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/data-table-custom.css' %}"></link>
+
+
+{% endblock %}

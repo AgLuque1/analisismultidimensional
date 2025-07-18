@@ -1,0 +1,28 @@
+<table id="table_dynamic" class='table table-striped table-bordered table-sm' cellspacing='10' width='100%'>
+          
+  <!--  === Metadata headers -->
+  <thead>
+    
+     
+      <th>Values</th>
+      <!--  === Header cell containing a checkbox for (de)selecting the current rows of the table -->
+      <th>
+        <div class="form-check">
+          <input id='select_deselect_all' class="form-check-input" type="checkbox" value="">
+          <label class="form-check-label" for="flexCheckDefault"></label>
+        </div>
+      </th>
+      
+  </thead>
+  
+  <!--  === Body with the metadata fields -->
+  <tbody> 
+      {% for value in var_value %}             
+        <tr>
+          <td> {{ value }} </td>
+          <!--  === Cell with selection box -->
+          <td class="text-center center-block selectable-cell"></td>
+        </tr>    
+      {% endfor %}         
+  </tbody>              
+</table>

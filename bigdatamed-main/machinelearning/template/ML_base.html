@@ -1,0 +1,35 @@
+{% extends 'ML_bootstrap.html' %}
+
+{% load bootstrap5 %}
+
+{% block bootstrap5_content %}
+    
+<header class="p-3 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-center justify-content-lg-start">
+
+        <ul class="nav d-flex align-items-center col-12 col-lg-auto me-lg-auto mb-2 justify-content-center align-center mb-md-0">
+            <li> <a class="nav-link px-2 text-white" href="{% url 'machinelearning:ML_index' %}"> <h1>BDMED</h1> </a></li>
+            <li> <a class="nav-link px-2 text-white" href="{% url 'machinelearning:ML_upload_csv' %}"> Subida de datos </a></li>
+            <li> <a class="nav-link px-2 text-white" href="{% url 'machinelearning:ML_display_filter_data' '_id' %}"> Visualización </a></li>
+            <li> <a class="nav-link px-2 text-white" href="{% url 'machinelearning:ML_eda_index' %}"> EDA </a></li>
+            <li> <a class="nav-link px-2 text-white" href=""> Resolución de problemas </a></li>
+            <li> <a class="nav-link px-2 text-white" href="{% url 'machinelearning:ML_previous_results' %}"> Resultados previos de ejecución </a></li>
+            <li> <a class="nav-link px-2 text-white" href="{% url 'admin:index' %}"> Administración de la BD </a></li>
+        </ul>
+      </div>
+    </div>
+</header>
+
+<div class="container">
+    <br/>
+    <h2>{% block title %}(no title){% endblock %}</h2>
+    <br/>
+    {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+
+    {% block content %}(no content){% endblock %}
+</div>
+
+<footer class="my-5 container"> <h3> <em>UgrITLab - BigDataMed ©</em></h3></footer>
+
+{% endblock %}
