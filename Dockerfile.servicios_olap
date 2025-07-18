@@ -1,0 +1,30 @@
+# Dockerfile.servicios_olap
+FROM python:3.10-slim
+
+# Instalamos PostgreSQL y dependencias necesarias
+RUN apt-get update && apt-get install -y gcc libpq-dev postgresql postgresql-contrib && apt-get clean
+
+# Crear carpeta de trabajo
+WORKDIR /servicios_olap
+
+# Copiar requirements.txt e instalar Python deps
+COPY requirements.txt .
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# Copiar código de la API OLAP
+COPY fastapi /servicios_olap/fastapi
+
+# Copiar scripts de inicialización de PostgreSQL si existen
+COPY postgres-init /docker-entrypoint-initdb.d
+
+# Creamos carpeta para PostgreSQL
+RUN mkdir -p /var/lib/postgresql/data
+
+# Exponer puertos
+EXPOSE 8001
+EXPOSE 5432
+
+# Lanzar PostgreSQL en segundo plano y luego iniciar API OLAP
+CMD service postgresql start && \
+    python fastapi/init_db.py && \
+    python fastapi/main.py

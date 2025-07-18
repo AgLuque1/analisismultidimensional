@@ -1,0 +1,40 @@
+# Dockerfile.bigdatamed
+FROM python:3.10-slim
+
+# Instalamos las dependencias necesarias
+RUN apt-get update && apt-get install -y gcc build-essential libpq-dev && apt-get clean
+
+# Creamos carpeta de trabajo
+WORKDIR /bigdatamed
+
+# Copiamos requirements e instalar dependencias
+COPY requirements.txt .
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# Copiamos código de bigatamed y la API de carga de datos
+COPY bigdatamed-main /bigdatamed/bigdatamed-main
+COPY API_CLOUDS /bigdatamed/API_CLOUDS
+
+# Copiamos los datos de mongo
+COPY mongo-init /data/mongo-init
+
+# Instalamos MongoDB y herramientas para importar JSON
+RUN apt-get update && \
+    apt-get install -y gnupg curl && \
+    curl -fsSL https://pgp.mongodb.com/server-6.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/mongodb-server.gpg] https://repo.mongodb.org/apt/debian buster/mongodb-org/6.0 main" | tee /etc/apt/sources.list.d/mongodb-org-6.0.list && \
+    apt-get update && apt-get install -y mongodb-org && \
+    mkdir -p /data/db
+
+# Exponemos puertos (8000 para bidatamed, 5000 para API de carga)
+EXPOSE 8000
+EXPOSE 5000
+
+# Comando para lanzar Mongo y ambas apps en segundo plano
+CMD mongod --fork --logpath /var/log/mongod.log && \
+    sleep 5 && \
+    mongoimport --db EjemploVentas --collection meta --file /data/mongo-init/meta.json --jsonArray && \
+    mongoimport --db EjemploVentas --collection data --file /data/mongo-init/data.json --jsonArray && \
+    python bigdatamed-main/manage.py runserver 0.0.0.0:8000 & \
+    cd /API_CLOUDS && flask run --host 0.0.0.0 --port 5000
+ 

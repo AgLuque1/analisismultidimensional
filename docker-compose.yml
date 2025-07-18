@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+
+  # Bigdamated + API Carga de datos + MongoDB
+  bigdatamed:
+    build:
+      context: .
+      dockerfile: Dockerfile.bigdatamed
+    ports:
+      - "8000:8000"  # App
+      - "5000:5000"  # API de carga
+    volumes:
+      - ./mongo-seed:/data/mongo-seed
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=mongo
+    depends_on:
+      - servicios_olap
+
+  # API de operaciones + PostgreSQL
+  servicios_olap:
+    build:
+      context: .
+      dockerfile: Dockerfile.servicios_olap
+    ports:
+      - "8001:8001"
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=aaaa
+      - POSTGRES_DB=postgres
+    volumes:
+      - ./postgres-init:/docker-entrypoint-initdb.d

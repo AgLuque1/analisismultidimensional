@@ -1,14 +1,25 @@
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+import time
 
 def crear_bds(nombre_bd, user, password, host="localhost", port=5432):
-    conn = psycopg2.connect(
-        dbname="postgres",  # Conexión a postgres genérica
-        user=user,
-        password=password,
-        host=host,
-        port=port
-    )
+    for _ in range(10):
+        try:
+            conn = psycopg2.connect(
+                dbname="postgres",  # Conexión a postgres genérica
+                user=user,
+                password=password,
+                host=host,
+                port=port
+            )
+            break
+        except Exception as e:
+            print("Esperando POSTGRESQL.. {e}")
+            time.sleep(2)
+
+    else:
+        raise Exception ("No se pudo conectar a postgresql")
+
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = conn.cursor()
 
