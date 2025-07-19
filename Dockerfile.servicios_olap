@@ -1,5 +1,5 @@
 # Dockerfile.servicios_olap
-FROM python:3.11-slim
+FROM python:3.11-buster
 
 # Instalamos PostgreSQL y dependencias necesarias
 RUN apt-get update && apt-get install -y gcc libpq-dev postgresql postgresql-contrib && apt-get clean
