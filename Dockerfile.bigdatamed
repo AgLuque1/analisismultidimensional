@@ -3,7 +3,8 @@ FROM python:3.11-slim-bookworm
 
 # Instalamos las dependencias necesarias
 RUN apt-get update && apt-get install -y gcc build-essential libpq-dev && apt-get clean \
-    && apt-get install -y gnupg curl && apt-get install -y wget
+    && apt-get install -y gnupg curl && apt-get install -y wget curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 # Instalar libssl1.1 manualmente
 RUN wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u3_amd64.deb \
@@ -25,12 +26,10 @@ COPY API_CLOUDS /bigdatamed/API_CLOUDS
 COPY mongo-init /data/mongo-init
 
 # Instalamos MongoDB
-RUN apt-get update && apt-get install -y wget gnupg curl libcurl4 openssl && \
-    wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-debian11-6.0.13.tgz && \
-    tar -xvzf mongodb-linux-x86_64-debian11-6.0.13.tgz && \
-    mv mongodb-linux-x86_64-debian11-6.0.13 /mongodb && \
-    ln -s /mongodb/bin/* /usr/local/bin/ && \
-    mkdir -p /data/db
+RUN curl -LO https://fastdl.mongodb.org/tools/db/mongodb-database-tools-debian11-x86_64-100.9.4.tgz \
+    && tar -xvzf mongodb-database-tools-debian11-x86_64-100.9.4.tgz \
+    && mv mongodb-database-tools-*/bin/mongoimport /usr/bin/ \
+    && rm -rf mongodb-database-tools-*
 
 # Copiamos el entrypoint.sh, que contiene codigo para hacer las migraciones y crear usuario de django
 COPY entrypoint.sh /entrypoint.sh
