@@ -1,5 +1,5 @@
 # Dockerfile.servicios_olap
-FROM python:3.11-buster
+FROM python:3.11-slim-bookworm
 
 RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /etc/apt/sources.list && \
     sed -i '/security.debian.org/d' /etc/apt/sources.list && \
