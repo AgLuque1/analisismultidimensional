@@ -14,9 +14,6 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Copiar código de la API OLAP
 COPY fastapi /servicios_olap/fastapi
 
-# Copiar scripts de inicialización de PostgreSQL si existen
-COPY postgres-init /docker-entrypoint-initdb.d
-
 # Creamos carpeta para PostgreSQL
 RUN mkdir -p /var/lib/postgresql/data
 
