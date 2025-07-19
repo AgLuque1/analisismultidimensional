@@ -83,6 +83,7 @@ pydantic-settings==2.1.0
 pydantic_core==2.16.2
 pyelftools==0.31
 Pygments==2.17.2
+pymongo
 PyNaCl==1.5.0
 pyparsing==3.1.1
 pyserial==3.5
