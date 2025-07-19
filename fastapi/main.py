@@ -30,7 +30,7 @@ app.include_router(api.router)
 #models.Base.metadata.create_all(bind=engine_modelo) #crea las tablas en la bd
 models.Modelo.metadata.create_all(bind=engine_modelo) #crea las tablas en la bd
 #models.Base.metadata.create_all(bind=engine_datawarehouse)
-models.Modelo.metadata.create_all(bind=engine_datawarehouse)
+#models.Modelo.metadata.create_all(bind=engine_datawarehouse)
 
 
  

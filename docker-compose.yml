@@ -10,8 +10,6 @@ services:
     ports:
       - "8000:8000"  # App
       - "5000:5000"  # API de carga
-    volumes:
-      - ./mongo-seed:/data/mongo-seed
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongo
       - MONGO_INITDB_ROOT_PASSWORD=mongo
@@ -30,5 +28,3 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=aaaa
       - POSTGRES_DB=postgres
-    volumes:
-      - ./postgres-init:/docker-entrypoint-initdb.d
