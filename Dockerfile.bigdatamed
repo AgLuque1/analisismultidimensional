@@ -1,8 +1,14 @@
 # Dockerfile.bigdatamed
-FROM python:3.11-buster
+FROM python:3.11-slim-bookworm
 
 # Instalamos las dependencias necesarias
-RUN apt-get update && apt-get install -y gcc build-essential libpq-dev && apt-get clean
+RUN apt-get update && apt-get install -y gcc build-essential libpq-dev && apt-get clean \
+    && apt-get install -y gnupg curl
+
+# Instalar libssl1.1 manualmente
+RUN curl -LO https://security.debian.org/debian-security/pool/updates/main/o/openssl1.1/libssl1.1_1.1.1f-1ubuntu2_amd64.deb \
+    && dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb \
+    && rm libssl1.1_1.1.1f-1ubuntu2_amd64.d
 
 # Creamos carpeta de trabajo
 WORKDIR /bigdatamed
@@ -19,9 +25,7 @@ COPY API_CLOUDS /bigdatamed/API_CLOUDS
 COPY mongo-init /data/mongo-init
 
 # Instalamos MongoDB y herramientas para importar JSON
-RUN apt-get update && \
-    apt-get install -y gnupg curl && \
-    curl -fsSL https://pgp.mongodb.com/server-6.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server.gpg && \
+RUN curl -fsSL https://pgp.mongodb.com/server-6.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/mongodb-server.gpg] https://repo.mongodb.org/apt/debian buster/mongodb-org/6.0 main" | tee /etc/apt/sources.list.d/mongodb-org-6.0.list && \
     apt-get update && apt-get install -y mongodb-org && \
     mkdir -p /data/db
