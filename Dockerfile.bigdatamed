@@ -30,9 +30,16 @@ RUN curl -fsSL https://pgp.mongodb.com/server-6.0.asc | gpg --dearmor -o /usr/sh
     apt-get update && apt-get install -y mongodb-org && \
     mkdir -p /data/db
 
+# Copiamos el entrypoint.sh, que contiene codigo para hacer las migraciones y crear usuario de django
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Exponemos puertos (8000 para bidatamed, 5000 para API de carga)
 EXPOSE 8000
 EXPOSE 5000
+
+# Ejecutamos entrypoint
+RUN ["/entrypoint.sh"]
 
 # Comando para lanzar Mongo y ambas apps en segundo plano
 CMD mongod --fork --logpath /var/log/mongod.log && \
