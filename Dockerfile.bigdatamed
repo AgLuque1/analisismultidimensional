@@ -39,4 +39,4 @@ EXPOSE 8000
 EXPOSE 5000
 
 # Ejecutamos entrypoint
-RUN ["/entrypoint.sh"]
+CMD ["/entrypoint.sh"]
