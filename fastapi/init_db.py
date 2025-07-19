@@ -6,7 +6,7 @@ def crear_bds(nombre_bd, user, password, host="localhost", port=5432):
     for _ in range(10):
         try:
             conn = psycopg2.connect(
-                dbname="postgres",  # Conexión a postgres genérica
+                dbname="postgres",
                 user=user,
                 password=password,
                 host=host,
