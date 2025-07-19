@@ -2,7 +2,7 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import time
 
-def crear_bds(nombre_bd, user, password, host="localhost", port=5432):
+def crear_bds(nombre_bd, user, password, host="127.0.0.1", port=5432):
     for _ in range(10):
         try:
             conn = psycopg2.connect(
