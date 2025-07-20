@@ -4,13 +4,14 @@ FROM python:3.11-slim-bookworm
 # Instalamos las dependencias necesarias
 RUN apt-get update && apt-get install -y gcc build-essential libpq-dev && apt-get clean \
     && apt-get install -y gnupg curl && apt-get install -y wget curl ca-certificates \
-    && apt-get install -y mongodb-org-tools \
     && rm -rf /var/lib/apt/lists/* 
 
 # Instalar libssl1.1 manualmente
 RUN wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u3_amd64.deb \
     && dpkg -i libssl1.1_1.1.1w-0+deb11u3_amd64.deb \
     && rm libssl1.1_1.1.1w-0+deb11u3_amd64.deb
+
+
 
 # Creamos carpeta de trabajo
 WORKDIR /bigdatamed
@@ -33,6 +34,11 @@ RUN wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-debian11-6.0.13.t
     ln -s /mongodb/bin/* /usr/local/bin/ && \
     rm mongodb-linux-x86_64-debian11-6.0.13.tgz
 
+#Instalamos herramientas de MongoDB
+RUN wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2404-x86_64-100.12.2.deb && \
+    apt install -y ./mongodb-database-tools-ubuntu2404-x86_64-100.12.2.deb && \
+    rm mongodb-database-tools-ubuntu2404-x86_64-100.12.2.deb &&\
+    rm -rf /var/lib/apt/lists/*
 
 # Copiamos el entrypoint.sh, que contiene codigo para hacer las migraciones y crear usuario de django
 COPY entrypoint.sh /entrypoint.sh
