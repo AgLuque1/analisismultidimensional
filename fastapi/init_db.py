@@ -2,7 +2,7 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import time
 
-def crear_bds(nombre_bd, user, password, host="/var/run/postgresql", port=5432):
+def crear_bds(nombre_bd, user, password, host="localhost", port=5432):
         try:
             conn = psycopg2.connect(
                 dbname="postgres",

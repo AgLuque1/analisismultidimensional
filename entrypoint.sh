@@ -1,6 +1,7 @@
 #!/bin/bash
+mkdir -p /data/db
 
-mongod --fork --logpath /var/log/mongod.log
+mongod --logpath /var/log/mongod.log --logappend --bind_ip_all &
 sleep 5
 
 # Importamos datos a mongo
