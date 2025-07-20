@@ -19,7 +19,6 @@
           {% else %}
             <img src="{% static 'img/default-profile.png' %}" alt="Default Profile Image">
           {% endif %}
-          <img src="{{ user.profile.image.url }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
           <a href="{% url 'dashboard:profile_user' %}" class="d-block">{{user.username}}</a>
