@@ -13,8 +13,8 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongo
       - MONGO_INITDB_ROOT_PASSWORD=mongo
-    depends_on:
-      - servicios_olap
+    #depends_on:
+     # - servicios_olap
 
   # API de operaciones + PostgreSQL
   servicios_olap:
