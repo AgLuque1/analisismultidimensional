@@ -14,7 +14,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          {% if user.profile.image %}
+          {% if user.is_authenticated and user.profile and user.profile.image %}
             <img src="{{ user.profile.image.url }}" alt="Profile Image">
           {% else %}
             <img src="{% static 'img/default-profile.png' %}" alt="Default Profile Image">

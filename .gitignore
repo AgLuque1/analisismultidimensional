@@ -21,8 +21,8 @@ ENV/
 *.log
 
 # Archivos de bases de datos locales
-*.sqlite3
-*.db
+#*.sqlite3
+#*.db
 
 # Carpetas de IDEs
 .vscode/

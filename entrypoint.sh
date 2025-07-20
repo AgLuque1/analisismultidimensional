@@ -12,6 +12,8 @@ mongoimport --db EjemploVentas --collection data --file /data/mongo-init/data.js
 python bigdatamed-main/manage.py makemigrations --noinput
 python bigdatamed-main/manage.py migrate --noinput
 
+echo "Migraciones hechas"
+
 # Creamos superusuario si no existe
 python bigdatamed-main/manage.py shell <<EOF
 from django.contrib.auth import get_user_model
