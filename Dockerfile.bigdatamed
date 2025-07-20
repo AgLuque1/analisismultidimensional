@@ -26,10 +26,12 @@ COPY API_CLOUDS /bigdatamed/API_CLOUDS
 COPY mongo-init /data/mongo-init
 
 # Instalamos MongoDB
-RUN curl -LO https://fastdl.mongodb.org/tools/db/mongodb-database-tools-debian11-x86_64-100.9.4.tgz \
-    && tar -xvzf mongodb-database-tools-debian11-x86_64-100.9.4.tgz \
-    && mv mongodb-database-tools-*/bin/mongoimport /usr/bin/ \
-    && rm -rf mongodb-database-tools-*
+RUN wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-debian11-6.0.13.tgz && \
+    tar -xvzf mongodb-linux-x86_64-debian11-6.0.13.tgz && \
+    mv mongodb-linux-x86_64-debian11-6.0.13 /mongodb && \
+    ln -s /mongodb/bin/* /usr/local/bin/ && \
+    rm mongodb-linux-x86_64-debian11-6.0.13.tgz
+
 
 # Copiamos el entrypoint.sh, que contiene codigo para hacer las migraciones y crear usuario de django
 COPY entrypoint.sh /entrypoint.sh
