@@ -16,6 +16,7 @@ RUN wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/
 # Creamos carpeta de trabajo
 WORKDIR /bigdatamed
 
+
 # Copiamos requirements e instalar dependencias
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
@@ -26,6 +27,8 @@ COPY API_CLOUDS /bigdatamed/API_CLOUDS
 
 # Copiamos los datos de mongo
 COPY mongo-init /data/mongo-init
+
+RUN mkdir -p /data/db
 
 # Instalamos MongoDB
 RUN wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-debian11-6.0.13.tgz && \

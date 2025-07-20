@@ -14,6 +14,11 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
+          {% if user.profile.image %}
+            <img src="{{ user.profile.image.url }}" alt="Profile Image">
+          {% else %}
+            <img src="{% static 'img/default-profile.png' %}" alt="Default Profile Image">
+          {% endif %}
           <img src="{{ user.profile.image.url }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
