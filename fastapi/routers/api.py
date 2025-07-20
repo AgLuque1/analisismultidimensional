@@ -169,7 +169,7 @@ async def crear_cubo_dw(
         #dimension_tables[jerarquia] = tabla
         jerarquia_por_defecto = contenido.get("jerarquia_por_defecto")
         if jerarquia_por_defecto:
-            dimension_tables[jerarquia_por_defecto] = tabla
+            dimension_tables[dimension] = tabla
         metadatos.create_all(engine_datawarehouse)
 
     # Creamos la tabla de hechos
@@ -208,7 +208,7 @@ async def crear_cubo_dw(
 
                 #tabla_dim = dimension_tables[jerarquia] 
                 tabla_dim = dimension_tables[dimension] 
-
+                
                 valores_dim = {
                     nivel: str(fila[nivel])
                     for nivel in niveles

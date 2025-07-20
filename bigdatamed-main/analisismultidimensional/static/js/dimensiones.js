@@ -199,10 +199,10 @@ $(document).ready(function(){
       const valorInput = event.target.value;
 
       //Verificamos si el valor contiene comas, puntos u otros caracteres no deseados
-      if (valorInput.match(/[,":;¿?~.¡!@#$%^&*'`()_+=<>?{}|[\]\\/]/)) {
+      if (valorInput.match(/[,\s":;¿?~.¡!@#$%^&*'`()_+=<>?{}|[\]\\/]/)) {
 
         //Si se encuentra algún carácter no deseado, se limpia el valor del campo de entrada
-        event.target.value = valorInput.replace(/[,:;"¿?.~¡!@#$%^&*()_+`'=<>?{}|[\]\\/]/g, '');
+        event.target.value = valorInput.replace(/[\s,:;"¿?.~¡!@#$%^&*()_+`'=<>?{}|[\]\\/]/g, '');
         var mensaje = i18next.t('errorCaracter');
         toastr.error(mensaje)
       }
@@ -242,7 +242,7 @@ $(document).ready(function(){
 function agregarDimension() {
 
    //Obtenemos el valor del input
-   var dimension = document.getElementById('nombreDimension').value;
+   var dimension = document.getElementById('nombreDimension').value.trim();
 
    //Si la dimensión no está vacía y no existe, la añadimos al select
    if (dimension.trim() !== '' && !estructuraCubo.dimensiones.hasOwnProperty(dimension)) {
@@ -286,8 +286,8 @@ function agregarDimension() {
 function añadirJerarquia(){
 
     //Obtenemos nombre de la dimensión seleccionada y la jerarquía
-    var nombreJerarquia = $('#nombreJerarquia').val();
-    var dimensionSeleccionada = $('#dimensiones').val();
+    var nombreJerarquia = $('#nombreJerarquia').val().trim();
+    var dimensionSeleccionada = $('#dimensiones').val().trim();
    
     //Comprobamos si se ha introducido nombre de jerarquía y hay una dimensión seleccionada
     if(nombreJerarquia.trim() !== '' && dimensionSeleccionada !== null){
@@ -336,11 +336,11 @@ function añadirNivel(){
 
   console.log("DENTRO DE AÑADIR NIVEL");
 
-  var nombreNivel = $('#nombreNivel').val();
+  var nombreNivel = $('#nombreNivel').val().trim();
 
-  var nombreJerarquia = $('#dimensionesJerarquias').val();
+  var nombreJerarquia = $('#dimensionesJerarquias').val().trim();
   
-  var nivelSeleccionado = $('#niveles').val();
+  var nivelSeleccionado = $('#niveles').val().trim();
 
   //Comprobar que se han seleccionado dimension y jerarquia
   if (nombreJerarquia.trim() === ''){

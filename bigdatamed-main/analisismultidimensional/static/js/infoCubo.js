@@ -844,7 +844,6 @@ async function realizarDice(){
 
 
     if (Array.isArray(data.resultado)) {
-      toastr.success("Dice realizado correctamente");
       var mensaje = i18next.t('successdice');
       toastr.success(mensaje);
       
