@@ -25,7 +25,8 @@ mongoimport --db EjemploVentas --collection data --file /data/mongo-init/data.js
 #'''
 
 # Lanzamos bigdatamed Django en background
-python bigdatamed-main/manage.py runserver 0.0.0.0:8000 &
+#python bigdatamed-main/manage.py migrate --no-input
+#python bigdatamed-main/manage.py runserver 0.0.0.0:8000 &
 
 # Lanzamos API_CLOUDS
 cd /bigdatamed/API_CLOUDS
