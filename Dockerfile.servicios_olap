@@ -26,7 +26,9 @@ EXPOSE 5432
 
 # Lanzar PostgreSQL en segundo plano y luego iniciar API OLAP
 CMD service postgresql start && \
+    echo "Haciendo cambio de contraseña" && \
     psql --username=postgres -c "ALTER USER postgres WITH PASSWORD 'aaaa';" && \
+    echo "Contraseña cambiada" && \
     until pg_isready -U postgres; do echo "Esperando a PostgreSQL.."; sleep 1; done && \
     python fastapi/init_db.py && \
     python fastapi/main.py
