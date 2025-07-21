@@ -5,7 +5,9 @@ FROM python:3.11-slim-bookworm
 RUN apt-get update && apt-get install -y gcc libpq-dev postgresql postgresql-contrib && apt-get clean
 
 # Cambiamos el modo de autenticación de postgresql
-RUN sed -i 's/^local\s\+all\s\+postgres\s\+peer/local all postgres md5/' /etc/postgresql/*/main/pg_hba.conf
+RUN sed -i 's/peer/trust/g' /etc/postgresql/15/main/pg_hba.conf && \
+    sed -i 's/md5/trust/g' /etc/postgresql/15/main/pg_hba.conf
+
 
 # Crear carpeta de trabajo
 WORKDIR /servicios_olap
@@ -27,7 +29,6 @@ EXPOSE 5432
 # Lanzar PostgreSQL en segundo plano y luego iniciar API OLAP
 CMD service postgresql start && \
     echo "Haciendo cambio de contraseña" && \
-    psql --username=postgres -c "ALTER USER postgres WITH PASSWORD 'aaaa';" && \
     echo "Contraseña cambiada" && \
     until pg_isready -U postgres; do echo "Esperando a PostgreSQL.."; sleep 1; done && \
     python fastapi/init_db.py && \
