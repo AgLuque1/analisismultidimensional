@@ -1,0 +1,81 @@
+.selectable-cell{
+    cursor: pointer !important;
+    pointer-events: all !important;
+}
+
+#select_deselect_all {
+    cursor: pointer !important;
+    pointer-events: all !important;
+}
+
+.form-check-custom{
+    padding-left: 2.12rem !important;
+    text-align: center !important;
+}
+
+.interval-generator-button{
+    font-size: 1rem !important;
+}
+
+.content-padding-custom{
+    padding: 0 0.5rem !important;
+}
+
+.nav-tabs .nav-link {
+    margin-bottom: -1px;
+    border: 1.3px solid transparent;
+    border-top-left-radius: 0rem;
+    border-top-right-radius: 0rem;
+}
+
+.nav-tabs .nav-link.active {
+    color: #495057;
+    background-color: #fff;
+    border-color: #dee2e6 #dee2e6 #dee2e6;
+}
+
+.filter-container{
+    padding: 0 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-top: 1rem;
+}
+
+.interval{
+    padding-left: 0.5rem;
+}
+
+.interval-box{
+    display:inline;
+    padding: 0 0.5rem;
+}
+
+.hyphen{
+    display:inline;
+    font-size:1rem;
+}
+
+.close-icon{
+    line-height: 25px;
+    padding-left:4px;
+    vertical-align: top;
+    display:inline-block;
+}
+
+.fa-times-circle{
+    color: #505050;
+}
+
+.fa-times-circle:hover{
+    color: #000000;
+    cursor: pointer;
+}
+
+.remove-interval{
+    display:inline;
+}
+
+#filter_information{
+    padding: 0 0.5rem;
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+}

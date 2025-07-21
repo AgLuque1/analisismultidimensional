@@ -1,0 +1,102 @@
+/* Estilo para los nodos de dimensión */
+span.fancytree-dimension > span.fancytree-title {
+    color: rgb(64,132,180);
+    font-weight: bold
+  }
+  
+  span.fancytree-jerarquia > span.fancytree-title {
+    color: rgb(48,164,68);
+    font-weight: bold
+  }
+
+  span.fancytree-jerarquia-defecto > span.fancytree-title {
+    color: rgb(48,164,68);
+    font-weight: bold;
+    text-decoration: underline;
+  }
+  
+  span.fancytree-nivel > span.fancytree-title {
+    color: rgb(255, 196, 4);
+    font-weight: bold
+  }
+
+  .btn {
+    width: 150px; 
+    text-align: center;
+  }
+  
+  .botonBorrar {
+    margin-left: 15px;
+    color: white;
+  }
+
+  .icono-dimension {
+    background-position: 0 0;
+    background-image: url("../img/dimension.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  
+  .icono-jerarquia {
+    background-position: 0 0;
+    background-image: url("../img/jerarquia.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  
+  .icono-nivel {
+    background-position: 0 0;
+    background-image: url("../img/nivel.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  
+  span.fancytree-iconodimension > span.fancytree-icon {
+    background-position: 0 0;
+    background-color: rgb(69, 198, 95);
+    background-image: url("{% static 'img/dimension.png' %}");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  
+  .dimension-container {
+    margin-bottom: 20px;
+  }
+
+  .lista-ordenable {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 60%;
+  }
+
+  .lista-ordenable li {
+    margin: 2px;
+    padding: 8px;
+    height: 1.5em;
+    cursor: move;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e3e3e3;
+    border: 1px solid #289c44;
+  }
+
+  /* Estilos generales para select2 */
+  .select2-container .select2-selection--single {
+    height: 40px; 
+    display: flex;
+    align-items: center;
+  }
+
+  .select2-container .select2-selection__rendered {
+    line-height: normal; 
+    padding: 0 8px; 
+    align-items: center;
+  }
+
+  .select2-container .select2-selection__arrow {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }

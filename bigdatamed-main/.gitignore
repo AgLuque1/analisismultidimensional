@@ -29,8 +29,7 @@ logs/
 bigdatamed/__pycache__/
 dashboard/__pycache__/
 migrations/
-/static/
-/media/
+
 
 
 

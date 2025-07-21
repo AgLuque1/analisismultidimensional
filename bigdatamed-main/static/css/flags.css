@@ -1,0 +1,20 @@
+.flags{
+    width: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.flags_item{
+    width: 30px;
+}
+
+.flags_img{
+    display: block;
+    cursor: pointer;
+}
+
+
+.content-wrapper{
+    visibility: 'hidden';
+}
