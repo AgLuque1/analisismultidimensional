@@ -2,13 +2,12 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import time
 
-print 
-
-def crear_bds(nombre_bd, user, host="127.0.0.1", port=5432):
+def crear_bds(nombre_bd, user, host="postgres_olap", port=5432):
         try:
             conn = psycopg2.connect(
                 dbname="postgres",
                 user=user,
+                password="aaaa",
                 host=host,
                 port=port
             )

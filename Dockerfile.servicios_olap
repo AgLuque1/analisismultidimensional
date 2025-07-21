@@ -2,19 +2,14 @@
 FROM python:3.11-slim-bookworm
 
 # Instalamos PostgreSQL y dependencias necesarias
-RUN apt-get update && apt-get install -y gcc libpq-dev postgresql postgresql-contrib && apt-get clean
-
-# Cambiamos el modo de autenticación de postgresql
-RUN sed -i 's/peer/trust/g' /etc/postgresql/15/main/pg_hba.conf && \
-    sed -i 's/md5/trust/g' /etc/postgresql/15/main/pg_hba.conf
-
+RUN apt-get update && apt-get install -y gcc libpq-dev && apt-get clean
 
 # Crear carpeta de trabajo
 WORKDIR /servicios_olap
 
 # Copiar requirements.txt e instalar Python deps
-COPY requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
+COPY fastapi/requirements.txt /servicios_olap/fastapi/
+RUN pip install --upgrade pip && pip install -r fastapi/requirements.txt
 
 # Copiar código de la API OLAP
 COPY fastapi /servicios_olap/fastapi
@@ -24,12 +19,11 @@ RUN mkdir -p /var/lib/postgresql/data
 
 # Exponer puertos
 EXPOSE 8001
-EXPOSE 5432
 
 # Lanzar PostgreSQL en segundo plano y luego iniciar API OLAP
-CMD service postgresql start && \
-    echo "Haciendo cambio de contraseña" && \
-    echo "Contraseña cambiada" && \
-    until pg_isready -U postgres; do echo "Esperando a PostgreSQL.."; sleep 1; done && \
-    python fastapi/init_db.py && \
-    python fastapi/main.py
+CMD until pg_isready -h postgres_olap -U postgres; do \
+    echo "Esperando a que PostgreSQL esté listo..."; \
+    sleep 1; \
+done && \
+python fastapi/init_db.py && \
+python fastapi/main.py

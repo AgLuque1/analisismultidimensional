@@ -3,14 +3,14 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 #Conexión bd de modelo
-URL_MODELO = 'postgresql://postgres:aaaa@localhost:5432/Modelo_AM'
+URL_MODELO = 'postgresql://postgres:aaaa@postgres_olap:5432/Modelo_AM'
 
 engine_modelo = create_engine(URL_MODELO)
 Session_modelo= sessionmaker(autocommit=False, autoflush=False, bind=engine_modelo)
 
 Modelo = declarative_base()
 
-URL_DATAWAREHOUSE = 'postgresql://postgres:aaaa@localhost:5432/DataWarehouse_AM'
+URL_DATAWAREHOUSE = 'postgresql://postgres:aaaa@postgres_olap:5432/DataWarehouse_AM'
 
 engine_datawarehouse = create_engine(URL_DATAWAREHOUSE)
 

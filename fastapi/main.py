@@ -13,7 +13,7 @@ app = FastAPI()
 
 #Configuración de CORS
 origins = [
-    "http://localhost:8000",  #URL de la aplicación desde donde se realice la llamada
+    "http://servicios_olap:8001",  #URL de la aplicación desde donde se realice la llamada
     "http://bigdatamed:8000",  #URL de la aplicación desde donde se realice la llamada
 ]
 
