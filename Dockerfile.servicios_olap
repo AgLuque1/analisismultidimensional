@@ -4,6 +4,9 @@ FROM python:3.11-slim-bookworm
 # Instalamos PostgreSQL y dependencias necesarias
 RUN apt-get update && apt-get install -y gcc libpq-dev postgresql postgresql-contrib && apt-get clean
 
+# Cambiamos el modo de autenticación de postgresql
+RUN sed -i 's/^local\s\+all\s\+postgres\s\+peer/local all postgres md5/' /etc/postgresql/*/main/pg_hba.conf
+
 # Crear carpeta de trabajo
 WORKDIR /servicios_olap
 
