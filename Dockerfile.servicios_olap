@@ -7,9 +7,9 @@ RUN apt-get update && apt-get install -y gcc libpq-dev && apt-get clean
 # Crear carpeta de trabajo
 WORKDIR /servicios_olap
 
-# Copiar requirements.txt e instalar Python deps
-COPY fastapi/requirements.txt /servicios_olap/fastapi/
-RUN pip install --upgrade pip && pip install -r fastapi/requirements.txt
+# Copiar requirements.txt 
+COPY fastapi/requirements.txt ./requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Copiar código de la API OLAP
 COPY fastapi /servicios_olap/fastapi

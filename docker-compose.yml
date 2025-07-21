@@ -38,7 +38,7 @@ services:
       - POSTGRES_HOST: postgres_olap
       - POSTGRES_PORT: 5432
       - POSTGRES_USER: postgres
-      - POSTGRES_PASSWORD: postgres
+      - POSTGRES_PASSWORD: aaaa
       - POSTGRES_DB: postgres
     ports:
       - "8001:8001"
