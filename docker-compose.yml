@@ -22,8 +22,10 @@ services:
     ports:
       - "8000:8000"  # App
       - "5000:5000"  # API de carga
-    #depends_on:
-      #- servicios_olap
+    depends_on:
+      - servicios_olap
+    volumes:
+      - sqlite_data:/bigdatamed/bigdatamed-main/db.sqlite3
 
   # API de operaciones + PostgreSQL
   servicios_olap:
@@ -42,3 +44,4 @@ services:
       - "8001:8001"
 volumes:
   postgres_olap_data:
+  sqlite_data:
