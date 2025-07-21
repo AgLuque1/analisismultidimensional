@@ -22,8 +22,8 @@ services:
     ports:
       - "8000:8000"  # App
       - "5000:5000"  # API de carga
-    #depends_on:
-     # - servicios_olap
+    depends_on:
+      - servicios_olap
 
   # API de operaciones + PostgreSQL
   servicios_olap:
