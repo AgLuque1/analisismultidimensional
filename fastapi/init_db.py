@@ -2,18 +2,20 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import time
 
-def crear_bds(nombre_bd, user, password, host="localhost", port=5432):
+print 
+
+def crear_bds(nombre_bd, user, host="127.0.0.1", port=5432):
         try:
             conn = psycopg2.connect(
                 dbname="postgres",
                 user=user,
-                password=password,
                 host=host,
                 port=port
             )
         except Exception as e:
             import traceback
             traceback.print_exc()
+            return
 
         conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cursor = conn.cursor()
@@ -30,5 +32,5 @@ def crear_bds(nombre_bd, user, password, host="localhost", port=5432):
         cursor.close()
         conn.close()
 
-crear_bds("Modelo_AM", user="postgres", password="aaaa")
-crear_bds("DataWarehouse_AM", user="postgres", password="aaaa")
+crear_bds("Modelo_AM", user="postgres")
+crear_bds("DataWarehouse_AM", user="postgres")
