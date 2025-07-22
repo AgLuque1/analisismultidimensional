@@ -25,8 +25,7 @@ services:
     depends_on:
       - servicios_olap
     volumes:
-      - sqlite_data:/bigdatamed/bigdatamed-main/db.sqlite3
-
+      - sqlite_data:/bigdatamed/bigdatamed-main/data
   # API de operaciones + PostgreSQL
   servicios_olap:
     build:
