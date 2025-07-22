@@ -1,0 +1,1 @@
+[{"_id":{"$oid":"63e3ecfc445a4966bf22b838"},"dataset":"HospitalMarbella","verbose":"Hospital Costa del Sol"},{"_id":{"$oid":"63e3ed50445a4966bf22b839"},"dataset":"HospitalSanCecilio","verbose":"Hospital San Cecilio"},{"_id":{"$oid":"66339fdc725eab0767b6d758"},"dataset":"EjemploVentas","verbose":"Ejemplo Ventas"}]

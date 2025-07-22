@@ -194,6 +194,7 @@ class getUserDBVerbose(Resource):
     def get(self):
         DB = dbases.database()
         data = DB.get_UserDBVerbose()
+        
 
         collection = json.loads(json_util.dumps(data))
 
@@ -206,6 +207,8 @@ class getAdminDBVerbose(Resource):
     def get(self):
         DB = dbases.database()
         data = DB.get_AdminDBVerbose()
+
+        print("DEBUG - Resultado de get_AdminDBVerbose():", data)
         
         collection = json.loads(json_util.dumps(data))
 

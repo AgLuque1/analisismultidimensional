@@ -7,7 +7,7 @@ sleep 5
 # Importamos datos a mongo
 mongoimport --db EjemploVentas --collection meta --file /data/mongo-init/meta.json --jsonArray
 mongoimport --db EjemploVentas --collection data --file /data/mongo-init/data.json --jsonArray
-
+mongoimport --db MetaInformation --collection data --file /data/mongo-init/metainformation_data.json --jsonArray
 
 # Aplicamos migraciones de Django
 python bigdatamed-main/manage.py makemigrations dashboard --noinput

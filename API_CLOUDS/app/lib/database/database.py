@@ -226,7 +226,7 @@ class database:
             '_id':0
         }
 
-        result = client['MetaInformation']['data'].find( projection=project)
+        result = client['MetaInformation']['data'].find(projection=project)
 
         return result
 
