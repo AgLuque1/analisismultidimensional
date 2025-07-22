@@ -25,8 +25,8 @@ async function borrarCubo(){
   }
 
   //URL del endpoint para la petición DELETE
-  //const url = `http://localhost:8001/analisismultidimensional/deleteCube/?user=${user}&nombre_cubo=${nombrecubo}`;
-  const url = `http://servicios_olap:8001/analisismultidimensional/deleteCube/?user=${user}&nombre_cubo=${nombrecubo}`;
+  const url = `http://localhost:8001/analisismultidimensional/deleteCube/?user=${user}&nombre_cubo=${nombrecubo}`;
+  //const url = `http://servicios_olap:8001/analisismultidimensional/deleteCube/?user=${user}&nombre_cubo=${nombrecubo}`;
   console.log(url);
 
   //Hacemos la petición
@@ -278,8 +278,8 @@ function crearOpcionesDice() {
 
       // Petición para obtener valores del nivel actual
       try {
-        //const response = await fetch(`http://localhost:8001/analisismultidimensional/getLevels/?nombreCubo=${cubo.nombreCubo}&nombreUser=${cubo.user}&nombreJerarquia=${jerarquia}&nombreNivel=${nivelActual}`);
-        const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/getLevels/?nombreCubo=${cubo.nombreCubo}&nombreUser=${cubo.user}&nombreJerarquia=${jerarquia}&nombreNivel=${nivelActual}`);
+        const response = await fetch(`http://localhost:8001/analisismultidimensional/getLevels/?nombreCubo=${cubo.nombreCubo}&nombreUser=${cubo.user}&nombreJerarquia=${jerarquia}&nombreNivel=${nivelActual}`);
+        //const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/getLevels/?nombreCubo=${cubo.nombreCubo}&nombreUser=${cubo.user}&nombreJerarquia=${jerarquia}&nombreNivel=${nivelActual}`);
 
         const data = await response.json();
         const valores = [...new Set(data.valores)];
@@ -538,8 +538,8 @@ function crearOpcionesSlice() {
       var nombrecubo = cubo.nombreCubo;
 
       try {
-        //const response = await fetch(`http://localhost:8001/analisismultidimensional/getLevels/?nombreCubo=${nombrecubo}&nombreUser=${user}&nombreJerarquia=${jerarquia}&nombreNivel=${nivelSeleccionado}`);
-        const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/getLevels/?nombreCubo=${nombrecubo}&nombreUser=${user}&nombreJerarquia=${jerarquia}&nombreNivel=${nivelSeleccionado}`);
+        const response = await fetch(`http://localhost:8001/analisismultidimensional/getLevels/?nombreCubo=${nombrecubo}&nombreUser=${user}&nombreJerarquia=${jerarquia}&nombreNivel=${nivelSeleccionado}`);
+        //const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/getLevels/?nombreCubo=${nombrecubo}&nombreUser=${user}&nombreJerarquia=${jerarquia}&nombreNivel=${nivelSeleccionado}`);
 
         if (!response.ok) throw new Error(`Error! status: ${response.status}`);
 
@@ -639,8 +639,8 @@ async function realizarSlice2(){
   }
 
   try {
-    //const response = await fetch(`http://localhost:8001/analisismultidimensional/slice2/`, {
-      const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/slice/`, {
+    const response = await fetch(`http://localhost:8001/analisismultidimensional/slice/`, {
+      //const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/slice/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -711,8 +711,8 @@ async function realizarDrillDown(){
 
   console.log("Haciendo peticion a roll up");
   try {
-    //const url = new URL("http://localhost:8001/analisismultidimensional/drilldown/");
-    const url = new URL("http://servicios_olap:8001/analisismultidimensional/drilldown/");
+    const url = new URL("http://localhost:8001/analisismultidimensional/drilldown/");
+    //const url = new URL("http://servicios_olap:8001/analisismultidimensional/drilldown/");
     const params = {
       user: user,
       nombre_cubo: nombreCubo,
@@ -772,8 +772,8 @@ async function realizarRollUp(){
 
   console.log("Haciendo peticion a roll up");
   try {
-    //const url = new URL("http://localhost:8001/analisismultidimensional/rollup/");
-    const url = new URL("http://servicios_olap:8001/analisismultidimensional/rollup/");
+    const url = new URL("http://localhost:8001/analisismultidimensional/rollup/");
+    //const url = new URL("http://servicios_olap:8001/analisismultidimensional/rollup/");
     const params = {
       user: user,
       nombre_cubo: nombreCubo,
@@ -826,8 +826,8 @@ async function realizarDice(){
   const operacion = cubo.tipoMedida;
 
   try {
-    //const response = await fetch(`http://localhost:8001/analisismultidimensional/dice/?user=${user}&nombre_cubo=${nombreCubo}&medida=${medida}&operacion=${operacion}`, {
-      const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/dice/?user=${user}&nombre_cubo=${nombreCubo}&medida=${medida}&operacion=${operacion}`, {
+    const response = await fetch(`http://localhost:8001/analisismultidimensional/dice/?user=${user}&nombre_cubo=${nombreCubo}&medida=${medida}&operacion=${operacion}`, {
+      //const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/dice/?user=${user}&nombre_cubo=${nombreCubo}&medida=${medida}&operacion=${operacion}`, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -1050,8 +1050,8 @@ $(document).ready(async function(){
 
     //Peticion
     try {
-      //const response = await fetch(`http://localhost:8001/analisismultidimensional/getCube/?user=${user}&nombre_cubo=${nombrecubo}`);
-      const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/getCube/?user=${user}&nombre_cubo=${nombrecubo}`);
+      const response = await fetch(`http://localhost:8001/analisismultidimensional/getCube/?user=${user}&nombre_cubo=${nombrecubo}`);
+      //const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/getCube/?user=${user}&nombre_cubo=${nombrecubo}`);
       if (!response.ok){
         throw new Error(`Error! status: ${response.status}`);
       }
@@ -1520,8 +1520,8 @@ async function mostrarResumenCubo() {
   const operacion = "SUM";
 
   try {
-    //const response = await fetch(`http://localhost:8001/analisismultidimensional/getDatosCubo/?user=${user}&nombre_cubo=${nombreCubo}&medida=${medida}&operacion=${operacion}`, {
-    const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/getDatosCubo/?user=${user}&nombre_cubo=${nombreCubo}&medida=${medida}&operacion=${operacion}`, {
+    const response = await fetch(`http://localhost:8001/analisismultidimensional/getDatosCubo/?user=${user}&nombre_cubo=${nombreCubo}&medida=${medida}&operacion=${operacion}`, {
+    //const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/getDatosCubo/?user=${user}&nombre_cubo=${nombreCubo}&medida=${medida}&operacion=${operacion}`, {
 
       method: 'POST'
     });

@@ -485,8 +485,6 @@ async def drilldown(
 
 #Endpoint para realizar la operacion slice
 #Se fija el valor de una dimensión, se filtra por eso.
-
-
 #Nuevo slice
 @router.post("/analisismultidimensional/slice/")
 async def slice_dimension(
