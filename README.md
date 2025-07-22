@@ -1,4 +1,4 @@
-# TFG
+# Instalación del entorno
 
 Para instalar y levantar el entorno del proyecto, es necesario tener previamente instalados **docker** y **docker-compose** en el sistema. 
 Si no están instalados, se instalan de la siguiente forma:
