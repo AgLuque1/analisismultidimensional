@@ -12,5 +12,6 @@ Tener en cuenta que hay que tener el servicio de docker levantado (`sudo systemc
 ```bash
 sudo docker-compose up --build
 
+Para acceder a la aplicación navegamos a `http://localhost:8000`
 
 
