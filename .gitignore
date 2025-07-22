@@ -32,7 +32,6 @@ ENV/
 
 # PyInstaller
 *.spec
-build/
 
 # Jupyter Notebooks checkpoints
 .ipynb_checkpoints
