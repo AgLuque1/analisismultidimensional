@@ -1,6 +1,6 @@
 services:
 
-  #Postgres para la API OLAP
+  #BD postgres para OLAP
   postgres_olap:
     image: postgres:15
     container_name: postgres_olap
@@ -14,19 +14,20 @@ services:
     volumes:
       - postgres_olap_data:/var/lib/postgresql/data
 
-  # Bigdamated + API Carga de datos + MongoDB
+  # Bigdamated
   bigdatamed:
     build:
       context: .
       dockerfile: Dockerfile.bigdatamed
     ports:
-      - "8000:8000"  # App
-      - "5000:5000"  # API de carga
+      - "8000:8000" 
+      - "5000:5000" 
     depends_on:
       - servicios_olap
     volumes:
       - sqlite_data:/bigdatamed/bigdatamed-main/data
-  # API de operaciones + PostgreSQL
+
+  # API OLAP
   servicios_olap:
     build:
       context: .
