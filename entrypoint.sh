@@ -25,7 +25,7 @@ if not User.objects.filter(username="admin").exists():
     User.objects.create_superuser("admin", "admin@example.com", "adminpass")
 EOF
 
-# Lanzamos bigdatamed Django en background
+# Lanzamos bigdatamed en background
 python bigdatamed-main/manage.py runserver 0.0.0.0:8000 &
 
 # Lanzamos API_CLOUDS (API para la carga de datos)
