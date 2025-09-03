@@ -1,4 +1,5 @@
-/* Estilo para los nodos de dimensión */
+/* Estilos */
+
 span.fancytree-dimension > span.fancytree-title {
     color: rgb(64,132,180);
     font-weight: bold
@@ -97,7 +98,6 @@ span.fancytree-dimension > span.fancytree-title {
     border: 1px solid #289c44;
   }
 
-  /* Estilos generales para select2 */
   .select2-container .select2-selection--single {
     height: 40px; 
     display: flex;
@@ -115,16 +115,6 @@ span.fancytree-dimension > span.fancytree-title {
     display: flex;
     align-items: center;
   }
-
-  /*
-  #contenedorGraficosResumen {
-    display: flex;
-    justify-content: space-around; /* o space-between / center según tu gusto 
-    gap: 20px;
-    flex-wrap: wrap; /* por si no caben todos en pantalla pequeña 
-  }*/
-
-
   #resumenPrincipal {
     display: flex;
     align-items: flex-start;
@@ -135,11 +125,8 @@ span.fancytree-dimension > span.fancytree-title {
   #contenedorGraficosResumen {
   flex-grow: 1;
   display: flex;
-  /*max-width: 80%;*/
   justify-content: center; 
-  /*flex-wrap: wrap; */
   gap: 20px;
-  /*width: 90%;*/
 }
 
 #botonOcultarDatosContainer {
@@ -158,18 +145,9 @@ span.fancytree-dimension > span.fancytree-title {
   display: flex;
   justify-content: center; 
   gap: 20px;
-  flex-wrap: wrap; /* que si hay muchos se vayan a la siguiente línea */
+  flex-wrap: wrap; 
   
 }
-
-/*
-.graficos-resumen canvas {
-  flex: 1;
-  max-width: 100%;
-  height: 300px;
-
-}*/
-
 .grafico-caja {
   flex: 0 0 300px;
   box-sizing: border-box;
@@ -178,16 +156,9 @@ span.fancytree-dimension > span.fancytree-title {
 
 .grafico-caja canvas {
   width: 100% !important;
-  height: 35vh !important; /* 30% de la altura visible de la ventana */
+  height: 35vh !important; 
   display: block;
 }
-
-/*
-  .grafico-dimension {
-    ;  
-    min-width: 250px;
-  }*/
-
 
 #botonOcultarDatos {
   background: transparent;
@@ -212,7 +183,6 @@ span.fancytree-dimension > span.fancytree-title {
 }
 
 #diceChart {
-  /*width: 600px;   */
   max-width: 60vw; 
   height: 100px; 
   display: block; 
