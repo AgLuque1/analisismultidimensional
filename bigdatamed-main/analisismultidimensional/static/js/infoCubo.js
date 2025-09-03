@@ -1,9 +1,3 @@
-/*var cubo = {"user": "antonio", "date": "12/03/2024", "nombreCubo": "Test 3", "descripcion": "Esto es una prueba 3", 
-"nombreExperimentacion": "Prueba 4", "dimensiones": {"Dimension1": {"jerarquias": {"Jer11": {"HOSPITAL": "hosp"}}}, 
-"Dimension2": {"jerarquias": {"jer22": {"AMBITO": "ambit"}}}, "dimension3": {"jerarquias": {"jer33": {"IDENTIF": "identificador"}}}}, 
-"nombreMedida": "medida ejemplo", "medida": "TIPCIP", "tipoMedida": "M\u00ednimo (MIN)"};
-*/
-let condicionesDiceLogico = [];
 var cubo;
 var dimensionesDisponiblesDD = {};
 var dimensionesDisponiblesRU = {};
@@ -26,8 +20,6 @@ async function borrarCubo(){
 
   //URL del endpoint para la petición DELETE
   const url = `http://localhost:8001/analisismultidimensional/deleteCube/?user=${user}&nombre_cubo=${nombrecubo}`;
-  //const url = `http://servicios_olap:8001/analisismultidimensional/deleteCube/?user=${user}&nombre_cubo=${nombrecubo}`;
-  console.log(url);
 
   //Hacemos la petición
   try{
@@ -40,7 +32,6 @@ async function borrarCubo(){
 
     if(response.ok) {
       const resultado = await response.json();
-      console.log(resultado.message);
     }
     else {
       const error = await response.json()
@@ -51,14 +42,11 @@ async function borrarCubo(){
     console.log('Error: ' + error.message);
   }
 
- 
-  
 }
 
 //Función que crea los select para la operación drill down
 function crearOpcionesDrillDown() {
-  console.log("Se ha seleccionado la operación de drill-down");
-
+  
   $('#contenedorSelects').empty();
 
   const divselectDimension = $('<div></div>');
@@ -144,8 +132,6 @@ function crearOpcionesDrillDown() {
 
 //Función que crea los select para la operación roll up
 function crearOpcionesRollUp() {
-  console.log("Se ha seleccionado la operación de rollup");
-
   $('#contenedorSelects').empty();
 
   const divselectDimension = $('<div></div>');
@@ -153,7 +139,7 @@ function crearOpcionesRollUp() {
 
   selectDimension.append($('<option value="" disabled selected></option>'));
 
-  // Añadir dimensiones con al menos 2 niveles y que no estén en el nivel más general
+  // Añadimos dimensiones con al menos 2 niveles y que no estén en el nivel más general
   for (let dimension in cubo.dimensiones) {
     const jerarquiaPorDefecto = cubo.dimensiones[dimension].jerarquia_por_defecto;
     const niveles = cubo.dimensiones[dimension].jerarquias[jerarquiaPorDefecto].niveles;
@@ -184,7 +170,7 @@ function crearOpcionesRollUp() {
     const idxActual = niveles.indexOf(nivelActual);
     const nivelesGenerales = niveles.slice(0, idxActual); // Del más general hasta justo antes del actual
 
-    // Limpiar y crear select de nivel superior
+    // Limpiamos y creamos select de nivel superior
     $('#selectNivelSuperior').remove();
     $('#divselectNivelSuperior').remove();
     $('#divselectJerarquia').remove();
@@ -198,15 +184,13 @@ function crearOpcionesRollUp() {
     selectJerarquia.append(optionJerarquia)
     divJerarquia.append('<label data-i18n="labelSelectJerarquia">' + i18next.t('labelSelectJerarquia') + '</label>');
     divJerarquia.append(selectJerarquia)
-    //$('#contenedorSelects').append(divJerarquia);
-
+  
     const divNivel = $('<div id="divselectNivelSuperior"></div>');
    
     const selectNivel = $('<select class="form-control select2" id="selectNivelSuperior"></select><br><br>');
     selectNivel.append($('<option value="" disabled selected></option>'));
-    
-    
 
+    // Creamos las opciones para cada nivel
     nivelesGenerales.forEach(n => {
       const option = new Option(n, n, false, false);
       selectNivel.append(option);
@@ -238,7 +222,6 @@ function crearOpcionesRollUp() {
 
 //Función que crea los select para la operación dice
 function crearOpcionesDice() {
-  console.log("Se ha seleccionado la operación de dice");
   $('#contenedorSelects').empty();
   condicionesDice = {};  // Reset
 
@@ -254,7 +237,7 @@ function crearOpcionesDice() {
     selectDimension.append('<option value="" disabled selected>Selecciona dimensión</option>');
 
     Object.keys(cubo.dimensiones).forEach(dimension => {
-      // Solo permitir dimensiones no ya seleccionadas
+      // Solo permitimos dimensiones no ya seleccionadas
       if (!(dimension in condicionesDice)) {
         selectDimension.append(new Option(dimension, dimension));
       }
@@ -279,7 +262,6 @@ function crearOpcionesDice() {
       // Petición para obtener valores del nivel actual
       try {
         const response = await fetch(`http://localhost:8001/analisismultidimensional/getLevels/?nombreCubo=${cubo.nombreCubo}&nombreUser=${cubo.user}&nombreJerarquia=${jerarquia}&nombreNivel=${nivelActual}`);
-        //const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/getLevels/?nombreCubo=${cubo.nombreCubo}&nombreUser=${cubo.user}&nombreJerarquia=${jerarquia}&nombreNivel=${nivelActual}`);
 
         const data = await response.json();
         const valores = [...new Set(data.valores)];
@@ -296,12 +278,12 @@ function crearOpcionesDice() {
 
           console.log("Condiciones actuales:", condicionesDice);
 
-          // Si hay menos de 3 dimensiones usadas, permitir añadir otra
+          // Si hay menos de 3 dimensiones usadas, permitimos añadir otra
           if (Object.keys(condicionesDice).length < 3) {
             añadirBloqueSeleccion();
           }
 
-          // Mostrar botón si hay al menos 2 condiciones
+          // Mostramos botón si hay al menos 2 condiciones
           if (Object.keys(condicionesDice).length >= 2 && $('#realizarDice').length === 0) {
             $('#contenedorSelects').append('<button id="realizarDice" onclick="realizarDice()" class="btn btn-primary" style="margin-top:10px;">Realizar Dice</button>');
           }
@@ -312,7 +294,7 @@ function crearOpcionesDice() {
       }
     });
 
-    // Iniciar select2
+    // Iniciamos select2
     selectDimension.select2();
     selectValor.select2();
   }
@@ -321,169 +303,8 @@ function crearOpcionesDice() {
 }
 
 /*
-// Función que crea los select para operacion dice nueva
-function crearOpcionesDice2(){
-   $('#contenedorSelects').empty();
-  condicionesDiceLogico = [];
-
-  const user = cubo.user;
-  const nombreCubo = cubo.nombreCubo;
-
-  // Select DIMENSIÓN
-  const selectDimension = $(`
-    <select id="selectDimensionDice" class="form-control select2 mb-2">
-      <option value="" disabled selected>Selecciona dimensión</option>
-    </select>
-  `);
-
-  for (let dimension in cubo.dimensiones) {
-    selectDimension.append(`<option value="${dimension}">${dimension}</option>`);
-  }
-
-  // Contenedor valores
-  const contenedorValores = $('<div id="contenedorValoresDice" class="mb-3"></div>');
-
-  // Select operador lógico
-  const selectOperador = $(`
-    <select id="selectOperadorLogico" class="form-control mb-2">
-      <option value="AND">AND</option>
-      <option value="OR">OR</option>
-    </select>
-  `);
-
-  // Botón añadir condición
-  const botonAgregar = $(`<button class="btn btn-primary mb-2">➕ Añadir condición</button>`);
-
-  // Lista condiciones añadidas
-  const listaCondiciones = $('<ul id="listaCondiciones" class="list-group mb-3"></ul>');
-
-  // Botón ejecutar
-  const botonEjecutar = $(`<button class="btn btn-success">▶ Ejecutar Dice lógico</button>`);
-
-  $('#contenedorSelects')
-    .append('<label>Dimensión</label>')
-    .append(selectDimension)
-    .append(contenedorValores)
-    .append('<label>Operador lógico</label>')
-    .append(selectOperador)
-    .append(botonAgregar)
-    .append('<hr><strong>Condiciones añadidas:</strong>')
-    .append(listaCondiciones)
-    .append(botonEjecutar);
-
-  $('#selectDimensionDice').select2();
-
-  // Al seleccionar dimensión, obtener valores
-  selectDimension.on('change', async function () {
-    const dimension = $(this).val();
-    const jerarquia = cubo.dimensiones[dimension].jerarquia_por_defecto;
-    const niveles = cubo.dimensiones[dimension].jerarquias[jerarquia].niveles;
-    const nivel = niveles[niveles.length - 1]; // Último nivel
-
-    try {
-      const response = await fetch(`http://localhost:8001/analisismultidimensional/getLevels/?nombreCubo=${nombreCubo}&nombreUser=${user}&nombreJerarquia=${jerarquia}&nombreNivel=${nivel}`);
-      const data = await response.json();
-      const valores = Array.from(new Set(data.valores));
-
-      const selectValores = $(`
-        <select id="selectValoresDimension" class="form-control select2" multiple>
-        </select>
-      `);
-
-      valores.forEach(v => {
-        selectValores.append(`<option value="${v}">${v}</option>`);
-      });
-
-      contenedorValores.empty().append('<label>Valores</label>').append(selectValores);
-      $('#selectValoresDimension').select2();
-
-    } catch (err) {
-      console.error("Error al obtener valores:", err);
-    }
-  });
-
-  // Añadir condición
-  botonAgregar.on('click', function () {
-    if (condicionesDiceLogico.length >= 3) {
-      toastr.warning("No puedes añadir más de 3 condiciones");
-      return;
-    }
-
-    const dimension = $('#selectDimensionDice').val();
-    const valores = $('#selectValoresDimension').val();
-    const operador = $('#selectOperadorLogico').val();
-
-    if (!dimension || !valores || valores.length === 0) {
-      var mensaje = i18next.t('exitoCrearCubo');
-      toastr.success(mensaje);
-      toastr.error("Debes seleccionar una dimensión y al menos un valor");
-      return;
-    }
-
-    const condicion = {
-      dimension: dimension,
-      valores: valores,
-      operador: operador
-    };
-
-    condicionesDiceLogico.push(condicion);
-
-    listaCondiciones.append(`<li class="list-group-item">${operador} (${dimension} IN [${valores.join(", ")}])</li>`);
-    $('#selectDimensionDice').val('').trigger('change');
-    contenedorValores.empty();
-  });
-
-  // Ejecutar Dice Lógico
-  botonEjecutar.on('click', function () {
-    if (condicionesDiceLogico.length < 2) {
-      toastr.error("Debes añadir al menos 2 condiciones");
-      return;
-    }
-
-    realizarDice2();
-  });
-}
-
-async function realizarDice2(){
-  
-  const user = cubo.user;
-  const nombreCubo = cubo.nombreCubo;
-  const medida = cubo.medida;
-  const operacion = cubo.tipoMedida;
-
-  try {
-    const response = await fetch(`http://localhost:8001/analisismultidimensional/dice2/?user=${user}&nombre_cubo=${nombreCubo}&medida=${medida}&operacion=${operacion}`, {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(condicionesDiceLogico)
-    });
-
-    if (!response.ok) throw new Error(`Error: ${response.status}`);
-    const data = await response.json();
-
-    console.log("Resultado Dice Lógico:", data);
-
-    if (Array.isArray(data.resultado)) {
-      crearChartDice(data.resultado, data.agrupado_por || "agrupado");
-      toastr.success("Dice lógico ejecutado correctamente");
-    } else if (data.resultado.total !== undefined) {
-      $('#valorTotalDice').text(data.resultado.total);
-      $('#resultadoDiceTotal').show();
-    }
-
-  } catch (error) {
-    console.error("Error ejecutando Dice Lógico:", error);
-    toastr.error("Error al ejecutar Dice Lógico");
-  }
-}
-  */
-
-
 // Función que crea los select para la operación slice
 function crearOpcionesSlice() {
-  console.log("Se ha seleccionado la operación de slice");
   $('#contenedorSelects').empty();
 
   // Nombre del cubo
@@ -507,7 +328,7 @@ function crearOpcionesSlice() {
 
   $('#selectDimensionSlice').select2({ minimumResultsForSearch: Infinity });
 
-  // Al seleccionar dimensión, cargar jerarquías
+  // Al seleccionar dimensión, cargamos las jerarquías
   $('#selectDimensionSlice').on('change', function () {
      $('#diceChart').empty();
     var dimensionSeleccionada = $(this).val();
@@ -531,7 +352,7 @@ function crearOpcionesSlice() {
     $('#contenedorSelects').append(divNivel);
     $('#selectNivelSlice').select2();
 
-    // Al seleccionar nivel, pedir valores al backend
+    // Al seleccionar nivel, pedimos valores al backend
     $('#selectNivelSlice').on('change', async function () {
       var nivelSeleccionado = $(this).val();
       var user = cubo.user;
@@ -539,8 +360,6 @@ function crearOpcionesSlice() {
 
       try {
         const response = await fetch(`http://localhost:8001/analisismultidimensional/getLevels/?nombreCubo=${nombrecubo}&nombreUser=${user}&nombreJerarquia=${jerarquia}&nombreNivel=${nivelSeleccionado}`);
-        //const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/getLevels/?nombreCubo=${nombrecubo}&nombreUser=${user}&nombreJerarquia=${jerarquia}&nombreNivel=${nivelSeleccionado}`);
-
         if (!response.ok) throw new Error(`Error! status: ${response.status}`);
 
         const data = await response.json();
@@ -580,10 +399,9 @@ function crearOpcionesSlice() {
 
   $('body').localize(); // Re-aplica traducción
 }
+*/
 
 function crearOpcionesSlice2(){
-  console.log("Se ha seleccionado la operación de slice (por selección de dimensiones)");
-
   $('#contenedorSelects').empty();
 
   // Nombre del cubo
@@ -620,49 +438,6 @@ function crearOpcionesSlice2(){
 }
 
 
-async function realizarSlice2(){
-  
-  const user = cubo.user;
-  const nombreCubo = cubo.nombreCubo;
-  const medida = cubo.medida;
-  const operacion = "SUM";
-
-  const dimensionesSeleccionadas = [];
-  $('.checkbox-dimension:checked').each(function () {
-    dimensionesSeleccionadas.push($(this).val());
-  });
-
-  if (dimensionesSeleccionadas.length !== 2) {
-    var mensaje = i18next.t('dimensioneslimiterealizarslice');
-    toastr.error(mensaje);
-    return;
-  }
-
-  try {
-    const response = await fetch(`http://localhost:8001/analisismultidimensional/slice/`, {
-      //const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/slice/`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        user,
-        nombre_cubo: nombreCubo,
-        dimensiones: dimensionesSeleccionadas,
-        medida,
-        operacion
-      })
-    });
-
-    const resultado = await response.json();
-    var mensaje = i18next.t('successlice');
-    toastr.success(mensaje);
-    crearChartSlice(resultado);
-
-  } catch (err) {
-    var mensaje = i18next.t('errorslice');
-    toastr.error(mensaje);
-  }
-}
-
 
 //Función que procesa la operación realizada
 function procesarOperacion(operacion){
@@ -691,10 +466,51 @@ function procesarOperacion(operacion){
   }
 }
 
+async function realizarSlice2(){
+  
+  const user = cubo.user;
+  const nombreCubo = cubo.nombreCubo;
+  const medida = cubo.medida;
+  const operacion = "SUM";
+
+  const dimensionesSeleccionadas = [];
+  $('.checkbox-dimension:checked').each(function () {
+    dimensionesSeleccionadas.push($(this).val());
+  });
+
+  if (dimensionesSeleccionadas.length !== 2) {
+    var mensaje = i18next.t('dimensioneslimiterealizarslice');
+    toastr.error(mensaje);
+    return;
+  }
+
+  try {
+    const response = await fetch(`http://localhost:8001/analisismultidimensional/slice/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user,
+        nombre_cubo: nombreCubo,
+        dimensiones: dimensionesSeleccionadas,
+        medida,
+        operacion
+      })
+    });
+
+    const resultado = await response.json();
+    var mensaje = i18next.t('successlice');
+    toastr.success(mensaje);
+    crearChartSlice(resultado);
+
+  } catch (err) {
+    var mensaje = i18next.t('errorslice');
+    toastr.error(mensaje);
+  }
+}
+
+
 //Función que hace la petición a la api para realizar la operación de drill down
 async function realizarDrillDown(){
-  console.log("Realizando drill down");
-
   const user = cubo.user;
   const nombreCubo = cubo.nombreCubo;
   const dimension = $('#selectDimensionDrill').val();
@@ -712,7 +528,6 @@ async function realizarDrillDown(){
   console.log("Haciendo peticion a roll up");
   try {
     const url = new URL("http://localhost:8001/analisismultidimensional/drilldown/");
-    //const url = new URL("http://servicios_olap:8001/analisismultidimensional/drilldown/");
     const params = {
       user: user,
       nombre_cubo: nombreCubo,
@@ -750,12 +565,8 @@ async function realizarDrillDown(){
   }
 }
 
-
 //Función que hace la petición a la api para realizar la operación de roll up
 async function realizarRollUp(){
-
-  console.log("Realizando roll up");
-
   const user = cubo.user;
   const nombreCubo = cubo.nombreCubo;
   const dimension = $('#selectDimension').val();
@@ -770,10 +581,8 @@ async function realizarRollUp(){
     return;
   }
 
-  console.log("Haciendo peticion a roll up");
   try {
     const url = new URL("http://localhost:8001/analisismultidimensional/rollup/");
-    //const url = new URL("http://servicios_olap:8001/analisismultidimensional/rollup/");
     const params = {
       user: user,
       nombre_cubo: nombreCubo,
@@ -810,10 +619,8 @@ async function realizarRollUp(){
   }
 }
 
-
 //Función que hace la petición a la api para realizar la operación de dice
 async function realizarDice(){
-  console.log("Realizando dice");
   if (Object.keys(condicionesDice).length < 2) {
     var mensaje = i18next.t('errorcamposdice');
     toastr.error(mensaje);
@@ -827,7 +634,6 @@ async function realizarDice(){
 
   try {
     const response = await fetch(`http://localhost:8001/analisismultidimensional/dice/?user=${user}&nombre_cubo=${nombreCubo}&medida=${medida}&operacion=${operacion}`, {
-      //const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/dice/?user=${user}&nombre_cubo=${nombreCubo}&medida=${medida}&operacion=${operacion}`, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -868,60 +674,12 @@ async function realizarDice(){
   }
 }
 
-/*
-//Función que hace la petición a la api para realizar la operación de slice
-async function realizarSlice(){
-
-  console.log("Realizando slice");
-
-  const user = cubo.user;
-  const nombreCubo = cubo.nombreCubo;
-
-  const dimension = $('#selectDimensionSlice').val();
-  const nivel = $('#selectNivelSlice').val();
-  const valor = $('#selectValorSlice').val();
-  const medida = cubo.medida;
-  const operacion =  cubo.tipoMedida;
-
-  if (!dimension || !nivel || !valor || !medida || !operacion) {
-    
-    toastr.error("Faltan datos para realizar el slice.");
-    return;
-  }
-
-   try {
-    const response = await fetch(`http://localhost:8001/analisismultidimensional/slice/?user=${user}&nombre_cubo=${nombreCubo}&dimension=${dimension}&nivel=${nivel}&valor=${encodeURIComponent(valor)}&medida=${medida}&operacion=${operacion}`, {
-      method: "POST"
-    });
-
-    if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err.detail || "Error en la operación slice");
-    }
-
-    const resultado = await response.json();
-    console.log("Resultado del slice:", resultado);
-    toastr.success("Slice realizado correctamente");
-    crearChartSlice(resultado);
-    $('#contenedorSelects').empty();
-    comprobarOperacionesDisponibles();
-    
-  } catch (error) {
-    console.error("Error al realizar slice:", error);
-    toastr.error("Error al realizar slice");
-  }
-}
-  */
-
-
-
 var tree = $('#tree');
 
 //Comprobamos si se puede realizar la operación drilldown
 //Para ello, miramos si en cada dimension el nivel actual no está en la posición mas especifica (la ultima)
 //Para cada dimensión comprobamos que haya más de una jerarquía
 function comprobarDrillDown() {
-  
   let disponible = false;
  
   for (let dimension in cubo.dimensiones) {
@@ -951,8 +709,6 @@ function comprobarDrillDown() {
 //Para ello, miramos si en cada dimension el nivel actual no está en la posición 0 (el más general)
 //Para cada dimensión comprobamos que haya más de un nivel
 function comprobarRollup(){
-
-  console.log("Comprobando roll-up");
   let disponible = false;
   
   for (let dimension in cubo.dimensiones) {
@@ -981,15 +737,12 @@ function comprobarRollup(){
 //Comprobamos si se puede realizar la operación Slice
 //Para ello, el cubo tiene que tener al menos una dimensión
 function comprobarSlice() {
-  console.log("Comprobando slice");
-
   return Object.keys(cubo.dimensiones).length > 0;
 }
 
 //Comprobamos si se puede realizar la operación dice
 //Para ello, el cubo tiene que tener al menos dos dimensiones
 function comprobarDice(){
-  console.log("Comprobando dice");
   var disponible = false;
 
   //Comprobamos que haya al menos dos dimensiones en el cubo
@@ -1000,9 +753,7 @@ function comprobarDice(){
   }
 
   return disponible;
-
 }
-
 
 function comprobarOperacionesDisponibles(){
   console.log("Dentro de comprobando");
@@ -1045,49 +796,21 @@ $(document).ready(async function(){
 
     user = cuboPeticion.user;
     nombrecubo = cuboPeticion.nombreCubo
-    console.log("user: ", user);
-    console.log("nombrecubo: ", nombrecubo);
-
-    //Peticion
+  
+    //Peticion para obtener el cubo
     try {
       const response = await fetch(`http://localhost:8001/analisismultidimensional/getCube/?user=${user}&nombre_cubo=${nombrecubo}`);
-      //const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/getCube/?user=${user}&nombre_cubo=${nombrecubo}`);
       if (!response.ok){
         throw new Error(`Error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log("Respuesta del servidor: ", data);
       cubo = data;
-      console.log("Nuevo cubo: ", cubo)
-      console.log("Dimensiones del nuevo cubo; ", cubo.dimensiones);
     } catch (error) {
         console.error('Error: ', error)
     }
 
-    /*
-    fetch(`http://localhost:8001/analisismultidimensional/getCube/?user=${user}&nombre_cubo=${nombrecubo}`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log("Respuesta del servidor: ", data);
-        cubo = data;
-        console.log("Nuevo cubo: ", cubo)
-        console.log("Dimensiones del nuevo cubo; ", cubo.dimensiones);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      })
-        */
-
-    //getCubo(cuboPeticion.user, cuboPeticion.nombreCubo)
     inicializarTraducciones();
-
-    console.log("Despues de la peticion, datos del cubo:", cubo)
 
     //Comprobamos las operaciones que se pueden aplicar sobre el cubo
     //Las que no se puedan realizar, no se podrán seleccionar
@@ -1121,15 +844,12 @@ $(document).ready(async function(){
         }
         var valor = valorNodo || "";
         
-        // Actualizar el contenido del span con la información del nodo activado
+        // Actualizamos el contenido del span con la información del nodo activado
         console.log("Tipo del nodo: " , tipoNodo);
         console.log("Nombre del nodo: " , contenidoNodo);
-        //$("#infonodo").text("Tipo de nodo: " + tipoNodo);
-        //$("#infovalor").text("Nombre: " + contenidoNodo);
         $("#infonodo").text(i18next.t('tipoNodo', {tipo: tipoNodo}));
         $("#infovalor").text(i18next.t('nombreNodo', {valor: valor}));
-        //$("#info").text("Contenido: " + contenidoNodo);
-       
+      
       },
       renderTitle: function(event, data) {
         data.node.span.innerHTML = data.node.title;
@@ -1142,57 +862,21 @@ $(document).ready(async function(){
     $("#nombrecubo").text(i18next.t('nombreCubo'));
     $("#medidaCubo").text(i18next.t('medidaCubo'));
 
-
-    /*
-    if(language === 'es'){
-      $("#nombrecubo").text("Nombre del cubo: " + cubo.nombreCubo);
-      $("#descripcion").text("Descripción: " + cubo.descripcion);
-      console.log("es");
-    }
-    else {
-      $("#nombrecubo").text("Cube name: " + cubo.nombreCubo);
-      $("#descripcion").text("Description: " + cubo.descripcion);
-      console.log("en");
-    }
-      */
     actualizarArbol();
     imprimirArbol();
     
-    
-
-    /*
-    $("#tree").on("fancytreeactivate", function(event, data) {
-      // Obtener el nodo activado
-      var nodo = data.node;
-      // Obtener el tipo de nodo y su contenido
-      var tipoNodo = nodo.data.tipo;
-      var contenidoNodo = nodo.title;
-
-      // Actualizar el contenido del span con la información del nodo activado
-      $("#infonodo").text("Tipo de nodo: " + tipoNodo);
-      $("#infovalor").text("Valor: " + contenidoNodo);
-      //$("#info").text("Contenido: " + contenidoNodo);
-  });
-*/
-
   });
 
+// Función que crea la tabla resultado de DICE
 function crearChartDice(resultado, agrupadopor){
   $('#contenedorGraficosResumen').empty();
   $('#resultadoDiceTotal').hide();
   $('#botonOcultarGrafico').remove();
 
   
-
   if(Array.isArray(resultado)) {
-    console.log("Dentro de crear el chat de dice");
-    
     const labels = resultado.map(item => item.nivel);
     const datos = resultado.map(item => item.valor);
-
-    console.log("Estos son los labels: " + labels);
-    console.log("Estos son los datos: " + datos);
-    
     var canvas = document.getElementById('diceChart');
 
     const ctx = canvas.getContext('2d');
@@ -1316,20 +1000,14 @@ function crearChartDice(resultado, agrupadopor){
   }
 }
 
+// Función que crear la tabla resultado de rollup/drilldown
 function crearChartRollupDrillDown(resultado, operacion){
    $('#contenedorGraficosResumen').empty();
-   //$('#diceChart').empty();
     $('#botonOcultarGrafico').remove();
-   console.log("Dentro de crear el chat de ru/dd");
-
-  console.log("Resultado: " + resultado);
-
+  
     const labels = resultado.datos.map(item => item.nivel);
     const valores = resultado.datos.map(item => item.valor);
 
-    console.log("Estos son los labels: " + labels);
-    console.log("Estos son los valores: " + valores);
-    
     var canvas = document.getElementById('diceChart');
 
     const ctx = canvas.getContext('2d');
@@ -1384,6 +1062,7 @@ function crearChartRollupDrillDown(resultado, operacion){
   });
 }
 
+// Función que crea la tabla resultado de SLICE
 function crearChartSlice(resultado){
   $('#contenedorGraficosResumen').empty();
   $('#botonOcultarGrafico').remove();
@@ -1420,10 +1099,10 @@ function crearChartSlice(resultado){
       });
     }
 
-  // Detectar las columnas (excepto "total")
+  // Detectamos las columnas (excepto "total")
   const keys = Object.keys(resultados[0]).filter(k => k !== "total");
 
-  // Si hay más de una dimensión, combinarlas en un label
+  // Si hay más de una dimensión, se combinan en un label
   const labels = resultados.map(r => keys.map(k => r[k]).join(" - "));
   const valores = resultados.map(r => r.total);
 
@@ -1469,12 +1148,10 @@ function crearChartDimension(canvasId, titulo, datos) {
     canvas.chartInstance.destroy();
   }
 
-  // Destruir gráfico anterior si ya existe
+  // Destruimos gráfico anterior si ya existe
   if (charts[canvasId]) {
     charts[canvasId].destroy();
   }
-
-  console.log("Esto son los datos que vienen: " + datos);
 
   const labels = datos.map(item => item.nivel);
   const valores = datos.map(item => item.valor);
@@ -1521,16 +1198,13 @@ async function mostrarResumenCubo() {
 
   try {
     const response = await fetch(`http://localhost:8001/analisismultidimensional/getDatosCubo/?user=${user}&nombre_cubo=${nombreCubo}&medida=${medida}&operacion=${operacion}`, {
-    //const response = await fetch(`http://servicios_olap:8001/analisismultidimensional/getDatosCubo/?user=${user}&nombre_cubo=${nombreCubo}&medida=${medida}&operacion=${operacion}`, {
-
       method: 'POST'
     });
 
     if (!response.ok) throw new Error("Error al obtener resumen del cubo");
 
     const data = await response.json();
-    console.log("Resumen del cubo:", data);
-
+    
     $('#contenedorGraficosResumen').show();
     $('#botonOcultarDatos').remove();
    
@@ -1548,8 +1222,6 @@ async function mostrarResumenCubo() {
 
       const titulo = cubo.medida + " agrupado por " + data.dimension_niveles_actuales[dimension];
 
-      
-      console.log("Datos de la dimension: " + data.datos[dimension])
       crearChartDimension(idCanvas, titulo, data.datos[dimension]);
     }
 
@@ -1578,22 +1250,19 @@ async function mostrarResumenCubo() {
   }
 }
 
-  
+ //Función que actualiza la vista de árbol
  function actualizarArbol(){
 
-  console.log("Dento de actualizar arbol");
-    // Borramos el árbol actual
+  // Borramos el árbol actual
   var tree = $.ui.fancytree.getTree("#tree");
 
   if (!tree) {
-  console.log("No se pudo obtener el árbol (#tree no está inicializado aún)");
   return;
   }
 
   var rootNode = tree.getRootNode();
 
   if (!rootNode) {
-  console.log("El nodo raíz del árbol no está disponible.");
   return;
 }
 
@@ -1616,17 +1285,13 @@ async function mostrarResumenCubo() {
     var jerarquiaPorDefecto = cubo.dimensiones[dimension].jerarquia_por_defecto;
     console.log("Jerarquia nombre: " + jerarquiaNombre);
     nivelActual = jerarquias[jerarquiaNombre].nivel_actual;
-    console.log("Nivel actual: ", nivelActual)
   
-    //var niveles = jerarquias[jerarquia].niveles || [];
-
     //Si no hay jerarquias todavia, sale de la función
     if (!jerarquiaNombre){
       return;
     }
 
     // Iteramos sobre todas las jerarquías 
-    console.log("Antes de iterar sobre las jerarquias")
     Object.keys(jerarquias).forEach(function(jerarquia) {
       var nodoJerarquia = nodoDimension.addChildren({
         title: jerarquiaNombre,
@@ -1643,18 +1308,7 @@ async function mostrarResumenCubo() {
       if (!Array.isArray(niveles) || niveles.length === 0) {
         return;
       }
-      /*
-      // Obtenemos y recorremos los niveles de esta jerarquía
-      niveles.forEach(function(nivel) {
-        nodoJerarquia.addChildren({
-          title: nivel,
-          tipo: nivel === nivelActual ? "Nivel actual" : "Nivel",
-          extraClasses: nivel === nivelActual 
-            ? "fancytree-nivel-actual"
-            : "fancytree-nivel",
-          icon: "icono-nivel",
-        });
-      });*/
+      
       niveles.forEach(function(nivel) {
         const esActual = nivel === nivelActual;
         const tituloConFlecha = esActual
@@ -1675,11 +1329,9 @@ async function mostrarResumenCubo() {
 
   tree.expandAll();
 }
-  
-function imprimirArbol(){
 
-  console.log(cubo.nombreCubo);
-  console.log("Imprimiendo árbol");
+// Función que imprime el árbol en la consola
+function imprimirArbol(){
 
   Object.keys(cubo.dimensiones).forEach(function(dimension) {
 
@@ -1699,10 +1351,6 @@ function imprimirArbol(){
     });
 
   });
-
-  console.log("Arbol acabado");
-
-  console.log(cubo.dimensiones);
 }
 
   
