@@ -14,26 +14,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Instalar libssl1.1 manualmente
 RUN wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u3_amd64.deb \
     && dpkg -i libssl1.1_1.1.1w-0+deb11u3_amd64.deb \
     && rm libssl1.1_1.1.1w-0+deb11u3_amd64.deb
 
-
-
-# Creamos carpeta de trabajo
 WORKDIR /bigdatamed
 
-
-# Copiamos requirements e instalar dependencias
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copiamos código de bigatamed y la API de carga de datos
 COPY bigdatamed-main /bigdatamed/bigdatamed-main
 COPY API_CLOUDS /bigdatamed/API_CLOUDS
 
-# Copiamos los datos de mongo
 COPY mongo-init /data/mongo-init
 
 RUN mkdir -p /data/db
@@ -55,7 +47,6 @@ RUN wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2404-x
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Exponemos puertos (8000 para bidatamed, 5000 para API de carga)
 EXPOSE 8000
 EXPOSE 5000
 
