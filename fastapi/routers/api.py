@@ -26,8 +26,8 @@ db_datawarehouse_dependency = Annotated[Session_datawarehouse, Depends(get_db_da
 @router.get("/analisismultidimensional/getCubes/{user}")
 async def obtenerCubos(user: str, db:db_modelo_dependency):
     #Obtiene los cubos del usuario 'user'
-    #cubos = db.query(models.Cubo).filter(json.loads(str(models.Cubo.propiedades))["user"] == user)
     cubos = db.query(models.Cubo).filter(func.json_extract_path_text(models.Cubo.propiedades, 'user') == user)
+    
     #Convertimos los objetos de SQLAlchemy en diccionarios
     cubos_json = [cubo.to_dict() for cubo in cubos]
     return cubos_json
@@ -47,9 +47,7 @@ async def obtenerCubo(dbmodel:db_modelo_dependency, user: str = Query(...), nomb
         cubo_json = cubo.to_dict()
         return cubo_json["propiedades"]
     
-    
     raise HTTPException(status_code=404, detail="Cube not found")
-
 
 #Endpoint para obtener los valores de un nivel de una jerarquia
 @router.get("/analisismultidimensional/getLevels/")
@@ -69,7 +67,6 @@ async def obtenerNiveles(dbdw: db_datawarehouse_dependency, nombreCubo: str = Qu
     if nombreTabla not in inspector.get_table_names():
         raise HTTPException(status_code=404, detail="La tabla no existe")
 
-
     tabla = Table(nombreTabla, metadatos, autoload_with=engine_datawarehouse)
 
     #Verificamos que el nivel está en la tabla
@@ -77,7 +74,6 @@ async def obtenerNiveles(dbdw: db_datawarehouse_dependency, nombreCubo: str = Qu
         raise HTTPException(status_code=404, detail="No se encuentra el nivel")
 
     #Hacemos la consulta
-   
     consulta = select(tabla.c[nivel])
     resultados = dbdw.execute(consulta).fetchall()
   
@@ -86,15 +82,12 @@ async def obtenerNiveles(dbdw: db_datawarehouse_dependency, nombreCubo: str = Qu
 
     return {"valores": valores}
 
-    
-
 #Endpoint para guardar la estructura del cubo en la base de datos del modelo
 @router.post("/analisismultidimensional/createCubeModel/")
 async def crear_cubo_modelo(
     cubo: CuboModeloBase, 
     dbmodel:db_modelo_dependency):
 
-    
     #Verificamos si hay un cubo ya creado con ese nombre por el usuario
     nombre = cubo.propiedades["nombreCubo"]
     usuario = cubo.propiedades["user"]
@@ -104,7 +97,6 @@ async def crear_cubo_modelo(
         func.json_extract_path_text(models.Cubo.propiedades, 'user') == usuario
         ).first()
         
-
     if(query):
         raise HTTPException(status_code=400, detail="Ya existe un cubo con ese nombre")
 
@@ -112,7 +104,6 @@ async def crear_cubo_modelo(
     dbmodel.add(db_cubo)
     dbmodel.commit()
     dbmodel.refresh(db_cubo)
-    print("Este es el modelo: ", cubo)
     return {"detail": "Metadata del cubo creado correctamente en la BD :)"}
 
 @router.post("/analisismultidimensional/createCubeDW/")
@@ -122,16 +113,12 @@ async def crear_cubo_dw(
 
     # Definimos metadata
     metadatos = MetaData()
-
-    print("Estas son las filas: ", filas)
-    
+ 
     dimensiones = filas["estructura"]["dimensiones"]
     filas_datos = filas["datos"]["filas"]
     medida = filas["estructura"]["medida"]
     nombrecubo = filas["estructura"]["nombreCubo"]
     nombreuser = filas["estructura"]["user"]
-
-    print("Filas de datos: ", filas_datos)
 
     inspector = inspect(engine_datawarehouse)
     
@@ -141,16 +128,6 @@ async def crear_cubo_dw(
     for dimension, contenido in dimensiones.items():
         tabla_dimension = f"{nombreuser}_{nombrecubo}_{dimension}"
         niveles_total = set()
-
-        '''for jerarquia, jerarquia_data in contenido.get("jerarquias", {}).items():
-            niveles = jerarquia_data.get("niveles", [])
-
-            if not isinstance(niveles, list):
-                continue
-
-            for nivel in niveles:
-                niveles_total.add(nivel)
-        '''
 
         for jerarquia_data in contenido.get("jerarquias", {}).values():
             niveles = jerarquia_data.get("niveles", [])
@@ -167,6 +144,7 @@ async def crear_cubo_dw(
 
         tabla = Table(tabla_dimension, metadatos, *columnas)
         #dimension_tables[jerarquia] = tabla
+        
         jerarquia_por_defecto = contenido.get("jerarquia_por_defecto")
         if jerarquia_por_defecto:
             dimension_tables[dimension] = tabla
@@ -206,7 +184,6 @@ async def crear_cubo_dw(
                 if not isinstance(niveles, list):
                     continue
 
-                #tabla_dim = dimension_tables[jerarquia] 
                 tabla_dim = dimension_tables[dimension] 
                 
                 valores_dim = {
@@ -246,7 +223,6 @@ async def crear_cubo_dw(
             dbdw.execute(ins_hechos)
             dbdw.commit()
         except SQLAlchemyError as e:
-            print(f"Error insertando en tabla de hechos: {e}")
             raise HTTPException(status_code=500, detail=f"Error insertando en hechos: {e}")
 
 
@@ -257,7 +233,6 @@ async def crear_cubo_dw(
 async def borrar_cubo(dbmodel:db_modelo_dependency, dbdw:db_datawarehouse_dependency, 
                       user: str = Query(...), nombre_cubo: str = Query(...)):
     #Primero comprobamos que el cubo existe
-
     cubo = dbmodel.query(models.Cubo).filter(
         func.json_extract_path_text(models.Cubo.propiedades, 'nombreCubo') == nombre_cubo,
         func.json_extract_path_text(models.Cubo.propiedades, 'user') == user
@@ -266,13 +241,10 @@ async def borrar_cubo(dbmodel:db_modelo_dependency, dbdw:db_datawarehouse_depend
     if not cubo:
         raise HTTPException(status_code=404, detail="Cubo no encontrado")
     
-  
 
     #Ahora vamos a generar los nombres de las tablas que se 
     #han creado en la bd de datawarehouse para su eliminacion
-
     dimensiones = cubo.propiedades["dimensiones"]
-    print("Estas son las dimensiones")
     for dimension in dimensiones:
         print(dimension)
 
@@ -301,12 +273,9 @@ async def borrar_cubo(dbmodel:db_modelo_dependency, dbdw:db_datawarehouse_depend
     dbmodel.delete(cubo)
     dbmodel.commit()
 
-
     return {"message": "Cubo borrado correctamente"}
 
-#---------OPERACIONES-------
-
-
+#---------OPERACIONES-------#
 
 #Endpoint para realizar la operacion roll up, subiendo al siguiente nivel
 @router.post("/analisismultidimensional/rollup/")
@@ -323,7 +292,6 @@ async def rollup(
 
     try:
 
-        print("Operacion: ", operacion)
         # Validaciones
         operacion = operacion.upper()
         if operacion not in {"SUM", "AVG", "MIN", "MAX"}:
@@ -339,7 +307,6 @@ async def rollup(
             raise HTTPException(status_code=404, detail="Cubo no encontrado")
          
         propiedades = cubo.propiedades
-
         dimensiones = propiedades.get("dimensiones", {})
 
         if (dimension not in dimensiones):
@@ -365,6 +332,7 @@ async def rollup(
         nombre_tabla_hechos = f"{user}_{nombre_cubo}_fact"
         nombre_tabla_dimension = f"{user}_{nombre_cubo}_{dimension}"
 
+        #Creamos la query
         query = text(f"""
             SELECT d.{nivel_destino} AS agrupado_por, {operacion}(f.{medida}) AS total
             FROM "{nombre_tabla_hechos}" f
@@ -395,8 +363,6 @@ async def rollup(
     except SQLAlchemyError as e:
         raise HTTPException(status_code=500, detail=f"Error en rollup: {str(e)}")
 
-
-
 #Endpoint para realizar la operacion drill down, bajando al siguiente nivel
 @router.post("/analisismultidimensional/drilldown/")
 async def drilldown(
@@ -415,7 +381,7 @@ async def drilldown(
         if operacion not in {"SUM", "AVG", "MIN", "MAX"}:
             raise HTTPException(status_code=400, detail="Operación no válida")
 
-        # Recuperar el cubo desde la BD de modelos
+        # Recuperamos el cubo desde la BD de modelos
         cubo = dbmodel.query(models.Cubo).filter(
             func.json_extract_path_text(models.Cubo.propiedades, 'nombreCubo') == nombre_cubo,
             func.json_extract_path_text(models.Cubo.propiedades, 'user') == user
@@ -424,6 +390,7 @@ async def drilldown(
         if not cubo:
             raise HTTPException(status_code=404, detail="Cubo no encontrado")
 
+        # Validaciones
         dimensiones = cubo.propiedades.get("dimensiones", {})
 
         if (dimension not in dimensiones):
@@ -433,11 +400,6 @@ async def drilldown(
         jerarquia = dimensiones[dimension]["jerarquias"].get(jerarquia_defecto, {})
         niveles = jerarquia.get("niveles", [])
         nivel_actual = jerarquia.get("nivel_actual")
-
-        print("Niveles de la dimension")
-        for nivel in niveles:
-            print(nivel)
-        print("Nivel actual es: ", nivel_actual)
 
         if not nivel_actual or nivel_actual not in niveles:
             raise HTTPException(status_code=400, detail="El nivel no pertenece a la dimensión")
@@ -454,6 +416,7 @@ async def drilldown(
         nombre_tabla_hechos = f"{user}_{nombre_cubo}_fact"
         nombre_tabla_dimension = f"{user}_{nombre_cubo}_{dimension}"
 
+        # Creamos la query
         query = text(f"""
             SELECT d.{nivel_destino} AS agrupado_por, {operacion}(f.{medida}) AS total
             FROM "{nombre_tabla_hechos}" f
@@ -484,8 +447,7 @@ async def drilldown(
 
 
 #Endpoint para realizar la operacion slice
-#Se fija el valor de una dimensión, se filtra por eso.
-#Nuevo slice
+#Se fija el valor de una dimensión, se filtra por eso
 @router.post("/analisismultidimensional/slice/")
 async def slice_dimension(
     dbdw: db_datawarehouse_dependency,
@@ -494,11 +456,11 @@ async def slice_dimension(
     
 ):
     try:
-        print("Dentro de slice2")
         operacion = payload.operacion.upper()
         if operacion not in {"SUM", "AVG", "MIN", "MAX"}:
             raise HTTPException(status_code=400, detail="Operación no válida")
 
+        # Extraemos el cubo
         cubo = dbmodel.query(models.Cubo).filter(
             func.json_extract_path_text(models.Cubo.propiedades, 'nombreCubo') == payload.nombre_cubo,
             func.json_extract_path_text(models.Cubo.propiedades, 'user') == payload.user
@@ -507,6 +469,7 @@ async def slice_dimension(
         if not cubo:
             raise HTTPException(status_code=404, detail="Cubo no encontrado")
 
+        # Validaciones
         dimensiones_modelo = cubo.propiedades.get("dimensiones", {})
 
         if len(payload.dimensiones) != 2:
@@ -533,6 +496,7 @@ async def slice_dimension(
 
         select_cols.append(f"{operacion}(f.{payload.medida}) AS total")
 
+        # Creamos la query
         query = f'''
             SELECT {', '.join(select_cols)}
             FROM "{tabla_hechos}" f
@@ -569,7 +533,7 @@ async def dice(
     ):
    
     try:
-
+        # Validaciones
         if len(condiciones) < 2:
             raise HTTPException(status_code=400, detail="Debe proporcionar al menos dos condiciones para dice")
     
@@ -635,6 +599,7 @@ async def dice(
             joins.append(f"JOIN \"{tabla_dim}\" {alias} ON f.{dimension_faltante}_id = {alias}.{dimension_faltante}_id")
             group_by = f"{alias}.{nivel_actual}"
             select_col = f"{alias}.{nivel_actual} AS agrupado_por"
+            
         # Si se han dado los 3 valores de dimensiones, no se hace group by
         else:
             group_by = None
@@ -658,11 +623,9 @@ async def dice(
             datos = [{"nivel": row[0], "valor": row[1]} for row in result]
         else:
             total = result[0][0] if result else 0
-            print("Dentro del else, se proporcionaron 3 valores, el resultado es: ", total)
             datos = {"total": total}
              # Si no hay group_by (es decir, se han dado los 3 valores), generamos una etiqueta combinada
             agrupado_por = " - ".join([f"{k}: {v}" for k, v in condiciones.items()])
-            print("Agrupado por: ", agrupado_por)
 
         return {
             "operacion": "dice",
@@ -674,98 +637,6 @@ async def dice(
     except SQLAlchemyError as e:
         raise HTTPException(status_code=500, detail=f"Error en dice: {str(e)}")
 
-'''
-#Endpoint para realizar la operacion dice
-@router.post("/analisismultidimensional/dice2/")
-async def dice2(
-    dbdw: db_datawarehouse_dependency,
-    dbmodel: db_modelo_dependency,
-    user: str = Query(...),
-    nombre_cubo: str = Query(...),
-    medida: str = Query(...),
-    operacion: str = Query("SUM"),
-    condiciones: List[Dict[str, Union[str, Dict[str, str]]]] = Body(...)
-):
-    
-    """
-    condiciones: una lista de condiciones, cada una con una estructura como:
-    {
-      "operador": "AND" / "OR",
-      "condiciones": {
-        "dimension": "valor",
-        "otra_dimension": "valor"
-      }
-    }
-    """
-    try:
-        cubo = dbmodel.query(models.Cubo).filter(
-            func.json_extract_path_text(models.Cubo.propiedades, 'nombreCubo') == nombre_cubo,
-            func.json_extract_path_text(models.Cubo.propiedades, 'user') == user
-        ).first()
-
-        if not cubo:
-            raise HTTPException(status_code=404, detail="Cubo no encontrado")
-
-        dimensiones = cubo.propiedades.get("dimensiones", {})
-        tabla_hechos = f"{user}_{nombre_cubo}_fact"
-        joins = []
-        where_parts = []
-        params = {}
-
-        alias_map = {}
-        alias_count = 0
-
-        for grupo in condiciones:
-            op = grupo.get("operador", "AND").upper()
-            if op not in {"AND", "OR"}:
-                raise HTTPException(status_code=400, detail="Operador no válido")
-
-            cond_parts = []
-            for dimension, valor in grupo["condiciones"].items():
-                if dimension not in dimensiones:
-                    raise HTTPException(status_code=400, detail=f"Dimensión {dimension} no encontrada")
-
-                tabla_dim = f"{user}_{nombre_cubo}_{dimension}"
-                if dimension not in alias_map:
-                    alias = f"d{alias_count}"
-                    joins.append(f'JOIN "{tabla_dim}" {alias} ON f.{dimension}_id = {alias}.{dimension}_id')
-                    alias_map[dimension] = alias
-                    alias_count += 1
-                else:
-                    alias = alias_map[dimension]
-
-                jerarquia_defecto = dimensiones[dimension]["jerarquia_por_defecto"]
-                niveles = dimensiones[dimension]["jerarquias"][jerarquia_defecto]["niveles"]
-                encontrado = False
-                for nivel in niveles:
-                    query = text(f'SELECT 1 FROM "{tabla_dim}" WHERE {nivel} = :valor LIMIT 1')
-                    result = dbdw.execute(query, {"valor": valor}).fetchone()
-                    if result:
-                        param_key = f"{dimension}_{nivel}_{len(params)}"
-                        cond_parts.append(f'{alias}.{nivel} = :{param_key}')
-                        params[param_key] = valor
-                        encontrado = True
-                        break
-                if not encontrado:
-                    raise HTTPException(status_code=400, detail=f"Valor {valor} no encontrado para {dimension}")
-
-            where_parts.append(f"({f' {op} '.join(cond_parts)})")
-
-        final_where = ' AND '.join(where_parts)
-  
-        result = dbdw.execute(text(query_sql), params).fetchone()
-        total = result[0] if result else 0
-
-        return {
-            "operacion": "dice_logico",
-            "condiciones": condiciones,
-            "tipo_agregacion": operacion,
-            "resultado": total
-        }
-
-    except SQLAlchemyError as e:
-        raise HTTPException(status_code=500, detail=f"Error en dice_logico: {str(e)}")
-''' 
 
 @router.post("/analisismultidimensional/getDatosCubo/")
 async def resumen_cubo_actual(
@@ -802,6 +673,7 @@ async def resumen_cubo_actual(
             nivel_actual = jerarquia.get("nivel_actual") or jerarquia["niveles"][-1]
             tabla_dimension = f"{user}_{nombre_cubo}_{dimension}"
 
+            #Creamos la query
             query = text(f"""
                 SELECT d.{nivel_actual} AS agrupado_por, {operacion}(f.{medida}) AS total
                 FROM "{nombre_tabla_hechos}" f
