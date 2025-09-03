@@ -28,8 +28,6 @@ def obtenerColumnas(request):
     
         # Obtenemos las columnas en cadena de texto
         filter_apply_str = experimentacion.filter_apply
-        print("Las columnas son: ", filter_apply_str)
-
         filter_apply_dict = ast.literal_eval(filter_apply_str)
         columnas = filter_apply_dict.get('selected_variables', [])
       
