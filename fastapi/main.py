@@ -1,7 +1,7 @@
 import init_db
 from fastapi import FastAPI, HTTPException, Depends
 import uvicorn
-from routers import api #Importar y agregar routers adicionales a la aplicación
+from routers import api 
 import models
 from database import engine_modelo, engine_datawarehouse
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,8 +17,8 @@ origins = [
     "http://127.0.0.1:8000",
     "http://127.0.0.1:8001"
     "http://localhost:8001",
-    "http://servicios_olap:8001",  #URL de la aplicación desde donde se realice la llamada
-    "http://bigdatamed:8000",  #URL de la aplicación desde donde se realice la llamada
+    "http://servicios_olap:8001",  
+    "http://bigdatamed:8000", 
 ]
 
 app.add_middleware(
