@@ -4,20 +4,15 @@ FROM python:3.11-slim-bookworm
 # Instalamos PostgreSQL y dependencias necesarias
 RUN apt-get update && apt-get install -y gcc libpq-dev && apt-get install -y postgresql-client && apt-get clean
 
-# Crear carpeta de trabajo
 WORKDIR /servicios_olap
 
-# Copiar requirements.txt 
 COPY fastapi/requirements.txt ./requirements.txt
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copiar código de la API OLAP
 COPY fastapi /servicios_olap/fastapi
 
-# Exponer puertos
 EXPOSE 8001
 
-# Lanzar PostgreSQL en segundo plano y luego iniciar API OLAP
 CMD until pg_isready -h postgres_olap -p 5432 -U postgres; do \
     echo "Esperando a que PostgreSQL esté listo..."; \
     sleep 1; \
