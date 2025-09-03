@@ -1,3 +1,5 @@
+// En este scrip se manejan las traducciones utilizando i18n
+
 var language = 'es';
     const flagsElement = document.getElementById("flags");
     const inputsToChange = document.querySelectorAll("input[data-placeholder]");
@@ -21,14 +23,13 @@ var language = 'es';
             const placeholderKey = inputToChange.dataset.placeholder;
             
             const translatedPlaceholder = texts.placeholders[placeholderKey];
-            // Actualiza el placeholder del input
             
+            // Actualiza el placeholder del input
             inputToChange.placeholder = translatedPlaceholder;
           });
 
          
     }
-
 
     //Función que inicializa las traducciones para los elementos dinámicos
 function inicializarTraducciones(){
@@ -312,21 +313,9 @@ function inicializarTraducciones(){
         // Traduce el contenido de la página
         $('body').localize();
       });
-      //language = e.target.parentElement.dataset.value;
-      //console.log(e.target.parentElement.dataset.value);
-      
-      //changeLanguage(e.target.parentElement.dataset.language);
     });
  }
  
-   
- /*
-    flagsElement.addEventListener("click", (e) => {
-        language = e.target.parentElement.dataset.value;
-        console.log(e.target.parentElement.dataset.value);
-        
-        changeLanguage(e.target.parentElement.dataset.language);
-    });
-*/
+
 
 
