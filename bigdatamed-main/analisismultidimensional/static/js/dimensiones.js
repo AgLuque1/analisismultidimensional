@@ -1,9 +1,7 @@
-// Funciones para la gestión de creación de dimensiones, jerarquías y niveles
+// Script con funciones para la gestión de creación de dimensiones, jerarquías y niveles
 
 //Variable donde almacenamos el cubo completo
 var cubo = {}
-
-
 
 var estructuraCubo = {};
 estructuraCubo.dimensiones = {};
@@ -51,7 +49,6 @@ var tree = $('#tree');
 //Inicializamos los select
 $(document).ready(function(){
 
-  //añadirOrdenNiveles();
   inicializarTraducciones();
   console.log("Traducciones finaleizasds");
   
@@ -87,9 +84,6 @@ $(document).ready(function(){
     minimumResultsForSearch: Infinity,
   });
 
-  
-
-
   //EVENTOS DE BORRADO
   const borrarDimension = document.getElementById("borrarDimension");
   const borrarJerarquia = document.getElementById("borrarJerarquia");
@@ -107,6 +101,7 @@ $(document).ready(function(){
       return;
     }
     else{
+      
       //Llamamos al modal
       $('#modalDimension').modal('show')
 
@@ -146,15 +141,6 @@ $(document).ready(function(){
     }
   });
   
-  /*
-  //Inicializamos Fancytree
-  tree.fancytree({
-    source: [],
-    nodata: false,
-    click: function(event, data) {
-    },
-  });
-  */
   //Inicializamos Fancytree
   tree.fancytree({
     source: [],
@@ -175,13 +161,8 @@ $(document).ready(function(){
       }
       var valor = valorNodo || "";
       // Actualizar el contenido del span con la información del nodo activado
-
-      //$("#infonodo").text("Tipo de nodo: " + tipoNodo);
-      //$("#infovalor").text("Nombre: " + contenidoNodo);
-
       $("#infonodo").text(i18next.t('tipoNodo', {tipo: tipoNodo}));
       $("#infovalor").text(i18next.t('nombreNodo', {valor: valor}));
-      //$("#info").text("Contenido: " + contenidoNodo);
     },
     renderTitle: function(event, data) {
         data.node.span.innerHTML = data.node.title;
@@ -236,8 +217,6 @@ $(document).ready(function(){
     $('#botonTerminar').prop('disabled', $(this).val() === null);
   });
   
-
-
  //Función que agrega dimensiones al select para poder crear jerarquías
 function agregarDimension() {
 
@@ -262,12 +241,9 @@ function agregarDimension() {
 
      $('#dimensiones').val(null).trigger('change.select2');
 
-    
      actualizarDimensiones();
      actualizarArbol();
-     imprimirArbol();
-
-     console.log(estructuraCubo);
+     //imprimirArbol();
 
      //Si la dimensión existe, informa error
    } else if (estructuraCubo.dimensiones.hasOwnProperty(dimension)){
@@ -293,12 +269,10 @@ function añadirJerarquia(){
     if(nombreJerarquia.trim() !== '' && dimensionSeleccionada !== null){
 
         //Comprobamos si la jerarquía ya existe
-        console.log("Comprobando si la jerarquia ya existe");
         if(!estructuraCubo.dimensiones[dimensionSeleccionada].jerarquias
         .hasOwnProperty(nombreJerarquia)){
             estructuraCubo.dimensiones[dimensionSeleccionada].jerarquias[nombreJerarquia] = {};
             estructuraCubo.dimensiones[dimensionSeleccionada].jerarquia_por_defecto=nombreJerarquia;
-            console.log("La jerarquia por defecto es: " + estructuraCubo.dimensiones[dimensionSeleccionada].jerarquia_por_defecto);
             estructuraCubo.dimensiones[dimensionSeleccionada].jerarquias[nombreJerarquia].niveles = [];
             estructuraCubo.dimensiones[dimensionSeleccionada].jerarquias[nombreJerarquia].nivel_actual = "";
             var mensaje = i18next.t('exitoCrearJerarquia');
@@ -321,8 +295,6 @@ function añadirJerarquia(){
 
         actualizarArbol();
         imprimirArbol();
-        
-        
     }
     else {
       var mensaje = i18next.t('introduceJer');
@@ -330,16 +302,11 @@ function añadirJerarquia(){
     }
  }
 
- 
 //Función que añade un nivel a una jerarquía
 function añadirNivel(){
 
-  console.log("DENTRO DE AÑADIR NIVEL");
-
   var nombreNivel = $('#nombreNivel').val().trim();
-
   var nombreJerarquia = $('#dimensionesJerarquias').val().trim();
-  
   var nivelSeleccionado = $('#niveles').val().trim();
 
   //Comprobar que se han seleccionado dimension y jerarquia
@@ -359,7 +326,6 @@ function añadirNivel(){
   }
 
   //Comprobamos si el nivel ya se ha añadido
-  console.log("Comprobando si el nivel está añadido");
   var encontrado = false;
   
   Object.keys(estructuraCubo.dimensiones).forEach(function(dimension) {
@@ -375,7 +341,6 @@ function añadirNivel(){
   });
 
   if (!encontrado){
-    console.log("El nivel no está añadido");
     var nombreDimension;
         
     //Buscamos el nombre de la dimensión a la que pertenece la jerarquía
@@ -387,21 +352,13 @@ function añadirNivel(){
     });
 
     //Añadimos el nivel
-  
-    //estructuraCubo.dimensiones[nombreDimension].jerarquias[nombreJerarquia] = nombreNivel;
-    console.log("Añadiendo el nivel " + nombreNivel + ": " + nivelSeleccionado);
-    console.log(estructuraCubo.dimensiones[nombreDimension].jerarquias[nombreJerarquia]);
-    console.log(estructuraCubo.dimensiones[nombreDimension].jerarquias[nombreJerarquia].niveles);
     estructuraCubo.dimensiones[nombreDimension].jerarquias[nombreJerarquia].niveles.push(nivelSeleccionado);
   
     //Si es el primer nivel añadido, se guarda como nivel por defecto
     if (estructuraCubo.dimensiones[nombreDimension].jerarquias[nombreJerarquia].niveles.length === 1){
       estructuraCubo.dimensiones[nombreDimension].jerarquias[nombreJerarquia].nivel_actual = nivelSeleccionado;
     }
-
-    console.log("El nivel actual, despues de añadir el nivel, es " + estructuraCubo.dimensiones[nombreDimension].jerarquias[nombreJerarquia].nivel_actual);
-
-    console.log("Añadido");
+    
     var mensaje = i18next.t('exitoCrearNivel');
     toastr.success(mensaje);
     
@@ -413,44 +370,24 @@ function añadirNivel(){
     $('#niveles').val(null).trigger('change.select2');
     //Acutlizamos los cambios en el arbol
     actualizarSelectMedidas(nivelSeleccionado, 'añadir');
-    console.log("Mostrando las dos formas");
-    console.log(estructuraCubo);
-    console.log(JSON.stringify(estructuraCubo, null, 2));
     añadirOrdenNiveles();
     actualizarArbol();
-    imprimirArbol();
+    //imprimirArbol();
     
   } 
 }
 
 //Función para añadir la selección de la jerarquia por defecto y el orden de los niveles
 function añadirOrdenNiveles(){
-
   $('#contenedorDimensiones').empty();
-
   var titulo = $('<h5 data-i18n="tituloDefecto">' + i18next.t('tituloDefecto') + '</h5>');
   $('#contenedorDimensiones').append(titulo);
   
-
   Object.keys(estructuraCubo.dimensiones).forEach(function(dimension) {
-
     var label = $('<label>' + dimension + '</label>' + '<br>');
     
-    //var select = $('<select class="form-control select2" id="jerarquiadefecto_' + dimension + '"></select>' + '<br><br>');
-    //var jerarquias = Object.keys(estructuraCubo.dimensiones[dimension].jerarquias);
-
     var dimensionContenedor = $('<div class="dimension-container"></div>');
-
-    /*
-     <div class="form-group select2-blue">
-      <br>
-      <select disabled id="experimentaciones" class="form-control" onchange="obtenerColumnas();obtenerFilas()">
-        <option data-section="placeholders" data-value="experimentation"  value="" 
-        disabled selected></option>
-        
-      </select>
-    </div> 
-    */
+    
     //Obtenemos la jerarquia de la dimension
     var jerarquias = Object.keys(estructuraCubo.dimensiones[dimension].jerarquias);
     if (jerarquias.length === 0) return;
@@ -470,10 +407,7 @@ function añadirOrdenNiveles(){
     selectNivelActual.on('change', function() {
       var nuevoNivel = $(this).val();
       estructuraCubo.dimensiones[dimension].jerarquias[jerarquia]["nivel_actual"] = nuevoNivel;
-      console.log("Nuevo nivel actual para " + dimension + ": " + nuevoNivel);
     });
-
-    console.log("En añadir orden, los niveles encontrados son: " + niveles);
 
     //Creamos la lista ordenable para los niveles
     var lista = $('<ul class="lista-ordenable" id="ordenable_' + dimension + '"></ul>');
@@ -483,17 +417,11 @@ function añadirOrdenNiveles(){
     });
 
     dimensionContenedor.append(label);
-    //dimensionContenedor.append(select);
     dimensionContenedor.append('<label data-i18n="labelOrden">' + i18next.t('labelOrden') + '</label>');
     dimensionContenedor.append(selectNivelActual);
     dimensionContenedor.append(lista);
     $('#contenedorDimensiones').append(dimensionContenedor);
     
-    /*
-    select.select2({
-      minimumResultsForSearch: Infinity
-    });*/
-  
     $('#jerarquiadefecto_' + dimension).select2({
       minimumResultsForSearch: Infinity,
       
@@ -504,23 +432,13 @@ function añadirOrdenNiveles(){
     });
 
      $('#nivelActual_' + dimension).on('change', function() {
-      console.log("Esta cambiando");
-      //actualizarEstructuraCubo();
       actualizarArbol();
     });
 
     $('#jerarquiadefecto_' + dimension).on('change', function() {
-      console.log("Esta cambiando");
-      //actualizarEstructuraCubo();
       actualizarArbol();
     });
-    /*
-    $('#jerarquiadefecto_' + dimension).on('change',function() {
-      console.log("Esta cambiando");
-      actualizarEstructuraCubo();
-      actualizarArbol();
-    })*/
-
+   
     $('#ordenable_' + dimension).sortable();
     $('#ordenable_' + dimension).disableSelection();
   });
@@ -547,22 +465,15 @@ function aplicarOrden(){
       nuevoOrden.push(this.id);  // Cada li tiene como id el nombre del nivel
     });
 
-    console.log("El nuevo orden seria: " + nuevoOrden);
-
     // Actualizamos el array de niveles en la estructura
     estructuraCubo.dimensiones[dimension].jerarquias[jerarquia].niveles = nuevoOrden;
 
     //Actualizamos el valor del nivel actual
     var nivelActualSeleccionado = $('#nivelActual_' + dimension).val();
 
-    console.log("Nivel seleccionado para ser nuevo actual: " + nivelActualSeleccionado);
-
     if (nivelActualSeleccionado){
-      console.log("En aplicar orden, el antiguo nivel actual es: " + estructuraCubo.dimensiones[dimension].jerarquias[jerarquia].nivel_actual);
       estructuraCubo.dimensiones[dimension].jerarquias[jerarquia].nivel_actual = nivelActualSeleccionado;
-      console.log("En aplicar orden, el nuevo nivel actual es: " + estructuraCubo.dimensiones[dimension].jerarquias[jerarquia].nivel_actual);
     }
-    console.log(`Nuevo orden para ${dimension} - ${jerarquia}:`, nuevoOrden);
      });
 
   toastr.success("Orden actualizado correctamente");
@@ -599,7 +510,6 @@ function actualizarJerarquias() {
   Object.keys(estructuraCubo.dimensiones).forEach(function(dimension) {
 
     var optgroup = $('<optgroup label="' + dimension + '"></optgroup>');
-
     var jerarquias = Object.keys(estructuraCubo.dimensiones[dimension].jerarquias);
 
     //Iteramos sobre las jerarquías y las añadimos a la dimensión
@@ -614,13 +524,10 @@ function actualizarJerarquias() {
 
   //Actualizamos el segundo select y el select final
   $('#dimensionesJerarquias').val(null).trigger('change.select2');
-
 }
-
 
 //Función que elimina dimensión
 function eliminarDimension(){
-  
   //Recuperamos la dimension seleccionada para borrar
   var dimension = document.getElementById('dimensiones').value;
 
@@ -644,9 +551,7 @@ function eliminarDimension(){
     actualizarDimensiones();
     actualizarJerarquias();
     actualizarArbol();
-    imprimirArbol();
-
-
+    //imprimirArbol();
   }
 }
 
@@ -671,16 +576,13 @@ function eliminarJerarquia(){
   //Ocultamos el modal
   $('#modalJerarquia').modal('hide');
 
- 
-  imprimirArbol();
+  //imprimirArbol();
   //Actualizamos el select de jerarquias
   actualizarJerarquias();
   añadirOrdenNiveles();
 
   //Actualizamos el arbol
   actualizarArbol();
-  
-
   
 }
 
@@ -699,7 +601,6 @@ function eliminarNivel(){
     Object.keys(estructuraCubo.dimensiones[dimension].jerarquias).forEach(function(jerarquia) {
 
       let niveles = estructuraCubo.dimensiones[dimension].jerarquias[jerarquia].niveles;
-      console.log("Los niveles de la jerarquia, " + jerarquia + " son: " + jerarquia.niveles);
       // Comprobamos que el nivel exista en el array de niveles de la jerarquia
       const index = niveles.indexOf(nivel);
 
@@ -720,13 +621,14 @@ function eliminarNivel(){
   
   //Actualizamos el select de medidas
   actualizarSelectMedidas(nivel, 'eliminar');
+  
   //Actualizamos el arbol
   añadirOrdenNiveles();
   actualizarArbol();
-  imprimirArbol();
-
+  //imprimirArbol();
 }
 
+// Función que actualiza el select de medidas
 function actualizarSelectMedidas(nivel, opcion){
 
   //Si añadimos un nivel al cubo, no lo podemos utilizar como medida, por lo que lo deshabilitamos de las medidas
@@ -747,21 +649,19 @@ function actualizarSelectMedidas(nivel, opcion){
   }
 }
 
+//Función que actualiza la vista de árbol del cubo
 function actualizarArbol(){
 
-  console.log("Dento de actualizar arbol");
-    // Borramos el árbol actual
+  // Borramos el árbol actual
   var tree = $.ui.fancytree.getTree("#tree");
 
   if (!tree) {
-  console.log("No se pudo obtener el árbol (#tree no está inicializado aún)");
   return;
   }
 
   var rootNode = tree.getRootNode();
 
   if (!rootNode) {
-  console.log("El nodo raíz del árbol no está disponible.");
   return;
 }
 
@@ -783,18 +683,12 @@ function actualizarArbol(){
     var jerarquiaNombre = Object.keys(jerarquias)[0]; // Solo hay una
     var jerarquiaPorDefecto = estructuraCubo.dimensiones[dimension].jerarquia_por_defecto;
 
-    
-    
     //var niveles = jerarquias[jerarquia].niveles || [];
     if (!jerarquiaNombre){
       return;
     }
 
-    
-
-    
     // Iteramos sobre todas las jerarquías 
-    console.log("Antes de iterar sobre las jerarquias")
     Object.keys(jerarquias).forEach(function(jerarquia) {
       var nodoJerarquia = nodoDimension.addChildren({
         title: jerarquiaNombre,
@@ -807,12 +701,10 @@ function actualizarArbol(){
 
       var niveles = jerarquias[jerarquiaNombre].niveles;
       
-
       // Si no hay niveles, no añadimos nada
       if (!Array.isArray(niveles) || niveles.length === 0) {
         return;
       }
-
 
       // Obtenemos y recorremos los niveles de esta jerarquía
       niveles.forEach(function(nivel) {
@@ -838,7 +730,8 @@ function actualizarArbol(){
   tree.expandAll();
 }
 
-
+/*
+// Función que imprime el cubo por consola
 function imprimirArbol(){
 
   console.log(nombreCubo);
@@ -866,7 +759,7 @@ function imprimirArbol(){
   console.log("Arbol acabado");
 
   console.log(estructuraCubo.dimensiones);
-}
+}*/
 
 //Función que comprueba que no haya jerarquías vacías antes de guardar el cubo
 function comprobarJerarquiasVacias(){
@@ -899,14 +792,13 @@ function comprobarJerarquiasVacias(){
   return false;
 }
 
+// Función que realiza la petición para crear el cubo
 function enviarCubo(){
 
-  //actualizarEstructuraCubo();
   actualizarArbol();
 
   var vacias = comprobarJerarquiasVacias();
-  console.log(vacias);
-
+ 
   nombreCubo = $('#cubename').val();
   nombreExperimentacion = $("#experimentaciones").val()
   nombreExperimentacion = nombreExperimentacion.match(/\/\s*([^\/]+)/)[1];
@@ -937,29 +829,18 @@ function enviarCubo(){
       tipoMedida = "SUM";
   }
 
-  console.log("tipo medida: " + tipoMedida);
-  console.log("Estructura: ");
-  console.log(estructuraCubo.dimensiones);
-
-  console.log("Haciendo OBJETO COMPLETO");
-
   cubo = {user, date, nombreCubo, descripcion, nombreExperimentacion, ...estructuraCubo, nombreMedida, medida, tipoMedida};
-
-  console.log("Mostrando Cubo Final");
-  console.log(cubo);
 
   // Obtenemos el token CSRF del documento HTML
   var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
 
   //Realizamos petición ajax
-   
   cubo_json = JSON.stringify(cubo);
   console.log("Cubo en json");
   console.log(cubo_json);
 
-  console.log("Enviando peticion POST");
   $.ajax({
-    url: "/analisismultidimensional/crear-cubo",  //Reemplazamos con la URL de la vista en Django
+    url: "/analisismultidimensional/crear-cubo", 
     headers: {
       'X-CSRFToken': csrfToken
     },
